@@ -25,7 +25,39 @@
     [[QNAlertViewController topViewController] presentViewController:alertController animated:YES completion:nil];
 }
 
++ (void)showBlackAlertWithTitle:(NSString *)title content:(NSString *)content cancelHandler:(void (^ __nullable)(UIAlertAction *action))cancelHandler confirmHandler:(void (^ __nullable)(UIAlertAction *action))confirmHandler {
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:content preferredStyle:UIAlertControllerStyleAlert];
+    UIView *subView = alertController.view.subviews.lastObject;
+    UIView *alertContentView = subView.subviews.lastObject;
+    
+    for (UIView *subSubView in alertContentView.subviews) {
+        subSubView.backgroundColor = [UIColor colorWithHexString:@"1B2C30"];
+    }
+    
+    UIAlertAction *cancelBtn = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        cancelHandler(action);
+    }];
+    [alertController addAction:cancelBtn];
+    
+    UIAlertAction *changeBtn = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        confirmHandler(action);
+    }];
+    [alertController addAction:changeBtn];
+    
+    //修改title
+    NSMutableAttributedString *alertControllerStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n",title]];
+    [alertControllerStr addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, title.length)];
+    [alertController setValue:alertControllerStr forKey:@"attributedTitle"];
 
+    //修改message
+    NSMutableAttributedString *alertControllerMessageStr = [[NSMutableAttributedString alloc] initWithString:content];
+    [alertControllerMessageStr addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, content.length)];
+    [alertController setValue:alertControllerMessageStr forKey:@"attributedMessage"];
+    
+    alertController.view.tintColor = [UIColor whiteColor];
+    [[QNAlertViewController topViewController] presentViewController:alertController animated:YES completion:nil];
+}
 
 + (UIViewController * )topViewController {
     UIViewController *resultVC;

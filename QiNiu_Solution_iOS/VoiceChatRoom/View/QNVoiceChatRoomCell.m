@@ -73,7 +73,7 @@
 - (void)updateWithModel:(QNRTCMicsInfo *)model {
     
 //    if (model.userExtension.length == 0) {
-//        
+//
 //    }
     
     NSData *JSONData = [model.userExtension dataUsingEncoding:NSUTF8StringEncoding];

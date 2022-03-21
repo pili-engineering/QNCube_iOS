@@ -23,6 +23,7 @@
 #import "QNSendMsgTool.h"
 #import "QNAlertViewController.h"
 #import "QNVoiceChatRoomCell.h"
+#import "QNInvitationModel.h"
 
 @interface QNVoiceChatRoomController ()<QNRTCClientDelegate,UITextFieldDelegate,QNIMChatServiceProtocol,UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -266,13 +267,20 @@
     
 }
 
-- (void)RTCClient:(QNRTCClient *)client didJoinOfUserID:(NSString *)userID userData:(NSString *)userData {    
+- (void)RTCClient:(QNRTCClient *)client didJoinOfUserID:(NSString *)userID userData:(NSString *)userData {
     [self getRoomInfo];
 }
 
 - (void)RTCClient:(QNRTCClient *)client didLeaveOfUserID:(NSString *)userID {
+    
+    if ([userID isEqualToString:self.model.roomInfo.creator]) {
+        [QNAlertViewController showBaseAlertWithTitle:@"房间已解散" content:@"房主离开后，其他成员也将被踢出房间" handler:^(UIAlertAction * _Nonnull action) {
+            [self requestLeave];
+        }];
+    }
     [self getRoomMicInfo];
     [self getRoomInfo];
+    
 }
 
 - (void)RTCClient:(QNRTCClient *)client didUserPublishTracks:(NSArray<QNRemoteTrack *> *)tracks ofUserID:(NSString *)userID {
@@ -302,13 +310,31 @@
     
     QNIMMessageModel *messageModel = [QNIMMessageModel mj_objectWithKeyValues:messages.firstObject.content];
     
+    __weak typeof(self)weakSelf = self;
     if ([messageModel.action isEqualToString:@"invite_send"]) {//连麦邀请消息
+        
+        QNInvitationModel *model = [QNInvitationModel mj_objectWithKeyValues:messages.firstObject.content];
+        
+        [QNAlertViewController showBlackAlertWithTitle:@"邀请提示" content:model.data.invitation.msg cancelHandler:^(UIAlertAction * _Nonnull action) {
+             QNIMMessageObject *message = [weakSelf.sendMsgTool createRejectInviteMessageWithInvitationName:@"voiceChatRoom" receiverId:weakSelf.model.roomInfo.creator];
+            [[QNIMChatService sharedOption] sendMessage:message];
+            
+        } confirmHandler:^(UIAlertAction * _Nonnull action) {
+                    
+            QNIMMessageObject *message = [weakSelf.sendMsgTool createAcceptInviteMessageWithInvitationName:@"voiceChatRoom" receiverId:weakSelf.model.roomInfo.creator];
+           [[QNIMChatService sharedOption] sendMessage:message];
+        }];
         
     } else if ([messageModel.action isEqualToString:@"invite_reject"]) {//连麦被拒绝消息
         
         [MBProgressHUD showText:@"对方拒绝了你的连麦申请"];
         
     } else if ([messageModel.action isEqualToString:@"invite_accept"]) {//连麦被接受消息
+        
+        [self requestUpMicSeat];
+        QNIMMessageObject *message = [self.sendMsgTool createChatMessage:@"参与了连麦"];
+        [[QNIMChatService sharedOption] sendMessage:message];
+        [self.chatRoomView sendMessage:message];
         
     } else if ([messageModel.action isEqualToString:@"rtc_sitDown"]) {//用户上麦信息
         
@@ -323,12 +349,6 @@
         [self getRoomInfo];
         [self getRoomMicInfo];
     } else if ([messageModel.action isEqualToString:@"quit_room"]) {//离开消息
-        
-        if ([messageModel.data.senderId isEqualToString:self.model.roomInfo.creator]) {
-            [QNAlertViewController showBaseAlertWithTitle:@"房间已解散" content:@"房主离开后，其他成员也将被踢出房间" handler:^(UIAlertAction * _Nonnull action) {
-                [self requestLeave];
-            }];
-        }
         
         [self.chatRoomView showMessage:messages.firstObject];
         [self getRoomInfo];
@@ -369,16 +389,21 @@
     [cell updateWithModel:self.onMicUserList[indexPath.item]];
     __weak typeof(self)weakSelf = self;
     cell.onSeatBlock = ^{
-        if ([self isOnMic]) {
-            [MBProgressHUD showText:@"您已经在麦上"];
-            return;
-        }
-        QNIMMessageObject *message = [self.sendMsgTool createChatMessage:@"参与了连麦"];
-        [[QNIMChatService sharedOption] sendMessage:message];
-        [self.chatRoomView sendMessage:message];
-        [weakSelf requestUpMicSeat];
+        [weakSelf sendInvitationUpMic];
     };
     return cell;
+}
+
+//请求上麦
+- (void)sendInvitationUpMic {
+    if ([self isOnMic]) {
+        [MBProgressHUD showText:@"您已经在麦上"];
+        [self getRoomMicInfo];
+        return;
+    }
+    
+    QNIMMessageObject *message = [self.sendMsgTool createInviteMessageWithInvitationName:@"voiceChatRoom" receiverId:self.model.roomInfo.creator];
+    [[QNIMChatService sharedOption] sendMessage:message];
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
@@ -394,7 +419,6 @@
 //判断是否已经在麦上
 - (BOOL)isOnMic {
     if ([QN_User_id isEqualToString:self.model.roomInfo.creator]) {
-        [MBProgressHUD showText:@"您已经在麦上"];
         return YES;
     }
     for (QNRTCMicsInfo  *mic in self.onMicUserList) {
@@ -535,3 +559,4 @@
     return _sendMsgTool;
 }
 @end
+

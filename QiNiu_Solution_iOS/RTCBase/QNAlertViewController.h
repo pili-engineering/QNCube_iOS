@@ -13,6 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)showBaseAlertWithTitle:(NSString *)title content:(NSString *)content handler:(void (^ __nullable)(UIAlertAction *action))handler;
 
++ (void)showBlackAlertWithTitle:(NSString *)title content:(NSString *)content cancelHandler:(void (^ __nullable)(UIAlertAction *action))cancelHandler confirmHandler:(void (^ __nullable)(UIAlertAction *action))confirmHandler;
+
+
 @end
 
 NS_ASSUME_NONNULL_END
