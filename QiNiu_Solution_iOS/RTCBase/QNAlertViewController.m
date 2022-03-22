@@ -25,6 +25,28 @@
     [[QNAlertViewController topViewController] presentViewController:alertController animated:YES completion:nil];
 }
 
++ (void)showTextAlertWithTitle:(NSString *)title content:(NSString *)content cancelHandler:(void (^ __nullable)(UIAlertAction *action))cancelHandler confirmHandler:(void (^)(NSString *text))confirmHandler {
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:content preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+            
+    }];
+    UIAlertAction *cancelBtn = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        cancelHandler(action);
+    }];
+    [alertController addAction:cancelBtn];
+    
+    UIAlertAction *changeBtn = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        [[alertController.textFields firstObject] endEditing:YES];
+        confirmHandler(alertController.textFields.firstObject.text);
+    }];
+    [alertController addAction:changeBtn];
+    
+    [[QNAlertViewController topViewController] presentViewController:alertController animated:YES completion:nil];
+}
+
 + (void)showBlackAlertWithTitle:(NSString *)title content:(NSString *)content cancelHandler:(void (^ __nullable)(UIAlertAction *action))cancelHandler confirmHandler:(void (^ __nullable)(UIAlertAction *action))confirmHandler {
     
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:content preferredStyle:UIAlertControllerStyleAlert];

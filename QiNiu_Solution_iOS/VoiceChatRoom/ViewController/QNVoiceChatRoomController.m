@@ -182,16 +182,14 @@
         [[QNIMGroupService sharedOption] joinGroupWithGroupId:self.model.imConfig.imGroupId message:@"" completion:^(QNIMError * _Nonnull error) {
             weakSelf.imGroupId = weakSelf.model.imConfig.imGroupId;
             
-            QNIMMessageObject *message = [self.sendMsgTool createJoinRoomMessage];
+            QNIMMessageObject *message = [weakSelf.sendMsgTool createJoinRoomMessage];
             [[QNIMChatService sharedOption] sendMessage:message];
-            [self.chatRoomView sendMessage:message];
+            [weakSelf.chatRoomView sendMessage:message];
         }];
         
         [self joinRoomOption];
         
         } failure:nil];
-    
-    
 }
 
 //获取房间信息
@@ -253,7 +251,6 @@
 }
 
 - (void)RTCClient:(QNRTCClient *)client didConnectionStateChanged:(QNConnectionState)state disconnectedInfo:(QNConnectionDisconnectedInfo *)info {
-    
     if (state == QNConnectionStateConnected) {
         
         if ([QN_User_id isEqualToString:self.model.roomInfo.creator]) {
@@ -264,7 +261,6 @@
         
         [self.roomTool requestRoomHeartBeatWithInterval:@"3"];
     }
-    
 }
 
 - (void)RTCClient:(QNRTCClient *)client didJoinOfUserID:(NSString *)userID userData:(NSString *)userData {
@@ -273,14 +269,16 @@
 
 - (void)RTCClient:(QNRTCClient *)client didLeaveOfUserID:(NSString *)userID {
     
-    if ([userID isEqualToString:self.model.roomInfo.creator]) {
-        [QNAlertViewController showBaseAlertWithTitle:@"房间已解散" content:@"房主离开后，其他成员也将被踢出房间" handler:^(UIAlertAction * _Nonnull action) {
-            [self requestLeave];
-        }];
-    }
-    [self getRoomMicInfo];
-    [self getRoomInfo];
-    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        if ([userID isEqualToString:self.model.roomInfo.creator]) {
+            [QNAlertViewController showBaseAlertWithTitle:@"房间已解散" content:@"房主离开后，其他成员也将被踢出房间" handler:^(UIAlertAction * _Nonnull action) {
+                [self requestLeave];
+            }];
+        }
+        [self getRoomMicInfo];
+        [self getRoomInfo];
+    });
 }
 
 - (void)RTCClient:(QNRTCClient *)client didUserPublishTracks:(NSArray<QNRemoteTrack *> *)tracks ofUserID:(NSString *)userID {
@@ -316,13 +314,16 @@
         QNInvitationModel *model = [QNInvitationModel mj_objectWithKeyValues:messages.firstObject.content];
         
         [QNAlertViewController showBlackAlertWithTitle:@"邀请提示" content:model.data.invitation.msg cancelHandler:^(UIAlertAction * _Nonnull action) {
-             QNIMMessageObject *message = [weakSelf.sendMsgTool createRejectInviteMessageWithInvitationName:@"voiceChatRoom" receiverId:weakSelf.model.roomInfo.creator];
+             QNIMMessageObject *message = [weakSelf.sendMsgTool createRejectInviteMessageWithInvitationName:@"audioroomupmic" receiverId:model.data.invitation.initiatorUid];
             [[QNIMChatService sharedOption] sendMessage:message];
+            
+            [weakSelf getRoomMicInfo];
             
         } confirmHandler:^(UIAlertAction * _Nonnull action) {
                     
-            QNIMMessageObject *message = [weakSelf.sendMsgTool createAcceptInviteMessageWithInvitationName:@"voiceChatRoom" receiverId:weakSelf.model.roomInfo.creator];
+            QNIMMessageObject *message = [weakSelf.sendMsgTool createAcceptInviteMessageWithInvitationName:@"audioroomupmic" receiverId:model.data.invitation.initiatorUid];
            [[QNIMChatService sharedOption] sendMessage:message];
+            [weakSelf getRoomMicInfo];
         }];
         
     } else if ([messageModel.action isEqualToString:@"invite_reject"]) {//连麦被拒绝消息
@@ -402,7 +403,7 @@
         return;
     }
     
-    QNIMMessageObject *message = [self.sendMsgTool createInviteMessageWithInvitationName:@"voiceChatRoom" receiverId:self.model.roomInfo.creator];
+    QNIMMessageObject *message = [self.sendMsgTool createInviteMessageWithInvitationName:@"audioroomupmic" receiverId:self.model.roomInfo.creator];
     [[QNIMChatService sharedOption] sendMessage:message];
 }
 

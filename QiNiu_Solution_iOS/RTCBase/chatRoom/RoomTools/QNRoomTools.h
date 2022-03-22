@@ -17,6 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithType:(NSString *)type roomId:(NSString *)roomId;
 
+//获取房间列表
+- (void)requestRoomListSuccess:(void (^)(NSArray<QNRoomInfo *> *rooms))success failure:(void (^)(NSError *error))failure;
+
+//创建房间
+- (void)requestStartRoomWithName:(NSString *)name success:(void (^)(QNRoomDetailModel *roomDetailodel))success failure:(void (^)(NSError *error))failure;
+
 //请求加入房间
 - (void)requestJoinRoomWithParams:(id)params success:(void (^)(QNRoomDetailModel *roomDetailodel))success failure:(void (^)(NSError *error))failure;
 
@@ -29,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 //请求上麦接口
 - (void)requestUpMicSeatWithUserExtRoleType:(NSString *)userExtRoleType  clientRoleType:(QNClientRoleType)clientRoleType success:(void (^)(void))success failure:(void (^)(NSError *error))failure;
 
+//请求下麦接口
 - (void)requestDownMicSeat;
 
 //房间心跳

@@ -146,10 +146,11 @@
         make.width.height.mas_equalTo(120);
     }];
     
+    __weak typeof(self)weakSelf = self;
     [[QNIMGroupService sharedOption] joinGroupWithGroupId:self.model.imConfig.imGroupId message:@"" completion:^(QNIMError * _Nonnull error) {
-        QNIMMessageObject *message = [self.sendMsgTool createJoinRoomMessage];
+        QNIMMessageObject *message = [weakSelf.sendMsgTool createJoinRoomMessage];
         [[QNIMChatService sharedOption] sendMessage:message];
-        [self.chatRoomView sendMessage:message];
+        [weakSelf.chatRoomView sendMessage:message];
     }];
 
 }
@@ -189,18 +190,20 @@
     
     self.onseat = YES;
     
+    __weak typeof(self)weakSelf = self;
+
     [self.seatViews enumerateObjectsUsingBlock:^(QNApplyOnSeatView * _Nonnull seatView, NSUInteger idx, BOOL * _Nonnull stop) {
             
         if (seatView.tagIndex == tag) {
             seatView.isSeat = YES;
             seatView.userId = [[NSUserDefaults standardUserDefaults]objectForKey:QN_ACCOUNT_ID_KEY];
-            [self.localVideoTrack play:seatView];
+            [weakSelf.localVideoTrack play:seatView];
             
-            QNIMMessageObject *message = [self.sendMsgTool createChatMessage:@"参与了连麦"];
+            QNIMMessageObject *message = [weakSelf.sendMsgTool createChatMessage:@"参与了连麦"];
             [[QNIMChatService sharedOption] sendMessage:message];
-            [self.chatRoomView sendMessage:message];
+            [weakSelf.chatRoomView sendMessage:message];
             
-            [self.rtcClient sendMessage:[NSString stringWithFormat:@"%ld",seatView.tagIndex] toUsers:nil messageId:nil];
+            [weakSelf.rtcClient sendMessage:[NSString stringWithFormat:@"%ld",seatView.tagIndex] toUsers:nil messageId:nil];
         }
         
     }];

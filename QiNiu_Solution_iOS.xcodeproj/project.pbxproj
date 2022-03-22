@@ -104,7 +104,6 @@
 		7769D8D827854F81008FB1F6 /* QNVoiceChatRoomListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7769D8D727854F81008FB1F6 /* QNVoiceChatRoomListController.m */; };
 		7769D8DB278C0BDC008FB1F6 /* QNVoiceChatRoomTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7769D8DA278C0BDC008FB1F6 /* QNVoiceChatRoomTitleCell.m */; };
 		7769D8DE278C121B008FB1F6 /* QNVoiceChatRoomListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7769D8DD278C121B008FB1F6 /* QNVoiceChatRoomListCell.m */; };
-		7769D8E1278C27E1008FB1F6 /* QNCreatVoiceChatRoomController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7769D8E0278C27E1008FB1F6 /* QNCreatVoiceChatRoomController.m */; };
 		7769D8E4278C3F21008FB1F6 /* QNVoiceChatRoomController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7769D8E3278C3F21008FB1F6 /* QNVoiceChatRoomController.m */; };
 		7769D8E7278C433B008FB1F6 /* QNVoiceChatRoomChaterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7769D8E6278C433B008FB1F6 /* QNVoiceChatRoomChaterCell.m */; };
 		7769D8EA278C45D9008FB1F6 /* QNVoiceChaterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7769D8E9278C45D9008FB1F6 /* QNVoiceChaterView.m */; };
@@ -406,8 +405,6 @@
 		7769D8DA278C0BDC008FB1F6 /* QNVoiceChatRoomTitleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNVoiceChatRoomTitleCell.m; sourceTree = "<group>"; };
 		7769D8DC278C121B008FB1F6 /* QNVoiceChatRoomListCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNVoiceChatRoomListCell.h; sourceTree = "<group>"; };
 		7769D8DD278C121B008FB1F6 /* QNVoiceChatRoomListCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNVoiceChatRoomListCell.m; sourceTree = "<group>"; };
-		7769D8DF278C27E1008FB1F6 /* QNCreatVoiceChatRoomController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNCreatVoiceChatRoomController.h; sourceTree = "<group>"; };
-		7769D8E0278C27E1008FB1F6 /* QNCreatVoiceChatRoomController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNCreatVoiceChatRoomController.m; sourceTree = "<group>"; };
 		7769D8E2278C3F21008FB1F6 /* QNVoiceChatRoomController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNVoiceChatRoomController.h; sourceTree = "<group>"; };
 		7769D8E3278C3F21008FB1F6 /* QNVoiceChatRoomController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNVoiceChatRoomController.m; sourceTree = "<group>"; };
 		7769D8E5278C433B008FB1F6 /* QNVoiceChatRoomChaterCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNVoiceChatRoomChaterCell.h; sourceTree = "<group>"; };
@@ -1037,8 +1034,6 @@
 			children = (
 				7769D8D627854F81008FB1F6 /* QNVoiceChatRoomListController.h */,
 				7769D8D727854F81008FB1F6 /* QNVoiceChatRoomListController.m */,
-				7769D8DF278C27E1008FB1F6 /* QNCreatVoiceChatRoomController.h */,
-				7769D8E0278C27E1008FB1F6 /* QNCreatVoiceChatRoomController.m */,
 				7769D8E2278C3F21008FB1F6 /* QNVoiceChatRoomController.h */,
 				7769D8E3278C3F21008FB1F6 /* QNVoiceChatRoomController.m */,
 			);
@@ -1657,7 +1652,6 @@
 				7714E5EC27045D5B004B7859 /* QNJoinRepairModel.m in Sources */,
 				775DD99727665C6F0049FCB0 /* CLImageHelper.m in Sources */,
 				776186E427607E0E002D485B /* QNMovieMemberListCell.m in Sources */,
-				7769D8E1278C27E1008FB1F6 /* QNCreatVoiceChatRoomController.m in Sources */,
 				7714E63C27133BC9004B7859 /* QNWhiteBoardLaserToolbar.m in Sources */,
 				776FAF2626FC617D00455BD4 /* QNRTCAbsRoom.m in Sources */,
 				77F61AA127E2077B0031C415 /* QNAlertViewController.m in Sources */,

@@ -6,16 +6,20 @@
 //
 
 #import "QNVoiceChatRoomListController.h"
-#import "QNVoiceChatRoomTitleCell.h"
-#import "QNVoiceChatRoomListCell.h"
-
-#import "QNCreatVoiceChatRoomController.h"
+#import <YYCategories/YYCategories.h>
+#import "QNFunnyListCell.h"
 #import "QNVoiceChatRoomController.h"
 #import "QNRoomDetailModel.h"
+#import "QNNetworkUtil.h"
+#import "QNRoomDetailModel.h"
+#import <MJExtension/MJExtension.h>
+#import "QNAlertViewController.h"
 
-@interface QNVoiceChatRoomListController ()<UITableViewDelegate,UITableViewDataSource>
+@interface QNVoiceChatRoomListController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
-@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UICollectionView *collectionView;
+
+@property (nonatomic, strong) QNRoomDetailModel *model;
 
 @property (nonatomic, strong) NSArray <QNRoomInfo *> *rooms;
 
@@ -26,21 +30,26 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.tabBarController.tabBar.hidden = YES;
+//    [self.navigationController setNavigationBarHidden:YES animated:NO];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+//    [self.navigationController setNavigationBarHidden:NO animated:NO];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"语聊房";
     self.view.backgroundColor = [UIColor whiteColor];
-
-    [self tableView];
+    self.title = @"房间列表";
+    [self collectionView];
     [self requestData];
-    [self startRoomButton];
-
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"icon_increase"] style:UIBarButtonItemStyleDone target:self action:@selector(addRoom)];
+    self.navigationItem.rightBarButtonItem = addButton;
 }
 
 - (void)requestData {
-    
+        
     NSMutableDictionary *requestParams = [NSMutableDictionary dictionary];
 
     requestParams[@"type"] = @"voiceChatRoom";
@@ -48,106 +57,91 @@
     [QNNetworkUtil getRequestWithAction:@"base/listRoom" params:requestParams success:^(NSDictionary *responseData) {
             
         self.rooms = [QNRoomInfo mj_objectArrayWithKeyValuesArray:responseData[@"list"]];
-        [self.tableView reloadData];
+        [self.collectionView reloadData];
         
         } failure:^(NSError *error) {
             
         }];
+}
+
+- (void)addRoom {
     
+    [QNAlertViewController showTextAlertWithTitle:@"设置房间名" content:@"" cancelHandler:^(UIAlertAction * _Nonnull action) {
+            
+    } confirmHandler:^(NSString * _Nonnull text) {
+        [self startRoomWithName:text];
+    }];
+
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return section == 0 ? (self.rooms.count == 0 ? 0 : 1)  : self.rooms.count;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return indexPath.section == 0 ? 100 : 180;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)startRoomWithName:(NSString *)name {
         
-    if (indexPath.section == 0) {
-        QNVoiceChatRoomTitleCell *cell = [tableView dequeueReusableCellWithIdentifier:@"QNVoiceChatRoomTitleCell" forIndexPath:indexPath];
-        [cell updateWithModel:self.rooms];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        return cell;
-    } else {
-        QNVoiceChatRoomListCell *cell = [tableView dequeueReusableCellWithIdentifier:@"QNVoiceChatRoomListCell" forIndexPath:indexPath];
-        [cell updateWithModel:self.rooms[indexPath.row]];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        return cell;
-    }
+    NSMutableDictionary *requestParams = [NSMutableDictionary dictionary];
+    requestParams[@"title"] = name;
+    requestParams[@"type"] = @"voiceChatRoom";
     
-    return nil;
+    [QNNetworkUtil postRequestWithAction:@"base/createRoom" params:requestParams success:^(NSDictionary *responseData) {
+        
+        QNRoomDetailModel *model = [QNRoomDetailModel mj_objectWithKeyValues:responseData];
+        
+        QNVoiceChatRoomController *vc = [QNVoiceChatRoomController new];
+        vc.model = model;
+        vc.model.userInfo.role = @"roomHost";
+        vc.modalPresentationStyle = UIModalPresentationFullScreen;
+        [self presentViewController:vc animated:YES completion:nil];
+            
+        } failure:^(NSError *error) {
+            [MBProgressHUD showText:@"创建房间失败"];
+        }];
+
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.rooms.count;
+}
+
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    QNFunnyListCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"QNFunnyListCell" forIndexPath:indexPath];
+    [cell updateWithModel:self.rooms[indexPath.item]];
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    [collectionView deselectItemAtIndexPath:indexPath animated:YES];
     
     QNRoomDetailModel *model = [QNRoomDetailModel new];
     
     QNVoiceChatRoomController *vc = [QNVoiceChatRoomController new];
-    model.roomInfo = self.rooms[indexPath.row];
     vc.model = model;
+    vc.model.roomInfo = self.rooms[indexPath.item];
+    QNUserInfo *userInfo = [QNUserInfo new];
+    userInfo.role = @"roomAudience";
+    vc.model.userInfo = userInfo;
     vc.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:vc animated:YES completion:nil];
 }
 
-- (UITableView *)tableView {
-    if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
-        _tableView.backgroundColor = [UIColor colorWithHexString:@"f6f5ec"];
-        _tableView.delegate = self;
-        _tableView.dataSource = self;
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        [self.view addSubview:_tableView];
-    
-        [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.left.right.bottom.equalTo(self.view);
-        }];
-        
-        [_tableView registerClass:[QNVoiceChatRoomTitleCell class] forCellReuseIdentifier:@"QNVoiceChatRoomTitleCell"];
-        [_tableView registerClass:[QNVoiceChatRoomListCell class] forCellReuseIdentifier:@"QNVoiceChatRoomListCell"];
-        
-        
+- (UICollectionView *)collectionView {
+    if (!_collectionView) {
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
+        layout.minimumLineSpacing = 10;
+        layout.minimumInteritemSpacing = 10;
+        layout.itemSize = CGSizeMake((kScreenWidth - 15)/2, (kScreenWidth - 15)/2);
+        layout.scrollDirection = UICollectionViewScrollDirectionVertical;
+
+        _collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth - 5, self.view.frame.size.height) collectionViewLayout:layout];
+        _collectionView.backgroundColor = [UIColor whiteColor];
+        _collectionView.delegate = self;
+        _collectionView.dataSource = self;
+        [_collectionView registerClass:[QNFunnyListCell class] forCellWithReuseIdentifier:@"QNFunnyListCell"];
+        [self.view addSubview:_collectionView];
     }
-    return _tableView;
-}
-
-- (void)startRoomButton {
-    
-    UIButton *startButton = [[UIButton alloc]init];
-    [startButton setTitle:@" + 创建房间 " forState:UIControlStateNormal];
-    [startButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    startButton.titleLabel.font = [UIFont systemFontOfSize:15];
-    [startButton setBackgroundColor:[UIColor colorWithHexString:@"3CB371"]];
-    startButton.clipsToBounds = YES;
-    startButton.layer.cornerRadius = 20;
-    [self.view addSubview:startButton];
-    [self.view bringSubviewToFront:startButton];
-    [startButton addTarget:self action:@selector(startRoom) forControlEvents:UIControlEventTouchUpInside];
-    
-    [startButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self.view);
-        make.bottom.equalTo(self.view.mas_bottom).offset(-30);
-        make.height.mas_equalTo(40);
-        make.width.mas_equalTo(150);
-    }];
-}
-
-- (void)startRoom {
-    
-    QNCreatVoiceChatRoomController *vc = [[QNCreatVoiceChatRoomController alloc]init];
-    vc.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:vc animated:YES completion:nil];
-    
-//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"+ Add a Topic" message:@"Start a room open to everyone" preferredStyle:UIAlertControllerStyleActionSheet];
-
-    
+    return _collectionView;
 }
 
 @end

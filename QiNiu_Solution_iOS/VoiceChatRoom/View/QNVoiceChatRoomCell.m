@@ -28,22 +28,22 @@
         self.contentView.alpha = 0.3;
         
         UIView *line = [[UIView alloc]initWithFrame:CGRectZero];
-        line.backgroundColor = [UIColor whiteColor];
+        line.backgroundColor = [UIColor colorWithHexString:@"007AFF"];
         [self.contentView addSubview:line];
         [line mas_makeConstraints:^(MASConstraintMaker *make) {
             make.center.equalTo(self.contentView);
-            make.height.mas_equalTo(1);
+            make.height.mas_equalTo(2);
             make.width.mas_equalTo(50);
         }];
         self.line = line;
         
         UIView *line2 = [[UIView alloc]initWithFrame:CGRectZero];
-        line2.backgroundColor = [UIColor whiteColor];
+        line2.backgroundColor = [UIColor colorWithHexString:@"007AFF"];
         [self.contentView addSubview:line2];
         [line2 mas_makeConstraints:^(MASConstraintMaker *make) {
             make.center.equalTo(self.contentView);
             make.height.mas_equalTo(50);
-            make.width.mas_equalTo(1);
+            make.width.mas_equalTo(2);
         }];
         self.line2 = line2;
         

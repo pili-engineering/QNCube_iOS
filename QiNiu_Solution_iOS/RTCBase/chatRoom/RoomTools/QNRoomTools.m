@@ -25,6 +25,39 @@
     return self;
 }
 
+//房间列表
+- (void)requestRoomListSuccess:(void (^)(NSArray<QNRoomInfo *> *rooms))success failure:(void (^)(NSError *error))failure {
+    
+    NSMutableDictionary *requestParams = [NSMutableDictionary dictionary];
+
+    requestParams[@"type"] = self.type;
+    
+    [QNNetworkUtil getRequestWithAction:@"base/listRoom" params:requestParams success:^(NSDictionary *responseData) {
+            
+        NSArray<QNRoomInfo *> *rooms = [QNRoomInfo mj_objectArrayWithKeyValuesArray:responseData[@"list"]];
+        success(rooms);
+        
+        } failure:^(NSError *error) {
+            
+        }];
+}
+
+//创建房间
+- (void)requestStartRoomWithName:(NSString *)name success:(void (^)(QNRoomDetailModel *roomDetailodel))success failure:(void (^)(NSError *error))failure {
+    
+    NSMutableDictionary *requestParams = [NSMutableDictionary dictionary];
+    requestParams[@"title"] = name;
+    requestParams[@"type"] = self.type;
+    
+    [QNNetworkUtil postRequestWithAction:@"base/createRoom" params:requestParams success:^(NSDictionary *responseData) {
+        
+        QNRoomDetailModel *model = [QNRoomDetailModel mj_objectWithKeyValues:responseData];
+        success(model);
+           
+        } failure:^(NSError *error) {
+        }];
+}
+
 //加入房间
 - (void)requestJoinRoomWithParams:(id)params success:(void (^)(QNRoomDetailModel *roomDetailodel))success failure:(void (^)(NSError *error))failure {
     

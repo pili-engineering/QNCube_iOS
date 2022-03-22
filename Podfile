@@ -22,10 +22,7 @@ target 'QiNiu_Solution_iOS' do
   pod 'IQKeyboardManager','6.5.9'
   pod 'MBProgressHUD','1.2.0'
   pod 'MJRefresh', '3.5.0'
-  pod 'SocketRocket','0.6.0'
-
-#  pod 'CLPlayer'
-  
+  pod 'SocketRocket','0.6.0'  
 
   target 'QiNiu_Solution_iOSTests' do
     inherit! :search_paths

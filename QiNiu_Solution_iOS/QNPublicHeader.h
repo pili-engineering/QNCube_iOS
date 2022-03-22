@@ -75,10 +75,10 @@
 #define QN_IM_psw  [[NSUserDefaults standardUserDefaults] stringForKey:QN_IM_USER_PASSWORD_KEY]
 
 //线上
-//#define MAINAPI @"https://niucube-api.qiniu.com/v1/%@"
+#define MAINAPI @"https://niucube-api.qiniu.com/v1/%@"
 
 //测试
-#define MAINAPI @"http://10.200.20.28:5080/v1/%@"
+//#define MAINAPI @"http://10.200.20.28:5080/v1/%@"
 
 
 //面试：公司/部门
@@ -102,11 +102,6 @@
 #define QN_POLICY_URL @"https://www.qiniu.com/privacy-right"
 //..服务用户协议
 #define QN_AGREEMENT_URL @"https://www.qiniu.com/user-agreement"
-
-
-
-
-
 
 
 #import "QNNetworkUtil.h"
