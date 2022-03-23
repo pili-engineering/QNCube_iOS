@@ -7,21 +7,34 @@
 
 #import "QNRTCAbsRoom.h"
 #import <QNRTCKit/QNRTCKit.h>
+#import "QNRoomDetailModel.h"
+#import "QNSendMsgTool.h"
+#import "QNRoomTools.h"
+#import "QNRTCRoomEntity.h"
+#import "QNVideoTrackParams.h"
+#import "QNAudioTrackParams.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class QNTrackInfo,QNVideoTrackParams,QNAudioTrackParams;
+@class QNTrackInfo;
 
 @interface QNRTCRoom : QNRTCAbsRoom
 
+@property (nonatomic, strong)QNRoomDetailModel *model;
+
+@property (nonatomic, strong) QNSendMsgTool *sendMsgTool;
+
+@property (nonatomic, strong) QNRoomTools *roomTool;
+
+-(instancetype)initWithRoomModel:(QNRoomDetailModel *)model;
 //本地视频轨道参数
 - (void)setUpLocalVideoParams:(QNVideoTrackParams *)videoTrackParams;
 //本地音频轨道参数
 - (void)setUpLocalAudioTrackParams:(QNAudioTrackParams *)audioTrackParams;
-//加入房间
+//加入房间（有设置过房间model时直接调用此方法加入房间，不需要设置进房参数）
+- (void)joinRoom;
+//加入房间（需要设置进房参数）
 - (void)joinRoom:(QNRTCRoomEntity *)roomEntity;
-//关闭房间
-- (void)closeRoom;
 //离开房间
 - (void)leaveRoom;
 //启用视频模块

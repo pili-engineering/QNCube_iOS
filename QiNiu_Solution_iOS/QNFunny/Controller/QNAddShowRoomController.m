@@ -71,22 +71,14 @@
     [QNNetworkUtil postRequestWithAction:@"base/createRoom" params:requestParams success:^(NSDictionary *responseData) {
         
         QNRoomDetailModel *model = [QNRoomDetailModel mj_objectWithKeyValues:responseData];
+        model.roomType = QN_Room_Type_Show;
+        model.userInfo.role = @"roomHost";
         
-        QNShowRoomController *vc = [QNShowRoomController new];
-        vc.model = model;
-        vc.model.userInfo.role = @"roomHost";
+        QNShowRoomController *vc = [[QNShowRoomController alloc]initWithRoomModel:model];
         [self.navigationController pushViewController:vc animated:YES];
             
         } failure:^(NSError *error) {
-            
-            QNShowRoomController *vc = [QNShowRoomController new];
-            vc.model = [QNRoomDetailModel new];
-            QNUserInfo *userInfo = [QNUserInfo new];
-            userInfo.role = @"roomHost";
-            vc.model.userInfo = userInfo;
-            vc.modalPresentationStyle = UIModalPresentationFullScreen;
-            [self.navigationController pushViewController:vc animated:YES];
-            
+            [MBProgressHUD showText:@"创建房间失败"];            
         }];
 }
 

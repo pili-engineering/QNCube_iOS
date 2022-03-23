@@ -33,7 +33,6 @@
 @property (nonatomic, strong) QNJoinInterviewModel *interviewModel;
 @property (nonatomic, strong) NSMutableArray *viewsArray;
 
-@property (nonatomic, strong) QNSendMsgTool *sendMsgTool;
 @property (nonatomic, strong) RCChatRoomView * chatRoomView;
 @property (nonatomic, strong) UIButton *commentButton;
 @property (nonatomic, strong) UIButton *closeButton;
@@ -801,13 +800,6 @@
         _layouts = [NSMutableArray array];
     }
     return _layouts;
-}
-
--(QNSendMsgTool *)sendMsgTool {
-    if (!_sendMsgTool) {
-        _sendMsgTool = [[QNSendMsgTool alloc]initWithToId:self.interviewModel.imConfig.imGroupId];
-    }
-    return _sendMsgTool;
 }
 
 @end

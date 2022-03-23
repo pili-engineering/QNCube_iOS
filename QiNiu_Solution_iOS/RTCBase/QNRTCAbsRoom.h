@@ -41,8 +41,6 @@ QNRemoteVideoTrack;
 @property (nonatomic, readonly) UIView *renderBackgroundView;
 //加入房间
 - (void)joinRoom:(QNRTCRoomEntity *)roomEntity;
-//关闭房间
-- (void)closeRoom;
 //离开房间
 - (void)leaveRoom;
 

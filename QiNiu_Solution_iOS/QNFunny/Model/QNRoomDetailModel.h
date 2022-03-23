@@ -104,6 +104,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) QNRTCInfo *rtcInfo;
 
 @property (nonatomic, strong) NSArray <QNRTCMicsInfo *> *mics;
+//房间类型
+@property (nonatomic, copy) NSString *roomType;
 
 @end
 

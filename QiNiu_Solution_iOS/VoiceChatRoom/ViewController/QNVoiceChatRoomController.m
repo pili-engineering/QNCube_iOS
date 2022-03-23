@@ -24,20 +24,15 @@
 #import "QNAlertViewController.h"
 #import "QNVoiceChatRoomCell.h"
 #import "QNInvitationModel.h"
+#import "QNVoiceChatBottomOperationView.h"
 
-@interface QNVoiceChatRoomController ()<QNRTCClientDelegate,UITextFieldDelegate,QNIMChatServiceProtocol,UICollectionViewDelegate,UICollectionViewDataSource>
+@interface QNVoiceChatRoomController ()<QNRTCClientDelegate,QNIMChatServiceProtocol,UICollectionViewDelegate,UICollectionViewDataSource>
 
 @property (nonatomic, strong) RCChatRoomView * chatRoomView;
 
-@property (nonatomic, strong) QNRoomTools *roomTool;
-
 @property (nonatomic, strong) UICollectionView *collectionView;
 
-@property (nonatomic, strong) QNSendMsgTool *sendMsgTool;
-
 @property (nonatomic, strong) UILabel *titleLabel;
-
-@property (nonatomic, strong) UITextField *commentTf;
 
 @property (nonatomic, strong) UIImageView *masterSeat;//房主座位
 
@@ -75,7 +70,6 @@
    
     [self titleLabel];
     [self masterSeat];
-//    [self collectionView];
     [self setupIMUI];
     [self setupBottomView];
     [self requestData];
@@ -91,43 +85,20 @@
 }
 
 - (void)setupBottomView {
-    
-    [self commentTf];
-    
-    UIView *bottomButtonView = [[UIView alloc] init];
+    __weak typeof(self)weakSelf = self;
+    QNVoiceChatBottomOperationView *bottomButtonView = [[QNVoiceChatBottomOperationView alloc]initWithFrame:CGRectMake(10, kScreenHeight - 60, kScreenWidth, 40)];
+    bottomButtonView.microphoneBlock = ^(BOOL selected) {
+        [weakSelf muteLocalAudio:!selected];
+    };
+    bottomButtonView.quitBlock = ^{
+        [weakSelf quitRoom];
+    };
+    bottomButtonView.textBlock = ^(NSString * _Nonnull text) {
+        QNIMMessageObject *message = [weakSelf.sendMsgTool createChatMessage:text];
+        [[QNIMChatService sharedOption] sendMessage:message];
+        [weakSelf.chatRoomView sendMessage:message];
+    };
     [self.view addSubview:bottomButtonView];
-    [bottomButtonView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.view);
-        make.centerY.equalTo(self.commentTf);
-        make.height.mas_equalTo(40);
-    }];
-    
-    NSString *selectedImage[] = {@"icon_microphone_on", @"icon_quit_show"};
-    NSString *normalImage[] = {@"icon_microphone_off",@"icon_quit_show"};
-    SEL selectors[] = {@selector(microphoneAction:),@selector(quitRoom)};
-    CGFloat buttonWidth = 40;
-    NSInteger space = (kScreenWidth - self.commentTf.width - buttonWidth * ARRAY_SIZE(normalImage))/(ARRAY_SIZE(normalImage)+1);
-    
-    for (int i = 0; i < ARRAY_SIZE(normalImage); i ++) {
-        UIButton *button = [[UIButton alloc] init];
-        [button setImage:[UIImage imageNamed:selectedImage[i]] forState:(UIControlStateSelected)];
-        [button setImage:[UIImage imageNamed:normalImage[i]] forState:(UIControlStateNormal)];
-        [button addTarget:self action:selectors[i] forControlEvents:(UIControlEventTouchUpInside)];
-        button.selected = YES;
-        [bottomButtonView addSubview:button];
-    }
-    
-    [bottomButtonView.subviews mas_distributeViewsAlongAxis:MASAxisTypeHorizontal withFixedSpacing:space leadSpacing:space tailSpacing:space];
-    [bottomButtonView.subviews mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(bottomButtonView);
-        make.width.height.mas_equalTo(buttonWidth);
-    }];
-}
-
-// 打开/关闭音频
-- (void)microphoneAction:(UIButton *)microphoneButton {
-    microphoneButton.selected = !microphoneButton.isSelected;
-    [self muteLocalAudio:!microphoneButton.isSelected];
 }
 
 - (void)quitRoom {
@@ -142,21 +113,8 @@
 
 //进房操作
 - (void)joinRoomOption {
-    
-    QNRTCRoomEntity *room = [QNRTCRoomEntity new];
-    room.providePushUrl = self.model.rtcInfo.publishUrl;
-    room.provideRoomToken = self.model.rtcInfo.roomToken;
-    room.provideHostUid = self.model.roomInfo.creator;
-    
-    room.provideMeId = self.model.userInfo.userId;
-    
-    QNUserExtension *userInfo = [QNUserExtension new];
-    userInfo.userExtRoleType = self.model.userInfo.role;
-    room.provideUserExtension = userInfo;
-    
-    [self joinRoom:room];
+    [self joinRoom];
     self.rtcClient.delegate = self;
-    
 }
 
 //加入房间
@@ -407,16 +365,6 @@
     [[QNIMChatService sharedOption] sendMessage:message];
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField {
-    
-    QNIMMessageObject *message = [self.sendMsgTool createChatMessage:textField.text];
-    [[QNIMChatService sharedOption] sendMessage:message];
-    [self.chatRoomView sendMessage:message];
-    
-    [self.commentTf resignFirstResponder];
-    self.commentTf.text = @"";
-}
-
 //判断是否已经在麦上
 - (BOOL)isOnMic {
     if ([QN_User_id isEqualToString:self.model.roomInfo.creator]) {
@@ -483,25 +431,6 @@
     return _titleLabel;
 }
 
-- (UITextField *)commentTf {
-    if (!_commentTf) {
-        _commentTf = [[UITextField alloc]initWithFrame:CGRectMake(15, kScreenHeight - 60, 250, 40)];
-        _commentTf.backgroundColor = [UIColor blackColor];
-        _commentTf.alpha = 0.5;
-        _commentTf.delegate = self;
-        _commentTf.font = [UIFont systemFontOfSize:14];
-        _commentTf.layer.cornerRadius = 10;
-        _commentTf.clipsToBounds = YES;
-        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:@"  说点什么..." attributes:
-             @{NSForegroundColorAttributeName:[UIColor whiteColor],
-               NSFontAttributeName:[UIFont systemFontOfSize:14]}];
-        _commentTf.attributedPlaceholder = attrString;
-        _commentTf.textColor = [UIColor whiteColor];
-        [self.view addSubview:_commentTf];
-    }
-    return _commentTf;
-}
-
 - (UIImageView *)masterSeat{
     if (!_masterSeat) {
         _masterSeat = [[UIImageView alloc]initWithFrame:CGRectMake(20, 80, 120, 120)];
@@ -546,18 +475,5 @@
     return _collectionView;
 }
 
-- (QNRoomTools *)roomTool {
-    if (!_roomTool) {
-        _roomTool = [[QNRoomTools alloc]initWithType:@"voiceChatRoom" roomId:self.model.roomInfo.roomId];
-    }
-    return _roomTool;
-}
-
--(QNSendMsgTool *)sendMsgTool {
-    if (!_sendMsgTool) {
-        _sendMsgTool = [[QNSendMsgTool alloc]initWithToId:self.model.imConfig.imGroupId];
-    }
-    return _sendMsgTool;
-}
 @end
 

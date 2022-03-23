@@ -39,8 +39,6 @@
 
 @property (nonatomic, strong) UIButton *inviteButton;
 @property (nonatomic, weak) UIActivityIndicatorView *activityIndicatorView;
-@property (nonatomic, strong) QNRoomTools *roomTool;
-@property (nonatomic, strong) QNSendMsgTool *sendMsgTool;
 @property (nonatomic, strong)CLPlayerView *playerView;
 @property (nonatomic, strong)QNMovieOnlineView *onlineView;
 @property (nonatomic, strong) NSMutableArray<QNUserInfo *> *allUserList;
@@ -1006,17 +1004,4 @@
     return _onlineView;
 }
 
-- (QNRoomTools *)roomTool {
-    if (!_roomTool) {
-        _roomTool = [[QNRoomTools alloc]initWithType:@"movie" roomId:self.model.roomInfo.roomId];
-    }
-    return _roomTool;
-}
-
--(QNSendMsgTool *)sendMsgTool {
-    if (!_sendMsgTool) {
-        _sendMsgTool = [[QNSendMsgTool alloc]initWithToId:self.imGroupId];
-    }
-    return _sendMsgTool;
-}
 @end

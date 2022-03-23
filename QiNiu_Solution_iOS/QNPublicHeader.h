@@ -104,6 +104,11 @@
 #define QN_AGREEMENT_URL @"https://www.qiniu.com/user-agreement"
 
 
+#define QN_Room_Type_VoiceChatRoom @"voiceChatRoom"
+#define QN_Room_Type_Movie @"movie"
+#define QN_Room_Type_Show @"show"
+#define QN_Room_Type_Repair @"repair"
+
 #import "QNNetworkUtil.h"
 #import <MJExtension/MJExtension.h>
 #import <YYCategories/YYCategories.h>
@@ -111,8 +116,6 @@
 #import "QNIMSDK/QNIMSDK.h"
 #import <Masonry/Masonry.h>
 #import "MBProgressHUD+QNShow.h"
-#import "QNSendMsgTool.h"
-#import "QNRoomTools.h"
 
 /********************* 通用 *********************/
 

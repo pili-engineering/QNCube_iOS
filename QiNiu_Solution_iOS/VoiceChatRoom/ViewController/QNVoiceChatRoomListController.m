@@ -83,10 +83,9 @@
     [QNNetworkUtil postRequestWithAction:@"base/createRoom" params:requestParams success:^(NSDictionary *responseData) {
         
         QNRoomDetailModel *model = [QNRoomDetailModel mj_objectWithKeyValues:responseData];
-        
-        QNVoiceChatRoomController *vc = [QNVoiceChatRoomController new];
-        vc.model = model;
-        vc.model.userInfo.role = @"roomHost";
+        model.roomType = QN_Room_Type_VoiceChatRoom;
+        model.userInfo.role = @"roomHost";
+        QNVoiceChatRoomController *vc = [[QNVoiceChatRoomController alloc]initWithRoomModel:model];
         vc.modalPresentationStyle = UIModalPresentationFullScreen;
         [self presentViewController:vc animated:YES completion:nil];
             
@@ -115,13 +114,13 @@
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
     
     QNRoomDetailModel *model = [QNRoomDetailModel new];
-    
-    QNVoiceChatRoomController *vc = [QNVoiceChatRoomController new];
-    vc.model = model;
-    vc.model.roomInfo = self.rooms[indexPath.item];
+    model.roomType = QN_Room_Type_VoiceChatRoom;
+    model.roomInfo = self.rooms[indexPath.item];
     QNUserInfo *userInfo = [QNUserInfo new];
     userInfo.role = @"roomAudience";
-    vc.model.userInfo = userInfo;
+    model.userInfo = userInfo;
+    
+    QNVoiceChatRoomController *vc = [[QNVoiceChatRoomController alloc]initWithRoomModel:model];
     vc.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:vc animated:YES completion:nil];
 }

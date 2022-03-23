@@ -25,10 +25,6 @@
 
 @property (nonatomic, strong) RCChatRoomView * chatRoomView;
 
-@property (nonatomic, strong) QNRoomTools *roomTool;
-
-@property (nonatomic, strong) QNSendMsgTool *sendMsgTool;
-
 @property (nonatomic, strong) UILabel *titleLabel;
 
 @property (nonatomic, strong) UITextField *commentTf;
@@ -127,17 +123,7 @@
 //进房操作
 - (void)joinRoomOption {
     
-    QNRTCRoomEntity *room = [QNRTCRoomEntity new];
-    room.providePushUrl = self.model.rtcInfo.publishUrl;
-    room.provideRoomToken = self.model.rtcInfo.roomToken;
-    room.provideHostUid = self.model.roomInfo.creator;
-    
-    room.provideMeId = self.model.userInfo.userId;
-    
-    QNUserExtension *userInfo = [QNUserExtension new];
-    userInfo.userExtRoleType = self.model.userInfo.role;   
-    room.provideUserExtension = userInfo;
-    [self joinRoom:room];
+    [self joinRoom];
     self.rtcClient.delegate = self;
     
     [self.preview mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -472,17 +458,4 @@
     return _commentTf;
 }
 
-- (QNRoomTools *)roomTool {
-    if (!_roomTool) {
-        _roomTool = [[QNRoomTools alloc]initWithType:@"show" roomId:self.model.roomInfo.roomId];
-    }
-    return _roomTool;
-}
-
--(QNSendMsgTool *)sendMsgTool {
-    if (!_sendMsgTool) {
-        _sendMsgTool = [[QNSendMsgTool alloc]initWithToId:self.model.imConfig.imGroupId];
-    }
-    return _sendMsgTool;
-}
 @end

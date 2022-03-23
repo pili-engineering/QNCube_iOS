@@ -177,9 +177,13 @@
 
     [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:QN_ROOM_NAME_KEY];
     [[NSUserDefaults standardUserDefaults] synchronize];
+        
+    QNRoomDetailModel *roomModel = [QNRoomDetailModel new];
+    roomModel.roomType = QN_Room_Type_Repair;
     
-    QNRepairViewController *vc = [QNRepairViewController new];
-    vc.model = model;
+    QNRepairViewController *vc = [[QNRepairViewController alloc]initWithRoomModel:roomModel];
+
+    vc.itemModel = model;
     vc.popBlock = ^{
         [self.tableView reloadData];
     };

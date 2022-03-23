@@ -90,13 +90,13 @@
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
     
     QNRoomDetailModel *model = [QNRoomDetailModel new];
-    
-    QNShowRoomController *vc = [QNShowRoomController new];
-    vc.model = model;
-    vc.model.roomInfo = self.rooms[indexPath.item];
+    model.roomType = QN_Room_Type_Show;
+    model.roomInfo = self.rooms[indexPath.item];
     QNUserInfo *userInfo = [QNUserInfo new];
     userInfo.role = @"roomAudience";
-    vc.model.userInfo = userInfo;
+    model.userInfo = userInfo;
+    
+    QNShowRoomController *vc = [[QNShowRoomController alloc]initWithRoomModel:model];
     [self.navigationController pushViewController:vc animated:YES];
 }
 

@@ -83,6 +83,7 @@
     
     QNTogetherMovieController *vc = [QNTogetherMovieController new];
     vc.model = model;
+    vc.model.roomType = QN_Room_Type_Movie;
     vc.model.roomInfo = self.rooms[indexPath.item];
     QNUserInfo *userInfo = [QNUserInfo new];
     userInfo.role = @"roomAudience";

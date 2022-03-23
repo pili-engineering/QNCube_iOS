@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QNRepairViewController : QNRTCRoom
 
-@property (nonatomic, strong) QNRepairItemModel *model;
+@property (nonatomic, strong) QNRepairItemModel *itemModel;
 
 @property (nonatomic, copy) void (^popBlock)(void);
 

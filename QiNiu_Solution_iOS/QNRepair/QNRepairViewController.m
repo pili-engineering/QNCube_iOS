@@ -28,10 +28,6 @@
 
 @property (nonatomic, strong) QNJoinRepairModel *repairModel;
 
-@property (nonatomic, strong) QNRoomTools *roomTool;
-
-@property (nonatomic, strong) QNSendMsgTool *sendMsgTool;
-
 @property (nonatomic, strong) RCChatRoomView * chatRoomView;
 
 @property (nonatomic, strong) QNRepairWhiteBoardController *whiteBoard;
@@ -59,9 +55,9 @@
 - (void)joinRepairRoom {
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"roomId"] = self.model.roomId;
+    params[@"roomId"] = self.itemModel.roomId;
     NSString *role;
-    switch (self.model.roleType) {
+    switch (self.itemModel.roleType) {
         case QNRepairRoleTypeProfessor:
             role = @"professor";
             break;
@@ -91,14 +87,14 @@
 
 - (void)leaveRoom {
     [super leaveRoom];
-    if (self.model.roleType ==QNRepairRoleTypeStaff) {
+    if (self.itemModel.roleType == QNRepairRoleTypeStaff) {
         [self.rtcClient stopLiveStreamingWithTranscoding:self.config];
     }
     
-    QNIMMessageObject *message = [self.sendMsgTool createJoinRoomMessage];
+    QNIMMessageObject *message = [self.sendMsgTool createLeaveRoomMessage];
     [[QNIMChatService sharedOption] sendMessage:message];
     
-    NSString *str = [NSString stringWithFormat:@"repair/leaveRoom/%@",self.model.roomId];
+    NSString *str = [NSString stringWithFormat:@"repair/leaveRoom/%@",self.itemModel.roomId];
     [QNNetworkUtil getRequestWithAction:str params:nil success:^(NSDictionary *responseData) {
                  
     } failure:^(NSError *error) {
@@ -115,7 +111,7 @@
     room.provideRoomToken = self.repairModel.roomToken;
     room.provideMeId = self.repairModel.userInfo.accountId;
     QNUserExtension *userInfo = [QNUserExtension new];
-    switch (self.model.roleType) {
+    switch (self.itemModel.roleType) {
         case QNRepairRoleTypeStaff:
             userInfo.userExtRoleType = @"staff";
             userInfo.clientRoleType = QNClientRoleTypeMaster;
@@ -139,15 +135,15 @@
     
     [self setupWhiteBoard];//白板
     
-    if (self.model.roleType == QNRepairRoleTypeStaff) {
+    if (self.itemModel.roleType == QNRepairRoleTypeStaff) {
         [self.localVideoTrack startCapture];
         [self.localVideoTrack play:self.preview];
         
         
-    } else if (self.model.roleType == QNRepairRoleTypeProfessor) {
+    } else if (self.itemModel.roleType == QNRepairRoleTypeProfessor) {
         [self setWhiteBoardButton];
 
-    } else if (self.model.roleType == QNRepairRoleTypeStudents) {
+    } else if (self.itemModel.roleType == QNRepairRoleTypeStudents) {
 
     } else {
         
@@ -237,7 +233,7 @@
     
     self.whiteBoard = [[QNRepairWhiteBoardController alloc]init];
     self.whiteBoard.roomToken = self.repairModel.roomToken;
-    self.whiteBoard.roleType = self.model.roleType;
+    self.whiteBoard.roleType = self.itemModel.roleType;
     self.whiteBoard.view.frame = self.wbBgView.frame;
     CGFloat aspectRatio = 9/16;
     
@@ -387,13 +383,13 @@
     QNTranscodingLiveStreamingTrack *pushAudioTrack = [QNTranscodingLiveStreamingTrack new];
     pushAudioTrack.trackId = self.localAudioTrack.trackID;
     
-    [self.rtcClient setTranscodingLiveStreamingID:self.model.roomId withTracks:@[pushVideoTrack,pushAudioTrack]];
+    [self.rtcClient setTranscodingLiveStreamingID:self.itemModel.roomId withTracks:@[pushVideoTrack,pushAudioTrack]];
 }
 
 - (QNTranscodingLiveStreamingConfig *)config {
     if (!_config) {
         _config = [QNTranscodingLiveStreamingConfig defaultConfiguration];
-        _config.streamID = self.model.roomId;
+        _config.streamID = self.itemModel.roomId;
         _config.width = 540;
         _config.height = 960;
         _config.publishUrl = self.repairModel.publishUrl;
@@ -435,7 +431,7 @@
         
         [tracks addObject:self.localAudioTrack];
         
-        if (self.model.roleType == QNRepairRoleTypeStaff) {
+        if (self.itemModel.roleType == QNRepairRoleTypeStaff) {
             QNVideoTrackParams *params = [QNVideoTrackParams new];
             params.width = 540;
             params.height = 960;
@@ -449,29 +445,13 @@
             
             [self audioToText];
             
-            if (self.model.roleType == QNRepairRoleTypeStaff) {
+            if (self.itemModel.roleType == QNRepairRoleTypeStaff) {
                 [self.rtcClient startLiveStreamingWithTranscoding:self.config];
             }
-            
-            
             
         }];
     }
     
-}
-
-- (QNRoomTools *)roomTool {
-    if (!_roomTool) {
-        _roomTool = [[QNRoomTools alloc]initWithType:@"repair" roomId:self.model.roomId];
-    }
-    return _roomTool;
-}
-
--(QNSendMsgTool *)sendMsgTool {
-    if (!_sendMsgTool) {
-        _sendMsgTool = [[QNSendMsgTool alloc]initWithToId:self.repairModel.imConfig.imGroupId];
-    }
-    return _sendMsgTool;
 }
 
 @end

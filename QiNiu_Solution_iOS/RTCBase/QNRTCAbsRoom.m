@@ -77,11 +77,6 @@
     
 }
 
-- (void)closeRoom {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [self.rtcClient leave];
-}
-
 - (void)leaveRoom {
     [self dismissViewControllerAnimated:YES completion:nil];
     [self.rtcClient leave];

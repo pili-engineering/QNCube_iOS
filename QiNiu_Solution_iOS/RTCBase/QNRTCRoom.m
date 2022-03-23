@@ -6,13 +6,6 @@
 //
 
 #import "QNRTCRoom.h"
-#import "QNVideoTrackParams.h"
-#import "QNAudioTrackParams.h"
-#import "MBProgressHUD+QNShow.h"
-#import <Masonry/Masonry.h>
-#import "QNRTCRoomEntity.h"
-#import <YYCategories/YYCategories.h>
-#import "QNRTCRoomEntity.h"
 #import "QNUserOperationView.h"
 #import "QNRoomUserView.h"
 #import "QNPageControl.h"
@@ -29,6 +22,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+}
+
+- (instancetype)initWithRoomModel:(QNRoomDetailModel *)model {
+    if (self = [super init]) {
+        self.model = model;
+        [self roomTool];
+        [self sendMsgTool];
+    }
+    return self;
 }
 
 //本地视频轨道参数
@@ -51,9 +53,25 @@
     
 }
 
-//- (void)joinRoom:(QNRTCRoomEntity *)roomEntity {
-//    [super joinRoom:roomEntity];
-//}
+//有传入房间model参数的情况下直接加入房间
+- (void)joinRoom {
+    QNRTCRoomEntity *room = [QNRTCRoomEntity new];
+    room.providePushUrl = self.model.rtcInfo.publishUrl;
+    room.provideRoomToken = self.model.rtcInfo.roomToken;
+    room.provideHostUid = self.model.roomInfo.creator;
+    
+    room.provideMeId = QN_User_id;
+    
+    QNUserExtension *userInfo = [QNUserExtension new];
+    userInfo.userExtRoleType = self.model.userInfo.role;
+    room.provideUserExtension = userInfo;
+    
+    [self joinRoom:room];
+}
+
+- (void)joinRoom:(QNRTCRoomEntity *)roomEntity {
+    [super joinRoom:roomEntity];
+}
 
 //本地音频轨道参数
 - (void)setUpLocalAudioTrackParams:(QNAudioTrackParams *)audioTrackParams{
@@ -64,18 +82,9 @@
     self.localAudioTrack.tag = audioTrackParams.tag.length == 0 ? @"audio" : audioTrackParams.tag;
 }
 
-//- (void)joinRoom:(QNRTCRoomEntity *)roomEntity {
-//    self.roomEntity = roomEntity;
-//    [self.rtcClient join:self.roomEntity.provideRoomToken];
-//}
-
-//- (void)closeRoom {
-//    [self dismissViewControllerAnimated:YES completion:nil];
-//}
-//
-//- (void)leaveRoom {
-//    [self.rtcClient leave];
-//}
+- (void)leaveRoom {
+    [super leaveRoom];
+}
 
 //启用视频模块
 - (void)enableVideo{
@@ -524,6 +533,20 @@
         _userViewArray = self.renderBackgroundView.subviews;
     }
     return _userViewArray;
+}
+
+-(QNSendMsgTool *)sendMsgTool {
+    if (!_sendMsgTool) {
+        _sendMsgTool = [[QNSendMsgTool alloc]initWithToId:self.model.imConfig.imGroupId];
+    }
+    return _sendMsgTool;
+}
+
+- (QNRoomTools *)roomTool {
+    if (!_roomTool) {
+        _roomTool = [[QNRoomTools alloc]initWithType:self.model.roomType roomId:self.model.roomInfo.roomId];
+    }
+    return _roomTool;
 }
 
 @end

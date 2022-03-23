@@ -170,6 +170,7 @@
 		77F61AAB27E9DB0E0031C415 /* QNIMSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 772C246B2743A024003C3323 /* QNIMSDK.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		77F61AB427EAC50E0031C415 /* LATWhiteboard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77F61AB227EAC5070031C415 /* LATWhiteboard.framework */; platformFilter = ios; };
 		77F61AB527EAC50E0031C415 /* LATWhiteboard.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 77F61AB227EAC5070031C415 /* LATWhiteboard.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		77F61ABB27EAF6CF0031C415 /* QNVoiceChatBottomOperationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F61ABA27EAF6CF0031C415 /* QNVoiceChatBottomOperationView.m */; };
 		77F61BC5271528F2003C93A7 /* QNRepairLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F61BC4271528F2003C93A7 /* QNRepairLiveViewController.m */; };
 		77F61BD0271550ED003C93A7 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77CE3CA52611C90D000FFE64 /* GLKit.framework */; };
 		77FC1C29263126C3006F8731 /* QNPersonalViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC1C28263126C3006F8731 /* QNPersonalViewModel.m */; };
@@ -529,6 +530,8 @@
 		77F61AA227E20C0B0031C415 /* QNVoiceChatRoomCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNVoiceChatRoomCell.h; sourceTree = "<group>"; };
 		77F61AA327E20C0B0031C415 /* QNVoiceChatRoomCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNVoiceChatRoomCell.m; sourceTree = "<group>"; };
 		77F61AB227EAC5070031C415 /* LATWhiteboard.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = LATWhiteboard.framework; sourceTree = SOURCE_ROOT; };
+		77F61AB927EAF6CE0031C415 /* QNVoiceChatBottomOperationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNVoiceChatBottomOperationView.h; sourceTree = "<group>"; };
+		77F61ABA27EAF6CF0031C415 /* QNVoiceChatBottomOperationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNVoiceChatBottomOperationView.m; sourceTree = "<group>"; };
 		77F61BC3271528F2003C93A7 /* QNRepairLiveViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNRepairLiveViewController.h; sourceTree = "<group>"; };
 		77F61BC4271528F2003C93A7 /* QNRepairLiveViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNRepairLiveViewController.m; sourceTree = "<group>"; };
 		77F75174261D9DC30016AF58 /* QNLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNLoginViewController.h; sourceTree = "<group>"; };
@@ -1016,6 +1019,8 @@
 				7769D8EF278C5A16008FB1F6 /* QNVoiceChatRoomBottomView.m */,
 				77F61AA227E20C0B0031C415 /* QNVoiceChatRoomCell.h */,
 				77F61AA327E20C0B0031C415 /* QNVoiceChatRoomCell.m */,
+				77F61AB927EAF6CE0031C415 /* QNVoiceChatBottomOperationView.h */,
+				77F61ABA27EAF6CF0031C415 /* QNVoiceChatBottomOperationView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1655,6 +1660,7 @@
 				77F61AA127E2077B0031C415 /* QNAlertViewController.m in Sources */,
 				7714E5C62701BF73004B7859 /* QNRepairListViewModel.m in Sources */,
 				775E15DC26280AD100BD135C /* QNHomeListView.m in Sources */,
+				77F61ABB27EAF6CF0031C415 /* QNVoiceChatBottomOperationView.m in Sources */,
 				777EF3F72731124500AC010A /* QNFunnyListController.m in Sources */,
 				775CE15D275DB62F006A7F0C /* CSBigView.m in Sources */,
 				77877D842758DFD400BE3509 /* QNCreateMovieRoomController.m in Sources */,

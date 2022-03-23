@@ -234,6 +234,7 @@
         vc.listModel = self.listModel;
         vc.model = self.model;
         vc.model.userInfo.role = @"roomAudience";
+        vc.model.roomType = QN_Room_Type_Movie;
         vc.inviteCode = [alertController.textFields firstObject].text;
         vc.modalPresentationStyle = UIModalPresentationFullScreen;
         [self presentViewController:vc animated:YES completion:nil];
@@ -272,6 +273,7 @@
         vc.listModel = self.listModel;
         vc.model = self.model;
         vc.model.userInfo.role = @"roomHost";
+        vc.model.roomType = QN_Room_Type_Movie;
         vc.modalPresentationStyle = UIModalPresentationFullScreen;
         [self presentViewController:vc animated:YES completion:nil];
         

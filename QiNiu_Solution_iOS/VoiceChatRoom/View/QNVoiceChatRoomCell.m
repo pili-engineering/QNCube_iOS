@@ -6,6 +6,7 @@
 //
 
 #import "QNVoiceChatRoomCell.h"
+#import "QNRTCRoomEntity.h"
 
 @interface QNVoiceChatRoomCell ()
 @property (nonatomic, strong) UIView *bgView;
