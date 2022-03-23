@@ -276,7 +276,7 @@
 		7732394A275A0FE300666081 /* QNMoreMovieRoomController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNMoreMovieRoomController.m; sourceTree = "<group>"; };
 		7732394C275A11DD00666081 /* QNMovieRoomListCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNMovieRoomListCell.h; sourceTree = "<group>"; };
 		7732394D275A11DD00666081 /* QNMovieRoomListCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNMovieRoomListCell.m; sourceTree = "<group>"; };
-		773F96EE271E912C00B50F84 /* QNWhiteBoardSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QNWhiteBoardSDK.framework; sourceTree = SOURCE_ROOT; };
+		773F96EE271E912C00B50F84 /* QNWhiteBoardSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QNWhiteBoardSDK.framework; path = QiNiu_Solution_iOS/Libraries/QNWhiteBoardSDK.framework; sourceTree = SOURCE_ROOT; };
 		7750EE7C2611A1E0009EED03 /* QiNiu_Solution_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QiNiu_Solution_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7750EE7F2611A1E0009EED03 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		7750EE802611A1E0009EED03 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -511,7 +511,7 @@
 		77F61AA027E2077B0031C415 /* QNAlertViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNAlertViewController.m; sourceTree = "<group>"; };
 		77F61AA227E20C0B0031C415 /* QNVoiceChatRoomCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNVoiceChatRoomCell.h; sourceTree = "<group>"; };
 		77F61AA327E20C0B0031C415 /* QNVoiceChatRoomCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNVoiceChatRoomCell.m; sourceTree = "<group>"; };
-		77F61AB227EAC5070031C415 /* LATWhiteboard.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = LATWhiteboard.framework; sourceTree = SOURCE_ROOT; };
+		77F61AB227EAC5070031C415 /* LATWhiteboard.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LATWhiteboard.framework; path = QiNiu_Solution_iOS/Libraries/LATWhiteboard.framework; sourceTree = SOURCE_ROOT; };
 		77F61AB927EAF6CE0031C415 /* QNVoiceChatBottomOperationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNVoiceChatBottomOperationView.h; sourceTree = "<group>"; };
 		77F61ABA27EAF6CF0031C415 /* QNVoiceChatBottomOperationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNVoiceChatBottomOperationView.m; sourceTree = "<group>"; };
 		77F61BC3271528F2003C93A7 /* QNRepairLiveViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNRepairLiveViewController.h; sourceTree = "<group>"; };
@@ -725,10 +725,7 @@
 		7750EE7E2611A1E0009EED03 /* QiNiu_Solution_iOS */ = {
 			isa = PBXGroup;
 			children = (
-				77F61AB227EAC5070031C415 /* LATWhiteboard.framework */,
-				773F96EE271E912C00B50F84 /* QNWhiteBoardSDK.framework */,
-				772C246B2743A024003C3323 /* QNIMSDK.framework */,
-				7769D8FE278EEEF5008FB1F6 /* QNAISDK.framework */,
+				77F4279A27EB3787007999A4 /* Libraries */,
 				775E1614262E7FAA00BD135C /* Main */,
 				77808453261EFA9C008992BB /* AppHome */,
 				772FCC3A2663F13E00EA25EE /* CustomView */,
@@ -1266,6 +1263,17 @@
 				7764C117263832E500A8BC8B /* Model */,
 			);
 			path = ChatRoom;
+			sourceTree = "<group>";
+		};
+		77F4279A27EB3787007999A4 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				77F61AB227EAC5070031C415 /* LATWhiteboard.framework */,
+				773F96EE271E912C00B50F84 /* QNWhiteBoardSDK.framework */,
+				772C246B2743A024003C3323 /* QNIMSDK.framework */,
+				7769D8FE278EEEF5008FB1F6 /* QNAISDK.framework */,
+			);
+			path = Libraries;
 			sourceTree = "<group>";
 		};
 		77F7515B261D81970016AF58 /* QNInterview */ = {
@@ -1848,8 +1856,26 @@
 				EXCLUDED_ARCHS = "EXCLUDED_ARCHS__EFFECTIVE_PLATFORM_SUFFIX_simulator__NATIVE_ARCH_64_BIT_x86_64=arm64 arm64e armv7 armv7s armv6 armv8 EXCLUDED_ARCHS=$(inherited) $(EXCLUDED_ARCHS__EFFECTIVE_PLATFORM_SUFFIX_$(EFFECTIVE_PLATFORM_SUFFIX)__NATIVE_ARCH_64_BIT_$(NATIVE_ARCH_64_BIT))";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(PROJECT_DIR)/QiNiu_Solution_iOS/Libraries",
 					"$(PROJECT_DIR)/QiNiu_Solution_iOS",
 					"$(PROJECT_DIR)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking/AFNetworking.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardManager/IQKeyboardManager.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MBProgressHUD/MBProgressHUD.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MJExtension/MJExtension.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MJRefresh/MJRefresh.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MMMaterialDesignSpinner/MMMaterialDesignSpinner.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Masonry/Masonry.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SocketRocket/SocketRocket.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YYCategories/YYCategories.framework/Headers\"",
+					"\"$(SRCROOT)/QiNiu_Solution_iOS/Libraries/QNWhiteBoardSDK.framework\"",
+					"\"$(SRCROOT)/QiNiu_Solution_iOS/Libraries/LATWhiteboard.framework\"",
+					"\"$(SRCROOT)/QiNiu_Solution_iOS/Libraries/QNIMSDK.framework\"",
+					"\"$(SRCROOT)/QiNiu_Solution_iOS/Libraries/QNAISDK.framework\"",
 				);
 				INFOPLIST_FILE = QiNiu_Solution_iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1973,8 +1999,26 @@
 				EXCLUDED_ARCHS = "EXCLUDED_ARCHS__EFFECTIVE_PLATFORM_SUFFIX_simulator__NATIVE_ARCH_64_BIT_x86_64=arm64 arm64e armv7 armv7s armv6 armv8 EXCLUDED_ARCHS=$(inherited) $(EXCLUDED_ARCHS__EFFECTIVE_PLATFORM_SUFFIX_$(EFFECTIVE_PLATFORM_SUFFIX)__NATIVE_ARCH_64_BIT_$(NATIVE_ARCH_64_BIT))";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(PROJECT_DIR)/QiNiu_Solution_iOS/Libraries",
 					"$(PROJECT_DIR)/QiNiu_Solution_iOS",
 					"$(PROJECT_DIR)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking/AFNetworking.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardManager/IQKeyboardManager.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MBProgressHUD/MBProgressHUD.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MJExtension/MJExtension.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MJRefresh/MJRefresh.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MMMaterialDesignSpinner/MMMaterialDesignSpinner.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Masonry/Masonry.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SocketRocket/SocketRocket.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YYCategories/YYCategories.framework/Headers\"",
+					"\"$(SRCROOT)/QiNiu_Solution_iOS/Libraries/QNWhiteBoardSDK.framework\"",
+					"\"$(SRCROOT)/QiNiu_Solution_iOS/Libraries/LATWhiteboard.framework\"",
+					"\"$(SRCROOT)/QiNiu_Solution_iOS/Libraries/QNIMSDK.framework\"",
+					"\"$(SRCROOT)/QiNiu_Solution_iOS/Libraries/QNAISDK.framework\"",
 				);
 				INFOPLIST_FILE = QiNiu_Solution_iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
