@@ -39,8 +39,6 @@
 		7732390E2759F5D100666081 /* QNMovieOnlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7732390D2759F5D100666081 /* QNMovieOnlineView.m */; };
 		7732394B275A0FE300666081 /* QNMoreMovieRoomController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7732394A275A0FE300666081 /* QNMoreMovieRoomController.m */; };
 		7732394E275A11DD00666081 /* QNMovieRoomListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7732394D275A11DD00666081 /* QNMovieRoomListCell.m */; };
-		7744A8E4271ED2D600E82E51 /* LATWhiteboard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775B09132716D430001BEDC4 /* LATWhiteboard.framework */; };
-		7744A8E5271ED2D600E82E51 /* LATWhiteboard.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 775B09132716D430001BEDC4 /* LATWhiteboard.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7744A8E7271ED2E000E82E51 /* QNWhiteBoardSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 773F96EE271E912C00B50F84 /* QNWhiteBoardSDK.framework */; };
 		7744A8E8271ED2E000E82E51 /* QNWhiteBoardSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 773F96EE271E912C00B50F84 /* QNWhiteBoardSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7750EE812611A1E0009EED03 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7750EE802611A1E0009EED03 /* AppDelegate.m */; };
@@ -124,7 +122,6 @@
 		7771EB942768BA5300EDE1EB /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7771EB932768BA4C00EDE1EB /* libsqlite3.0.tbd */; };
 		7771EB962768BA6400EDE1EB /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7771EB952768BA5D00EDE1EB /* libz.tbd */; };
 		7771EB9B2769C37A00EDE1EB /* QNMovieLiveController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7771EB9A2769C37A00EDE1EB /* QNMovieLiveController.m */; };
-		777B7CD427E08C7300681585 /* floo-ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 777B7CD327E08C7300681585 /* floo-ios.framework */; };
 		777B7CDD27E1D36B00681585 /* QNRoomTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 777B7CDC27E1D36B00681585 /* QNRoomTools.m */; };
 		777B7CE127E1E26F00681585 /* QNSendMsgTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 777B7CE027E1E26F00681585 /* QNSendMsgTool.m */; };
 		777EF3F72731124500AC010A /* QNFunnyListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 777EF3F62731124500AC010A /* QNFunnyListController.m */; };
@@ -169,7 +166,10 @@
 		77F4F59A2762216F00B749FF /* QNRoomMicInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F4F5992762216F00B749FF /* QNRoomMicInfoModel.m */; };
 		77F61AA127E2077B0031C415 /* QNAlertViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F61AA027E2077B0031C415 /* QNAlertViewController.m */; };
 		77F61AA427E20C0B0031C415 /* QNVoiceChatRoomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F61AA327E20C0B0031C415 /* QNVoiceChatRoomCell.m */; };
-		77F61AA527E344080031C415 /* QNIMSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 772C246B2743A024003C3323 /* QNIMSDK.framework */; platformFilter = ios; };
+		77F61AAA27E9DB0E0031C415 /* QNIMSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 772C246B2743A024003C3323 /* QNIMSDK.framework */; platformFilter = ios; };
+		77F61AAB27E9DB0E0031C415 /* QNIMSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 772C246B2743A024003C3323 /* QNIMSDK.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		77F61AB427EAC50E0031C415 /* LATWhiteboard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77F61AB227EAC5070031C415 /* LATWhiteboard.framework */; platformFilter = ios; };
+		77F61AB527EAC50E0031C415 /* LATWhiteboard.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 77F61AB227EAC5070031C415 /* LATWhiteboard.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		77F61BC5271528F2003C93A7 /* QNRepairLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F61BC4271528F2003C93A7 /* QNRepairLiveViewController.m */; };
 		77F61BD0271550ED003C93A7 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77CE3CA52611C90D000FFE64 /* GLKit.framework */; };
 		77FC1C29263126C3006F8731 /* QNPersonalViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC1C28263126C3006F8731 /* QNPersonalViewModel.m */; };
@@ -204,8 +204,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				77F61AAB27E9DB0E0031C415 /* QNIMSDK.framework in Embed Frameworks */,
+				77F61AB527EAC50E0031C415 /* LATWhiteboard.framework in Embed Frameworks */,
 				7769D901278EEF04008FB1F6 /* QNAISDK.framework in Embed Frameworks */,
-				7744A8E5271ED2D600E82E51 /* LATWhiteboard.framework in Embed Frameworks */,
 				7744A8E8271ED2E000E82E51 /* QNWhiteBoardSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -297,7 +298,6 @@
 		7750EEA22611A1E1009EED03 /* QiNiu_Solution_iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QiNiu_Solution_iOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7750EEA62611A1E1009EED03 /* QiNiu_Solution_iOSUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QiNiu_Solution_iOSUITests.m; sourceTree = "<group>"; };
 		7750EEA82611A1E1009EED03 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		775B09132716D430001BEDC4 /* LATWhiteboard.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = LATWhiteboard.framework; sourceTree = SOURCE_ROOT; };
 		775CE148275DB615006A7F0C /* CSEmojiCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSEmojiCollectionViewCell.m; sourceTree = "<group>"; };
 		775CE149275DB616006A7F0C /* ConstantPart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstantPart.h; sourceTree = "<group>"; };
 		775CE14A275DB617006A7F0C /* CSMessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSMessageModel.m; sourceTree = "<group>"; };
@@ -441,7 +441,6 @@
 		7771EB952768BA5D00EDE1EB /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		7771EB992769C37A00EDE1EB /* QNMovieLiveController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNMovieLiveController.h; sourceTree = "<group>"; };
 		7771EB9A2769C37A00EDE1EB /* QNMovieLiveController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNMovieLiveController.m; sourceTree = "<group>"; };
-		777B7CD327E08C7300681585 /* floo-ios.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "floo-ios.framework"; sourceTree = SOURCE_ROOT; };
 		777B7CDB27E1D36B00681585 /* QNRoomTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNRoomTools.h; sourceTree = "<group>"; };
 		777B7CDC27E1D36B00681585 /* QNRoomTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNRoomTools.m; sourceTree = "<group>"; };
 		777B7CDF27E1E26F00681585 /* QNSendMsgTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNSendMsgTool.h; sourceTree = "<group>"; };
@@ -529,6 +528,7 @@
 		77F61AA027E2077B0031C415 /* QNAlertViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNAlertViewController.m; sourceTree = "<group>"; };
 		77F61AA227E20C0B0031C415 /* QNVoiceChatRoomCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNVoiceChatRoomCell.h; sourceTree = "<group>"; };
 		77F61AA327E20C0B0031C415 /* QNVoiceChatRoomCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNVoiceChatRoomCell.m; sourceTree = "<group>"; };
+		77F61AB227EAC5070031C415 /* LATWhiteboard.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = LATWhiteboard.framework; sourceTree = SOURCE_ROOT; };
 		77F61BC3271528F2003C93A7 /* QNRepairLiveViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNRepairLiveViewController.h; sourceTree = "<group>"; };
 		77F61BC4271528F2003C93A7 /* QNRepairLiveViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNRepairLiveViewController.m; sourceTree = "<group>"; };
 		77F75174261D9DC30016AF58 /* QNLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNLoginViewController.h; sourceTree = "<group>"; };
@@ -552,15 +552,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77F61AAA27E9DB0E0031C415 /* QNIMSDK.framework in Frameworks */,
+				77F61AB427EAC50E0031C415 /* LATWhiteboard.framework in Frameworks */,
 				7769D900278EEF04008FB1F6 /* QNAISDK.framework in Frameworks */,
 				7771EB962768BA6400EDE1EB /* libz.tbd in Frameworks */,
 				77CE3CA82611C91B000FFE64 /* VideoToolbox.framework in Frameworks */,
-				7744A8E4271ED2D600E82E51 /* LATWhiteboard.framework in Frameworks */,
 				77F61BD0271550ED003C93A7 /* GLKit.framework in Frameworks */,
 				7771EB942768BA5300EDE1EB /* libsqlite3.0.tbd in Frameworks */,
-				77F61AA527E344080031C415 /* QNIMSDK.framework in Frameworks */,
 				7744A8E7271ED2E000E82E51 /* QNWhiteBoardSDK.framework in Frameworks */,
-				777B7CD427E08C7300681585 /* floo-ios.framework in Frameworks */,
 				77CE3CA42611C8FF000FFE64 /* ReplayKit.framework in Frameworks */,
 				AC2F3FC7FDEAC261AAACB451 /* Pods_QiNiu_Solution_iOS.framework in Frameworks */,
 			);
@@ -737,9 +736,8 @@
 		7750EE7E2611A1E0009EED03 /* QiNiu_Solution_iOS */ = {
 			isa = PBXGroup;
 			children = (
-				777B7CD327E08C7300681585 /* floo-ios.framework */,
+				77F61AB227EAC5070031C415 /* LATWhiteboard.framework */,
 				773F96EE271E912C00B50F84 /* QNWhiteBoardSDK.framework */,
-				775B09132716D430001BEDC4 /* LATWhiteboard.framework */,
 				772C246B2743A024003C3323 /* QNIMSDK.framework */,
 				7769D8FE278EEEF5008FB1F6 /* QNAISDK.framework */,
 				772FCC3A2663F13E00EA25EE /* CustomView */,
@@ -1931,7 +1929,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W2TP34G2MM;
+				DEVELOPMENT_TEAM = GDFHW66V92;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = "EXCLUDED_ARCHS__EFFECTIVE_PLATFORM_SUFFIX_simulator__NATIVE_ARCH_64_BIT_x86_64=arm64 arm64e armv7 armv7s armv6 armv8 EXCLUDED_ARCHS=$(inherited) $(EXCLUDED_ARCHS__EFFECTIVE_PLATFORM_SUFFIX_$(EFFECTIVE_PLATFORM_SUFFIX)__NATIVE_ARCH_64_BIT_$(NATIVE_ARCH_64_BIT))";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1955,7 +1953,7 @@
 					"$(PROJECT_DIR)/QiNiu_Solution_iOS/Effect/st_mobile_sdk/lib/ios_sim",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-all_load",
@@ -2056,7 +2054,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W2TP34G2MM;
+				DEVELOPMENT_TEAM = GDFHW66V92;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = "EXCLUDED_ARCHS__EFFECTIVE_PLATFORM_SUFFIX_simulator__NATIVE_ARCH_64_BIT_x86_64=arm64 arm64e armv7 armv7s armv6 armv8 EXCLUDED_ARCHS=$(inherited) $(EXCLUDED_ARCHS__EFFECTIVE_PLATFORM_SUFFIX_$(EFFECTIVE_PLATFORM_SUFFIX)__NATIVE_ARCH_64_BIT_$(NATIVE_ARCH_64_BIT))";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2080,7 +2078,7 @@
 					"$(PROJECT_DIR)/QiNiu_Solution_iOS/Effect/st_mobile_sdk/lib/ios_sim",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",

@@ -4,38 +4,6 @@
 <dict>
 	<key>files</key>
 	<dict>
-		<key>.DS_Store</key>
-		<data>
-		+eiUxeYsNyRKh8MJtneqcNP/LBM=
-		</data>
-		<key>Frameworks/floo-ios.framework/Info.plist</key>
-		<data>
-		plVrj/E3tRpzlK0nJCI1gvm9HZs=
-		</data>
-		<key>Frameworks/floo-ios.framework/_CodeSignature/CodeDirectory</key>
-		<data>
-		UPj7TWLl9ivtmOI/NAej4MAe7sc=
-		</data>
-		<key>Frameworks/floo-ios.framework/_CodeSignature/CodeRequirements</key>
-		<data>
-		B/yPVDKpP657h2O188rSVMsFyN4=
-		</data>
-		<key>Frameworks/floo-ios.framework/_CodeSignature/CodeRequirements-1</key>
-		<data>
-		LIHjtJ7h3yMLZEtL4lgAURFxRwI=
-		</data>
-		<key>Frameworks/floo-ios.framework/_CodeSignature/CodeResources</key>
-		<data>
-		phF20WR+J/Dw01wkW45SvOty7RE=
-		</data>
-		<key>Frameworks/floo-ios.framework/_CodeSignature/CodeSignature</key>
-		<data>
-		MVn6wgsw7uesHWhRv6kQzQPpKPk=
-		</data>
-		<key>Frameworks/floo-ios.framework/floo-ios</key>
-		<data>
-		Vu5n0UErajtlki2KDm2k2W1/xok=
-		</data>
 		<key>Headers/QNIMApplication.h</key>
 		<data>
 		wqS1RPFSr0Yz4BSeP/qiJ+rj64g=
@@ -211,83 +179,6 @@
 	</dict>
 	<key>files2</key>
 	<dict>
-		<key>Frameworks/floo-ios.framework/Info.plist</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			plVrj/E3tRpzlK0nJCI1gvm9HZs=
-			</data>
-			<key>hash2</key>
-			<data>
-			N7OtGjubqE7zwphNBgFsyeT2TQ5mQlipnEXQYp/b4YA=
-			</data>
-		</dict>
-		<key>Frameworks/floo-ios.framework/_CodeSignature/CodeDirectory</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			UPj7TWLl9ivtmOI/NAej4MAe7sc=
-			</data>
-			<key>hash2</key>
-			<data>
-			fUe0hOKJUGPmrl1KuG8IfZen7szUHGbuzGK5o0knmG8=
-			</data>
-		</dict>
-		<key>Frameworks/floo-ios.framework/_CodeSignature/CodeRequirements</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			B/yPVDKpP657h2O188rSVMsFyN4=
-			</data>
-			<key>hash2</key>
-			<data>
-			gy66dSWZx0p/NVXEASY6B86iRxCHtRTzUVYsKTeW/HE=
-			</data>
-		</dict>
-		<key>Frameworks/floo-ios.framework/_CodeSignature/CodeRequirements-1</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			LIHjtJ7h3yMLZEtL4lgAURFxRwI=
-			</data>
-			<key>hash2</key>
-			<data>
-			Y2kk3akAjI7CX46+Fga3gNIycSP1zqLtJfxKy5TiDbw=
-			</data>
-		</dict>
-		<key>Frameworks/floo-ios.framework/_CodeSignature/CodeResources</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			phF20WR+J/Dw01wkW45SvOty7RE=
-			</data>
-			<key>hash2</key>
-			<data>
-			v0iGpyulB967iZHDN4bILrNNxbTlJI4ixDv705wFX14=
-			</data>
-		</dict>
-		<key>Frameworks/floo-ios.framework/_CodeSignature/CodeSignature</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			MVn6wgsw7uesHWhRv6kQzQPpKPk=
-			</data>
-			<key>hash2</key>
-			<data>
-			GEqt02nB6NHiO5v6X3XuST3HWLj3sWBtobZaqDVIMH4=
-			</data>
-		</dict>
-		<key>Frameworks/floo-ios.framework/floo-ios</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			Vu5n0UErajtlki2KDm2k2W1/xok=
-			</data>
-			<key>hash2</key>
-			<data>
-			Z8ZHP6pgJLIURZPoG629f3Y04eh+jOpcxv0z7Bmkmfk=
-			</data>
-		</dict>
 		<key>Headers/QNIMApplication.h</key>
 		<dict>
 			<key>hash</key>

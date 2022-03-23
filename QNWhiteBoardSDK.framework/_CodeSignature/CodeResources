@@ -4,34 +4,6 @@
 <dict>
 	<key>files</key>
 	<dict>
-		<key>Frameworks/LATWhiteboard.framework/Assets.car</key>
-		<data>
-		Px2T+fHOvL3QeWpuRI852fRJxXQ=
-		</data>
-		<key>Frameworks/LATWhiteboard.framework/Info.plist</key>
-		<data>
-		bzpAD/WWwwrRMUT674jsuU0BSaM=
-		</data>
-		<key>Frameworks/LATWhiteboard.framework/LATWhiteboard</key>
-		<data>
-		6IanKOIgH+CMyR3F+z7cgXGAjm8=
-		</data>
-		<key>Frameworks/LATWhiteboard.framework/_CodeSignature/CodeResources</key>
-		<data>
-		bqLlsML35umLp9adHSsWwE05VRk=
-		</data>
-		<key>Frameworks/LATWhiteboard.framework/loadingAnimation.json</key>
-		<data>
-		DJczD8+ZIcJuLHixB9Mg06ayIJw=
-		</data>
-		<key>Frameworks/LATWhiteboard.framework/loadingAnimation.png</key>
-		<data>
-		jLtKbopHfE6HjSWK9kBHwHPjAOA=
-		</data>
-		<key>Frameworks/LATWhiteboard.framework/logService.json</key>
-		<data>
-		KNpBohyxF8YyOdA/zXPUAhmw2LU=
-		</data>
 		<key>Headers/QNActiveWidgetInfo.h</key>
 		<data>
 		fPZ3R/Y3kLesLOnp7IDZ/AcDxwM=
@@ -114,7 +86,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		YnUPWvSdEjfNN5oNiQG4YawFXdw=
+		b/XowW3YQuvbHB6G954gTZRaEJE=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -123,83 +95,6 @@
 	</dict>
 	<key>files2</key>
 	<dict>
-		<key>Frameworks/LATWhiteboard.framework/Assets.car</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			Px2T+fHOvL3QeWpuRI852fRJxXQ=
-			</data>
-			<key>hash2</key>
-			<data>
-			M/dyW80dnKBOd2mncvprLfMpy9Zk400uoYPQZ/kZBAk=
-			</data>
-		</dict>
-		<key>Frameworks/LATWhiteboard.framework/Info.plist</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			bzpAD/WWwwrRMUT674jsuU0BSaM=
-			</data>
-			<key>hash2</key>
-			<data>
-			526qxVz3OuFcuyogxBEeUna259oGXHIb8dJU322LQbw=
-			</data>
-		</dict>
-		<key>Frameworks/LATWhiteboard.framework/LATWhiteboard</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			6IanKOIgH+CMyR3F+z7cgXGAjm8=
-			</data>
-			<key>hash2</key>
-			<data>
-			q2qQQCnhQHbmJ6IcfwbUUyFEPA/U2SYWv7bUzhF1m24=
-			</data>
-		</dict>
-		<key>Frameworks/LATWhiteboard.framework/_CodeSignature/CodeResources</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			bqLlsML35umLp9adHSsWwE05VRk=
-			</data>
-			<key>hash2</key>
-			<data>
-			3LeDK1c1hxsMzAfCyoBjGBvfzQF7HLPYjG17lPpBGNk=
-			</data>
-		</dict>
-		<key>Frameworks/LATWhiteboard.framework/loadingAnimation.json</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			DJczD8+ZIcJuLHixB9Mg06ayIJw=
-			</data>
-			<key>hash2</key>
-			<data>
-			vq/dO6K8biK3zEagQa3qvU4hxOXaeduHT5r0RzTMr2s=
-			</data>
-		</dict>
-		<key>Frameworks/LATWhiteboard.framework/loadingAnimation.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			jLtKbopHfE6HjSWK9kBHwHPjAOA=
-			</data>
-			<key>hash2</key>
-			<data>
-			UQmGJ3af7hW4STsMu9eGUT6mOkcQHfAueENMGs6VzAg=
-			</data>
-		</dict>
-		<key>Frameworks/LATWhiteboard.framework/logService.json</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			KNpBohyxF8YyOdA/zXPUAhmw2LU=
-			</data>
-			<key>hash2</key>
-			<data>
-			iwt3bpKJVeOh9aNHBazSvNbT3eDJmnNex38eBHCqcPU=
-			</data>
-		</dict>
 		<key>Headers/QNActiveWidgetInfo.h</key>
 		<dict>
 			<key>hash</key>
