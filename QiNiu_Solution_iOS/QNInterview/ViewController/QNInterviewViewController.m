@@ -15,7 +15,7 @@
 #import "QNNetworkUtil.h"
 #import <YYCategories/YYCategories.h>
 #import "QNRoomUserView.h"
-#import "RCChatRoomView.h"
+#import "QNChatRoomView.h"
 #import "QNIMMessageModel.h"
 #import "MBProgressHUD+QNShow.h"
 #import <SDWebImage/SDWebImage.h>
@@ -26,14 +26,14 @@
 
 #define QN_DELAY_MS 5000
 
-@interface QNInterviewViewController ()<QNIMChatServiceProtocol,UIGestureRecognizerDelegate,QNRTCClientDelegate,RCCRInputBarControlDelegate>
+@interface QNInterviewViewController ()<QNIMChatServiceProtocol,UIGestureRecognizerDelegate,QNRTCClientDelegate,QNInputBarControlDelegate>
 
 @property (nonatomic, strong) NSString *mergeJobId;
 @property (nonatomic, strong) UIView *buttonView;
 @property (nonatomic, strong) QNJoinInterviewModel *interviewModel;
 @property (nonatomic, strong) NSMutableArray *viewsArray;
 
-@property (nonatomic, strong) RCChatRoomView * chatRoomView;
+@property (nonatomic, strong) QNChatRoomView * chatRoomView;
 @property (nonatomic, strong) UIButton *commentButton;
 @property (nonatomic, strong) UIButton *closeButton;
 @property (nonatomic, strong) UIButton *screenShareButton;//屏幕共享
@@ -102,17 +102,6 @@
 
 //进房
 - (void)joinInterViewRoom {
-        
-    QNAudioTrackParams *param = [QNAudioTrackParams new];
-    param.volume = 0.5;
-    [self setUpLocalAudioTrackParams:param];
-        
-    QNVideoTrackParams *params = [QNVideoTrackParams new];
-    params.width = 540;
-    params.height = 960;
-    [self setUpLocalVideoParams:params];
-    [self.localVideoTrack startCapture];
-    [self.localVideoTrack play:self.preview];
     
     QNRTCRoomEntity *room = [[QNRTCRoomEntity alloc]init];
     room.providePushUrl = [NSString stringWithFormat:@"rtmp://pili-publish.qnsdk.com/sdk-live/%@", self.interviewInfoModel.ID];
@@ -133,7 +122,7 @@
     [self.preview addGestureRecognizer:tap];
     
     [[QNIMGroupService sharedOption] joinGroupWithGroupId:self.interviewModel.imConfig.imGroupId message:@"" completion:^(QNIMError * _Nonnull error) {
-        QNIMMessageObject *message = [self.sendMsgTool createJoinRoomMessage];
+        QNIMMessageObject *message = [self.messageCreater createJoinRoomMessage];
         [[QNIMChatService sharedOption] sendMessage:message];
         [self.chatRoomView sendMessage:message];
     }];
@@ -260,7 +249,7 @@
 
 - (void)onTouchSendButton:(NSString *)text {
     
-    QNIMMessageObject *message = [self.sendMsgTool createChatMessage:text];
+    QNIMMessageObject *message = [self.messageCreater createChatMessage:text];
     [[QNIMChatService sharedOption] sendMessage:message];
     [self.chatRoomView sendMessage:message];
 }
@@ -275,7 +264,7 @@
 //离开房间
 - (void)closeRoom {
     
-    QNIMMessageObject *message = [self.sendMsgTool createLeaveRoomMessage];
+    QNIMMessageObject *message = [self.messageCreater createLeaveRoomMessage];
     [[QNIMChatService sharedOption] sendMessage:message];
     [self.chatRoomView sendMessage:message];
     
@@ -300,7 +289,7 @@
     if (@available(iOS 11.0, *)) {
         bottomExtraDistance = [self getIPhonexExtraBottomHeight];
     }
-    self.chatRoomView = [[RCChatRoomView alloc] initWithFrame:CGRectMake(0, kScreenHeight - (237 +50)  - bottomExtraDistance, kScreenWidth, 237+50)];
+    self.chatRoomView = [[QNChatRoomView alloc] initWithFrame:CGRectMake(0, kScreenHeight - (237 +50)  - bottomExtraDistance, kScreenWidth, 237+50)];
     
     self.chatRoomView.commentBtn = self.commentButton;
     [self.view insertSubview:self.chatRoomView atIndex:2];

@@ -23,7 +23,6 @@
 #import "QNMovieMemberListController.h"
 #import "QNInvitationModel.h"
 #import "QNMicSeatMessageModel.h"
-#import "QNUserMicSeatModel.h"
 #import "QNAudioTrackParams.h"
 #import "QNVideoTrackParams.h"
 #import "QNMovieMicController.h"
@@ -93,7 +92,7 @@
         [arr addObject:model2];
     }
     
-    [self.roomTool requestJoinRoomWithParams:[QNAttrsModel mj_keyValuesArrayWithObjectArray:arr] success:^(QNRoomDetailModel * _Nonnull roomDetailodel) {
+    [self.roomRequest requestJoinRoomWithParams:[QNAttrsModel mj_keyValuesArrayWithObjectArray:arr] success:^(QNRoomDetailModel * _Nonnull roomDetailodel) {
         self.model = roomDetailodel;
         self.allUserList = self.model.allUserList;
         QNUserInfo *userInfo = [QNUserInfo new];
@@ -246,7 +245,7 @@
 - (void)publishTrack {
     
     //发送上麦信令
-    QNIMMessageObject *message = [self.sendMsgTool createOnMicMessage];
+    QNIMMessageObject *message = [self.messageCreater createOnMicMessage];
     [self.chatVc sendMessageWithMessage:message];
     
     self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatioAndFill;
@@ -446,7 +445,7 @@
     __weak typeof(self)weakSelf = self;
     vc.invitationClickedBlock = ^(QNUserInfo * _Nonnull itemModel) {
         
-        QNIMMessageObject *message = [weakSelf.sendMsgTool createInviteMessageWithInvitationName:@"watchMoviesTogether" receiverId:itemModel.userId];
+        QNIMMessageObject *message = [weakSelf.messageCreater createInviteMessageWithInvitationName:@"watchMoviesTogether" receiverId:itemModel.userId];
         [weakSelf.chatVc sendMessageWithMessage:message];
     };
     [self addChildViewController:vc];
@@ -509,7 +508,7 @@
 
 - (void)requestLeave {
 
-    [self.roomTool requestLeaveRoom];
+    [self.roomRequest requestLeaveRoom];
     [self.navigationController popViewControllerAnimated:YES];
     [self leaveRoom];
         
@@ -528,7 +527,7 @@
     
     UIAlertAction *cancelBtn = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         //发送拒绝连麦信令
-        QNIMMessageObject *message = [weakSelf.sendMsgTool createRejectInviteMessageWithInvitationName:model.data.invitationName receiverId:model.data.invitation.initiatorUid];
+        QNIMMessageObject *message = [weakSelf.messageCreater createRejectInviteMessageWithInvitationName:model.data.invitationName receiverId:model.data.invitation.initiatorUid];
         [weakSelf.chatVc sendMessageWithMessage:message];
         
     }];
@@ -536,7 +535,7 @@
     
     UIAlertAction *changeBtn = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         //发送接收连麦信令
-        QNIMMessageObject *message = [weakSelf.sendMsgTool createAcceptInviteMessageWithInvitationName:model.data.invitationName receiverId:model.data.invitation.initiatorUid];
+        QNIMMessageObject *message = [weakSelf.messageCreater createAcceptInviteMessageWithInvitationName:model.data.invitationName receiverId:model.data.invitation.initiatorUid];
         [weakSelf.chatVc sendMessageWithMessage:message];
         //显示连麦画面
         [weakSelf showRTCView];
@@ -613,7 +612,7 @@
             [weakSelf.rtcClient leave];
 //            [weakSelf.rtcClient unpublish:@[weakSelf.localVideoTrack,weakSelf.localAudioTrack]];
                 //发送下麦信令
-            QNIMMessageObject *message = [weakSelf.sendMsgTool createDownMicMessage];
+            QNIMMessageObject *message = [weakSelf.messageCreater createDownMicMessage];
             [weakSelf.chatVc sendMessageWithMessage:message];
         }
     };
@@ -658,7 +657,7 @@
 //请求房间麦位
 - (void)requestAllMicSeat {
     
-    [self.roomTool requestRoomMicInfoSuccess:^(QNRoomDetailModel * _Nonnull roomDetailodel) {
+    [self.roomRequest requestRoomMicInfoSuccess:^(QNRoomDetailModel * _Nonnull roomDetailodel) {
         self.micInfoModel = [QNRoomMicInfoModel mj_objectWithKeyValues:roomDetailodel.mj_keyValues];
         } failure:^(NSError * _Nonnull error) {
             
@@ -669,7 +668,7 @@
 //请求上麦接口
 - (void)requestUpMicSeat {
     
-    [self.roomTool requestUpMicSeatWithUserExtRoleType:@"" clientRoleType:0 success:^{} failure:^(NSError * _Nonnull error) {}];
+    [self.roomRequest requestUpMicSeatWithUserExtRoleType:@"" clientRoleType:0 success:^{} failure:^(NSError * _Nonnull error) {}];
 }
 
 //请求下麦接口
@@ -735,7 +734,7 @@
 - (void)RTCClient:(QNRTCClient *)client didConnectionStateChanged:(QNConnectionState)state disconnectedInfo:(QNConnectionDisconnectedInfo *)info {
     
     if (state == QNConnectionStateConnected) {
-        [self.roomTool requestRoomHeartBeatWithInterval:@"3"];
+        [self.roomRequest requestRoomHeartBeatWithInterval:@"3"];
         if ([[[NSUserDefaults standardUserDefaults] objectForKey:QN_ACCOUNT_ID_KEY] isEqualToString:self.model.roomInfo.creator]) {
             [self.rtcClient startLiveStreamingWithTranscoding:self.mergeConfig];
         } else {

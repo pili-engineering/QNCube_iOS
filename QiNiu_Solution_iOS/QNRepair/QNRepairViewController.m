@@ -10,7 +10,7 @@
 #import "QNNetworkUtil.h"
 #import "QNJoinRepairModel.h"
 #import <MJExtension/MJExtension.h>
-#import "RCChatRoomView.h"
+#import "QNChatRoomView.h"
 #import "QNRoomUserView.h"
 #import "QNIMMessageModel.h"
 #import <YYCategories/YYCategories.h>
@@ -28,7 +28,7 @@
 
 @property (nonatomic, strong) QNJoinRepairModel *repairModel;
 
-@property (nonatomic, strong) RCChatRoomView * chatRoomView;
+@property (nonatomic, strong) QNChatRoomView * chatRoomView;
 
 @property (nonatomic, strong) QNRepairWhiteBoardController *whiteBoard;
 @property (nonatomic, strong) UIView *wbBgView;
@@ -91,7 +91,7 @@
         [self.rtcClient stopLiveStreamingWithTranscoding:self.config];
     }
     
-    QNIMMessageObject *message = [self.sendMsgTool createLeaveRoomMessage];
+    QNIMMessageObject *message = [self.messageCreater createLeaveRoomMessage];
     [[QNIMChatService sharedOption] sendMessage:message];
     
     NSString *str = [NSString stringWithFormat:@"repair/leaveRoom/%@",self.itemModel.roomId];
@@ -150,7 +150,7 @@
     }
     
     [[QNIMGroupService sharedOption] joinGroupWithGroupId:self.repairModel.imConfig.imGroupId message:@"" completion:^(QNIMError * _Nonnull error) {
-        QNIMMessageObject *message = [self.sendMsgTool createJoinRoomMessage];
+        QNIMMessageObject *message = [self.messageCreater createJoinRoomMessage];
         [[QNIMChatService sharedOption] sendMessage:message];
         [self.chatRoomView sendMessage:message];
     }];
@@ -180,7 +180,7 @@
         //语音识别成功，发送识别消息
         NSString *content = [wealSelf audioWithTranscript:result.transcript];
         if (result.isFinal == 1 && content.length > 0) {
-            QNIMMessageObject *message = [self.sendMsgTool createChatMessage:content];
+            QNIMMessageObject *message = [self.messageCreater createChatMessage:content];
             [[QNIMChatService sharedOption] sendMessage:message];
             [self.chatRoomView sendMessage:message];
                         
@@ -326,8 +326,7 @@
 
 // 退出房间
 - (void)conferenceAction:(UIButton *)conferenceButton {
-    
-    
+        
     [self dismissViewControllerAnimated:YES completion:nil];
   
 }
@@ -354,7 +353,7 @@
         bottomExtraDistance = [self getIPhonexExtraBottomHeight];
     }
     
-    self.chatRoomView = [[RCChatRoomView alloc] initWithFrame:CGRectMake(30, kScreenHeight - (237 +50)  - bottomExtraDistance, kScreenWidth, 237+50)];
+    self.chatRoomView = [[QNChatRoomView alloc] initWithFrame:CGRectMake(30, kScreenHeight - (237 +50)  - bottomExtraDistance, kScreenWidth, 237+50)];
     [self.whiteBoard.view addSubview:self.chatRoomView];
 
 }
@@ -371,14 +370,9 @@
 
 - (void)RTCClient:(QNRTCClient *)client didStartLiveStreamingWith:(NSString *)streamID {
     
-    QNVideoTrackParams *params = [QNVideoTrackParams new];
-    params.width = 540;
-    params.height = 960;
-    [self setScreenTrackParams:params];
-    
     QNTranscodingLiveStreamingTrack *pushVideoTrack = [QNTranscodingLiveStreamingTrack new];
     pushVideoTrack.trackId = self.localVideoTrack.trackID;
-    pushVideoTrack.frame = CGRectMake(0, 0, params.width, params.height);
+    pushVideoTrack.frame = CGRectMake(0, 0, 540, 960);
     
     QNTranscodingLiveStreamingTrack *pushAudioTrack = [QNTranscodingLiveStreamingTrack new];
     pushAudioTrack.trackId = self.localAudioTrack.trackID;

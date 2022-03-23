@@ -16,14 +16,14 @@
 #import "QNVideoTrackParams.h"
 #import "QNApplyOnSeatView.h"
 #import <UIKit/UIKit.h>
-#import "RCChatRoomView.h"
+#import "QNChatRoomView.h"
 #import "QNIMMessageModel.h"
 #import <YYCategories/YYCategories.h>
 #import "QNSeatNumModel.h"
 
 @interface QNShowRoomController ()<QNRTCClientDelegate,UITextFieldDelegate,QNIMChatServiceProtocol>
 
-@property (nonatomic, strong) RCChatRoomView * chatRoomView;
+@property (nonatomic, strong) QNChatRoomView * chatRoomView;
 
 @property (nonatomic, strong) UILabel *titleLabel;
 
@@ -106,7 +106,7 @@
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"role"] = self.model.userInfo.role;
-    [self.roomTool requestJoinRoomWithParams:dic success:^(QNRoomDetailModel * _Nonnull roomDetailodel) {
+    [self.roomRequest requestJoinRoomWithParams:dic success:^(QNRoomDetailModel * _Nonnull roomDetailodel) {
         
         self.model = roomDetailodel;
         
@@ -134,7 +134,7 @@
     
     __weak typeof(self)weakSelf = self;
     [[QNIMGroupService sharedOption] joinGroupWithGroupId:self.model.imConfig.imGroupId message:@"" completion:^(QNIMError * _Nonnull error) {
-        QNIMMessageObject *message = [weakSelf.sendMsgTool createJoinRoomMessage];
+        QNIMMessageObject *message = [weakSelf.messageCreater createJoinRoomMessage];
         [[QNIMChatService sharedOption] sendMessage:message];
         [weakSelf.chatRoomView sendMessage:message];
     }];
@@ -185,7 +185,7 @@
             seatView.userId = [[NSUserDefaults standardUserDefaults]objectForKey:QN_ACCOUNT_ID_KEY];
             [weakSelf.localVideoTrack play:seatView];
             
-            QNIMMessageObject *message = [weakSelf.sendMsgTool createChatMessage:@"参与了连麦"];
+            QNIMMessageObject *message = [weakSelf.messageCreater createChatMessage:@"参与了连麦"];
             [[QNIMChatService sharedOption] sendMessage:message];
             [weakSelf.chatRoomView sendMessage:message];
             
@@ -205,7 +205,7 @@
         bottomExtraDistance = [self getIPhonexExtraBottomHeight];
     }
     
-    self.chatRoomView = [[RCChatRoomView alloc] initWithFrame:CGRectMake(-10, kScreenHeight - (237 +50)  - bottomExtraDistance, kScreenWidth, 237+50)];
+    self.chatRoomView = [[QNChatRoomView alloc] initWithFrame:CGRectMake(-10, kScreenHeight - (237 +50)  - bottomExtraDistance, kScreenWidth, 237+50)];
     [self.view addSubview:self.chatRoomView];
         
     [self setupBottomView];
@@ -268,7 +268,7 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     
-    QNIMMessageObject *message = [self.sendMsgTool createChatMessage:textField.text];
+    QNIMMessageObject *message = [self.messageCreater createChatMessage:textField.text];
     [[QNIMChatService sharedOption] sendMessage:message];
     [self.chatRoomView sendMessage:message];
     
@@ -292,7 +292,7 @@
             [self publishOwnTrack];
         }
         
-        [self.roomTool requestRoomHeartBeatWithInterval:@"3"];
+        [self.roomRequest requestRoomHeartBeatWithInterval:@"3"];
     }
     
 }

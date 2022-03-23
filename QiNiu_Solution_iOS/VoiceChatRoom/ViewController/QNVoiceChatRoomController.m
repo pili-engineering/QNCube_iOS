@@ -13,14 +13,12 @@
 #import "QNVoiceChatRoomBottomView.h"
 #import "QNVoiceChatRoomListController.h"
 #import "QNAudioTrackParams.h"
-#import "QNMicSeatMessageModel.h"
-#import "QNUserMicSeatModel.h"
 #import "QNIMMessageModel.h"
 #import <YYCategories/YYCategories.h>
-#import "RCChatRoomView.h"
+#import "QNChatRoomView.h"
 #import "QNApplyOnSeatView.h"
-#import "QNRoomTools.h"
-#import "QNSendMsgTool.h"
+#import "QNRoomRequest.h"
+#import "QNMessageCreater.h"
 #import "QNAlertViewController.h"
 #import "QNVoiceChatRoomCell.h"
 #import "QNInvitationModel.h"
@@ -28,7 +26,7 @@
 
 @interface QNVoiceChatRoomController ()<QNRTCClientDelegate,QNIMChatServiceProtocol,UICollectionViewDelegate,UICollectionViewDataSource>
 
-@property (nonatomic, strong) RCChatRoomView * chatRoomView;
+@property (nonatomic, strong) QNChatRoomView * chatRoomView;
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 
@@ -94,7 +92,7 @@
         [weakSelf quitRoom];
     };
     bottomButtonView.textBlock = ^(NSString * _Nonnull text) {
-        QNIMMessageObject *message = [weakSelf.sendMsgTool createChatMessage:text];
+        QNIMMessageObject *message = [weakSelf.messageCreater createChatMessage:text];
         [[QNIMChatService sharedOption] sendMessage:message];
         [weakSelf.chatRoomView sendMessage:message];
     };
@@ -128,7 +126,7 @@
     self.role = model1.value;
     [arr addObject:model1];
         
-    [self.roomTool requestJoinRoomWithParams:[QNAttrsModel mj_keyValuesArrayWithObjectArray:arr] success:^(QNRoomDetailModel * roomDetailodel) {
+    [self.roomRequest requestJoinRoomWithParams:[QNAttrsModel mj_keyValuesArrayWithObjectArray:arr] success:^(QNRoomDetailModel * roomDetailodel) {
         
         self.model = roomDetailodel;
         self.allUserList = self.model.allUserList;
@@ -140,7 +138,7 @@
         [[QNIMGroupService sharedOption] joinGroupWithGroupId:self.model.imConfig.imGroupId message:@"" completion:^(QNIMError * _Nonnull error) {
             weakSelf.imGroupId = weakSelf.model.imConfig.imGroupId;
             
-            QNIMMessageObject *message = [weakSelf.sendMsgTool createJoinRoomMessage];
+            QNIMMessageObject *message = [weakSelf.messageCreater createJoinRoomMessage];
             [[QNIMChatService sharedOption] sendMessage:message];
             [weakSelf.chatRoomView sendMessage:message];
         }];
@@ -153,7 +151,7 @@
 //获取房间信息
 - (void)getRoomInfo {
     
-    [self.roomTool requestRoomInfoSuccess:^(QNRoomDetailModel * _Nonnull roomDetailodel) {
+    [self.roomRequest requestRoomInfoSuccess:^(QNRoomDetailModel * _Nonnull roomDetailodel) {
             
         self.model = roomDetailodel;
         self.allUserList = roomDetailodel.allUserList;
@@ -169,7 +167,7 @@
 //获取房间麦位信息
 - (void) getRoomMicInfo {
     
-    [self.roomTool requestRoomMicInfoSuccess:^(QNRoomDetailModel * _Nonnull roomDetailodel) {
+    [self.roomRequest requestRoomMicInfoSuccess:^(QNRoomDetailModel * _Nonnull roomDetailodel) {
         __weak typeof(self)weakSelf = self;
         [self dealMicArrayWithAllMics:roomDetailodel.mics callBack:^(NSMutableArray<QNRTCMicsInfo *> *arr) {
             weakSelf.onMicUserList = arr;
@@ -184,9 +182,9 @@
 //请求上麦接口
 - (void)requestUpMicSeat {
     
-    [self.roomTool requestUpMicSeatWithUserExtRoleType:self.model.userInfo.role clientRoleType:1 success:^{
+    [self.roomRequest requestUpMicSeatWithUserExtRoleType:self.model.userInfo.role clientRoleType:1 success:^{
         
-        QNIMMessageObject *message = [self.sendMsgTool createOnMicMessage];
+        QNIMMessageObject *message = [self.messageCreater createOnMicMessage];
         [[QNIMChatService sharedOption] sendMessage:message];
         [self.rtcClient publish:@[self.localAudioTrack] completeCallback:^(BOOL onPublished, NSError *error) {}];
         [self getRoomMicInfo];
@@ -198,11 +196,11 @@
 //离开房间
 - (void)requestLeave {
     
-    QNIMMessageObject *message = [self.sendMsgTool createLeaveRoomMessage];
+    QNIMMessageObject *message = [self.messageCreater createLeaveRoomMessage];
     [[QNIMChatService sharedOption] sendMessage:message];
     [self.chatRoomView sendMessage:message];
-    [self.roomTool requestDownMicSeat];
-    [self.roomTool requestLeaveRoom];
+    [self.roomRequest requestDownMicSeat];
+    [self.roomRequest requestLeaveRoom];
     [self dismissViewControllerAnimated:YES completion:nil];
     [self leaveRoom];
         
@@ -217,7 +215,7 @@
             [self getRoomMicInfo];
         }
         
-        [self.roomTool requestRoomHeartBeatWithInterval:@"3"];
+        [self.roomRequest requestRoomHeartBeatWithInterval:@"3"];
     }
 }
 
@@ -257,14 +255,14 @@
         QNInvitationModel *model = [QNInvitationModel mj_objectWithKeyValues:messages.firstObject.content];
         
         [QNAlertViewController showBlackAlertWithTitle:@"邀请提示" content:model.data.invitation.msg cancelHandler:^(UIAlertAction * _Nonnull action) {
-             QNIMMessageObject *message = [weakSelf.sendMsgTool createRejectInviteMessageWithInvitationName:@"audioroomupmic" receiverId:model.data.invitation.initiatorUid];
+             QNIMMessageObject *message = [weakSelf.messageCreater createRejectInviteMessageWithInvitationName:@"audioroomupmic" receiverId:model.data.invitation.initiatorUid];
             [[QNIMChatService sharedOption] sendMessage:message];
             
             [weakSelf getRoomMicInfo];
             
         } confirmHandler:^(UIAlertAction * _Nonnull action) {
                     
-            QNIMMessageObject *message = [weakSelf.sendMsgTool createAcceptInviteMessageWithInvitationName:@"audioroomupmic" receiverId:model.data.invitation.initiatorUid];
+            QNIMMessageObject *message = [weakSelf.messageCreater createAcceptInviteMessageWithInvitationName:@"audioroomupmic" receiverId:model.data.invitation.initiatorUid];
            [[QNIMChatService sharedOption] sendMessage:message];
             [weakSelf getRoomMicInfo];
         }];
@@ -276,7 +274,7 @@
     } else if ([messageModel.action isEqualToString:@"invite_accept"]) {//连麦被接受消息
         
         [self requestUpMicSeat];
-        QNIMMessageObject *message = [self.sendMsgTool createChatMessage:@"参与了连麦"];
+        QNIMMessageObject *message = [self.messageCreater createChatMessage:@"参与了连麦"];
         [[QNIMChatService sharedOption] sendMessage:message];
         [self.chatRoomView sendMessage:message];
         
@@ -346,7 +344,7 @@
         return;
     }
     
-    QNIMMessageObject *message = [self.sendMsgTool createInviteMessageWithInvitationName:@"audioroomupmic" receiverId:self.model.roomInfo.creator];
+    QNIMMessageObject *message = [self.messageCreater createInviteMessageWithInvitationName:@"audioroomupmic" receiverId:self.model.roomInfo.creator];
     [[QNIMChatService sharedOption] sendMessage:message];
 }
 
@@ -431,7 +429,7 @@
     if (@available(iOS 11.0, *)) {
         bottomExtraDistance = [self getIPhonexExtraBottomHeight];
     }
-    self.chatRoomView = [[RCChatRoomView alloc] initWithFrame:CGRectMake(-10, kScreenHeight - (237 +50)  - bottomExtraDistance, kScreenWidth, 237+50)];
+    self.chatRoomView = [[QNChatRoomView alloc] initWithFrame:CGRectMake(-10, kScreenHeight - (237 +50)  - bottomExtraDistance, kScreenWidth, 237+50)];
     [self.view addSubview:self.chatRoomView];
 }
 
