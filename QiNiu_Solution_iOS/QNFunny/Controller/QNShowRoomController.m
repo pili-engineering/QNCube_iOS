@@ -392,34 +392,12 @@
 
 //发布自己的音视频流
 - (void)publishOwnTrack {
-
-    [self.localVideoTrack startCapture];
     
     if ([self.model.userInfo.role isEqualToString:@"roomHost"]) {
         [self.localVideoTrack play:self.preview];
     }
-        
-    NSMutableArray *tracks = [NSMutableArray array];
-    
-    QNAudioTrackParams *param = [QNAudioTrackParams new];
-    param.volume = 0.5;
-    [self setUpLocalAudioTrackParams:param];
     self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatioAndFill;
-    [tracks addObject:self.localAudioTrack];
-    
-    QNVideoTrackParams *params = [QNVideoTrackParams new];
-    params.width = 540;
-    params.height = 960;
-    [self setUpLocalVideoParams:params];
-    [tracks addObject:self.localVideoTrack];
-    
-    [self.rtcClient publish:tracks completeCallback:^(BOOL onPublished, NSError *error) {
-        
-//        if (![self.model.userInfo.role isEqualToString:@"roomHost"]) {
-//            
-//            
-//            [self sendMessageWithContent:@""];
-//        }
+    [self.rtcClient publish:@[self.localAudioTrack,self.localVideoTrack] completeCallback:^(BOOL onPublished, NSError *error) {
         
     }];
 }

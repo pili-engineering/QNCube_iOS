@@ -249,24 +249,9 @@
     QNIMMessageObject *message = [self.sendMsgTool createOnMicMessage];
     [self.chatVc sendMessageWithMessage:message];
     
-    [self.localVideoTrack startCapture];
-
-    NSMutableArray *tracks = [NSMutableArray array];
-    
-    QNAudioTrackParams *param = [QNAudioTrackParams new];
-    param.volume = 0.5;
-    [self setUpLocalAudioTrackParams:param];
     self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatioAndFill;
-    [tracks addObject:self.localAudioTrack];
-    
-    QNVideoTrackParams *params = [QNVideoTrackParams new];
-    params.width = 540;
-    params.height = 960;
-    [self setUpLocalVideoParams:params];
-    [tracks addObject:self.localVideoTrack];
-    
     __weak typeof(self)weakSelf = self;
-    [self.rtcClient publish:tracks completeCallback:^(BOOL onPublished, NSError *error) {
+    [self.rtcClient publish:@[self.localAudioTrack,self.localVideoTrack] completeCallback:^(BOOL onPublished, NSError *error) {
         
         if (error) {
             NSLog(@"发布视频流失败，error = %@",error);

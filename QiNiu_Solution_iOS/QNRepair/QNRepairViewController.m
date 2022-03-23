@@ -422,22 +422,11 @@
     
     if (state == QNConnectionStateConnected) {
         
-        NSMutableArray *tracks = [NSMutableArray array];
-        
-        QNAudioTrackParams *param = [QNAudioTrackParams new];
-        param.volume = 0.5;
-        [self setUpLocalAudioTrackParams:param];
-        self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatio;
-        
+        NSMutableArray *tracks = [NSMutableArray array];        
         [tracks addObject:self.localAudioTrack];
         
         if (self.itemModel.roleType == QNRepairRoleTypeStaff) {
-            QNVideoTrackParams *params = [QNVideoTrackParams new];
-            params.width = 540;
-            params.height = 960;
-            
-            [self setUpLocalVideoParams:params];
-//            self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatio;
+            self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatio;
             [tracks addObject:self.localVideoTrack];
         }
         

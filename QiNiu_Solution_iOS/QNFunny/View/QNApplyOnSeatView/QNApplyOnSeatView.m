@@ -26,12 +26,12 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
                 
-        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(35, 60, 50, 1)];
+        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(35, 60, 50, 2)];
         line.backgroundColor = [UIColor whiteColor];
         [self addSubview:line];
         self.line = line;
         
-        UIView *line2 = [[UIView alloc]initWithFrame:CGRectMake(60, 35, 1, 50)];
+        UIView *line2 = [[UIView alloc]initWithFrame:CGRectMake(60, 35, 2, 50)];
         line2.backgroundColor = [UIColor whiteColor];
         [self addSubview:line2];
         self.line2 = line2;

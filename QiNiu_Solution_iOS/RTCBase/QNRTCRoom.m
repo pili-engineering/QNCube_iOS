@@ -45,7 +45,6 @@
     // 设置采集视频的帧率
     self.localVideoTrack.videoFrameRate = videoTrackParams.fps;
     self.localVideoTrack.previewMirrorFrontFacing = NO;
-    self.localVideoTrack.videoDelegate = self;
     [self.localVideoTrack startCapture];
 //    self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatio;
 //     设置本地预览视图
@@ -76,8 +75,6 @@
 //本地音频轨道参数
 - (void)setUpLocalAudioTrackParams:(QNAudioTrackParams *)audioTrackParams{
     
-    self.localAudioTrack = [QNRTC createMicrophoneAudioTrack];
-//    self.localAudioTrack.audioDelegate = self;
     [self.localAudioTrack setVolume:audioTrackParams.volume];
     self.localAudioTrack.tag = audioTrackParams.tag.length == 0 ? @"audio" : audioTrackParams.tag;
 }
@@ -143,7 +140,7 @@
     self.localScreenTrack = [QNRTC createScreenVideoTrackWithConfig:screenConfig];
     // 设置采集视频的帧率
     self.localScreenTrack.screenRecorderFrameRate = params.fps;
-    self.localScreenTrack.screenDelegate = self;
+
 }
 //发布本地屏幕共享
 - (void)pubLocalScreenTrack{

@@ -188,7 +188,7 @@
         
         QNIMMessageObject *message = [self.sendMsgTool createOnMicMessage];
         [[QNIMChatService sharedOption] sendMessage:message];
-        [self publishOwnTrack];
+        [self.rtcClient publish:@[self.localAudioTrack] completeCallback:^(BOOL onPublished, NSError *error) {}];
         [self getRoomMicInfo];
         } failure:^(NSError * _Nonnull error) {
             
@@ -241,21 +241,6 @@
 
 - (void)RTCClient:(QNRTCClient *)client didUserPublishTracks:(NSArray<QNRemoteTrack *> *)tracks ofUserID:(NSString *)userID {
     [self getRoomMicInfo];
-}
-
-//发布自己的音频
-- (void)publishOwnTrack {
-        
-    NSMutableArray *tracks = [NSMutableArray array];
-    
-    QNAudioTrackParams *param = [QNAudioTrackParams new];
-    param.volume = 0.5;
-    [self setUpLocalAudioTrackParams:param];
-    [tracks addObject:self.localAudioTrack];
-    
-    [self.rtcClient publish:tracks completeCallback:^(BOOL onPublished, NSError *error) {
-        
-    }];
 }
 
 - (void)messageStatusChanged:(QNIMMessageObject *)message error:(QNIMError *)error {

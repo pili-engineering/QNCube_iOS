@@ -15,7 +15,7 @@
 #import "QNRoomUserView.h"
 #import <MJExtension/MJExtension.h>
 
-@interface QNRTCAbsRoom ()<QNRTCClientDelegate,QNCameraTrackVideoDataDelegate,QNMicrophoneAudioTrackDataDelegate>
+@interface QNRTCAbsRoom ()<QNRTCClientDelegate,QNCameraTrackVideoDataDelegate,QNMicrophoneAudioTrackDataDelegate,QNScreenVideoTrackDelegate>
 
 @property (nonatomic, strong) UIView *renderBackgroundView;//上面只添加 renderView
 
@@ -82,8 +82,48 @@
     [self.rtcClient leave];
 }
 
+//本地音频轨道默认参数
+- (QNMicrophoneAudioTrack *)localAudioTrack {
+    if (!_localAudioTrack) {
+        _localAudioTrack = [QNRTC createMicrophoneAudioTrack];
+        [_localAudioTrack setVolume:0.5];
+        _localAudioTrack.audioDelegate = self;
+        _localAudioTrack.tag =  @"audio";
+    }
+    return _localAudioTrack;
+}
 
+//本地视频轨道默认参数
+- (QNCameraVideoTrack *)localVideoTrack {
+    if (!_localVideoTrack) {
+        CGSize videoEncodeSize = CGSizeMake(540, 960);
+        QNCameraVideoTrackConfig * cameraConfig = [[QNCameraVideoTrackConfig alloc] initWithSourceTag:@"camera" bitrate:400*1000 videoEncodeSize:videoEncodeSize];
+        _localVideoTrack = [QNRTC createCameraVideoTrackWithConfig:cameraConfig];
+        _localVideoTrack.videoFrameRate = 15;
+        _localVideoTrack.previewMirrorFrontFacing = NO;
+        _localVideoTrack.videoDelegate = self;
+        [_localVideoTrack startCapture];
+        [_localVideoTrack play:self.preview];
+    }
+    return _localVideoTrack;
+}
 
+//本地录制轨道默认参数
+- (QNScreenVideoTrack *)localScreenTrack {
+    if (!_localScreenTrack) {
+        if (![QNScreenVideoTrack isScreenRecorderAvailable]) {
+            [MBProgressHUD showText:@"当前设备不支持屏幕录制"];
+            return nil;
+        }
+        CGSize videoEncodeSize = CGSizeMake(540, 960);
+        QNScreenVideoTrackConfig * screenConfig = [[QNScreenVideoTrackConfig alloc] initWithSourceTag:@"screen" bitrate:400*1000 videoEncodeSize:videoEncodeSize];
+        _localScreenTrack = [QNRTC createScreenVideoTrackWithConfig:screenConfig];
+        _localScreenTrack.screenRecorderFrameRate = 15;
+        _localScreenTrack.screenDelegate = self;
+
+    }
+    return _localScreenTrack;
+}
 
 #pragma mark    ----------------QNRTCClientDelegate
 /*!
