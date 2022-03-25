@@ -17,7 +17,7 @@
 #import "QNApplyOnSeatView.h"
 #import <UIKit/UIKit.h>
 #import "QNChatRoomView.h"
-#import "QNIMMessageModel.h"
+#import "QNIMTextMsgModel.h"
 #import <YYCategories/YYCategories.h>
 #import "QNSeatNumModel.h"
 

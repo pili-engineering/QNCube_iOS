@@ -12,7 +12,7 @@
 #import <MJExtension/MJExtension.h>
 #import "QNChatRoomView.h"
 #import "QNRoomUserView.h"
-#import "QNIMMessageModel.h"
+#import "QNIMTextMsgModel.h"
 #import <YYCategories/YYCategories.h>
 #import <Masonry/Masonry.h>
 #import <QNWhiteBoardSDK/QNWhiteBoardSDK.h>

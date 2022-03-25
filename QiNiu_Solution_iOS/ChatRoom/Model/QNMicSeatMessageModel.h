@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class QNUserExtension,QNRTCRoomEntity;
 
-@interface QNUserMicSeatModel : NSObject
+@interface QNMicSeatMessageModel : NSObject
 
 @property (nonatomic,assign) BOOL ownerOpenAudio;
 
@@ -22,16 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) QNUserExtension *userExtension;
 
 @property (nonatomic, copy)NSString *msg;
-
-@end
-
-@interface QNMicSeatMessageModel : NSObject
-
-@property(nonatomic, copy) NSString *action;
-
-@property(nonatomic, strong) QNUserMicSeatModel *data;
-
-@property(nonatomic, copy) NSString *msg;
 
 @end
 

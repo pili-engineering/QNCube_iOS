@@ -9,21 +9,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface QNForbiddenMsgModel : NSObject
+@interface QNForbiddenMicModel : NSObject
 
 @property(nonatomic, copy) NSString *uid;
 
 @property(nonatomic, assign) BOOL isForbidden;
 
 @property(nonatomic, copy) NSString *msg;
-
-@end
-
-@interface QNForbiddenMicModel : NSObject
-
-@property(nonatomic, copy) NSString *action;
-
-@property(nonatomic, strong) QNForbiddenMsgModel *data;
 
 @end
 

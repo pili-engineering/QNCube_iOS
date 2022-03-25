@@ -22,21 +22,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) NSString *receiver;
 
 @property(nonatomic, copy) NSString *timeStamp;
-@end
-
-@interface QNInvitationData : NSObject
-
-@property(nonatomic, strong) QNInvitationInfo *invitation;
-
-@property(nonatomic, copy) NSString *invitationName;
 
 @end
 
 @interface QNInvitationModel : NSObject
 
-@property(nonatomic, copy) NSString *action;
+@property(nonatomic, strong) QNInvitationInfo *invitation;
 
-@property(nonatomic, strong) QNInvitationData *data;
+@property(nonatomic, copy) NSString *invitationName;
 
 @end
 

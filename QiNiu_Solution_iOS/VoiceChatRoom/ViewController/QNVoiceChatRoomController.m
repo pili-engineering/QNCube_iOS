@@ -13,7 +13,8 @@
 #import "QNVoiceChatRoomBottomView.h"
 #import "QNVoiceChatRoomListController.h"
 #import "QNAudioTrackParams.h"
-#import "QNIMMessageModel.h"
+#import "QNIMTextMsgModel.h"
+#import "QNIMModel.h"
 #import <YYCategories/YYCategories.h>
 #import "QNChatRoomView.h"
 #import "QNApplyOnSeatView.h"
@@ -136,8 +137,7 @@
         
         __weak typeof(self)weakSelf = self;
         [[QNIMGroupService sharedOption] joinGroupWithGroupId:self.model.imConfig.imGroupId message:@"" completion:^(QNIMError * _Nonnull error) {
-            weakSelf.imGroupId = weakSelf.model.imConfig.imGroupId;
-            
+            weakSelf.imGroupId = weakSelf.model.imConfig.imGroupId;            
             QNIMMessageObject *message = [weakSelf.messageCreater createJoinRoomMessage];
             [[QNIMChatService sharedOption] sendMessage:message];
             [weakSelf.chatRoomView sendMessage:message];
@@ -247,22 +247,22 @@
 
 - (void)receivedMessages:(NSArray<QNIMMessageObject *> *)messages {
     
-    QNIMMessageModel *messageModel = [QNIMMessageModel mj_objectWithKeyValues:messages.firstObject.content];
+    QNIMModel *messageModel = [QNIMModel mj_objectWithKeyValues:messages.firstObject.content];
     
     __weak typeof(self)weakSelf = self;
     if ([messageModel.action isEqualToString:@"invite_send"]) {//连麦邀请消息
         
-        QNInvitationModel *model = [QNInvitationModel mj_objectWithKeyValues:messages.firstObject.content];
+        QNInvitationModel *model = [QNInvitationModel mj_objectWithKeyValues:messageModel.data];
         
-        [QNAlertViewController showBlackAlertWithTitle:@"邀请提示" content:model.data.invitation.msg cancelHandler:^(UIAlertAction * _Nonnull action) {
-             QNIMMessageObject *message = [weakSelf.messageCreater createRejectInviteMessageWithInvitationName:@"audioroomupmic" receiverId:model.data.invitation.initiatorUid];
+        [QNAlertViewController showBlackAlertWithTitle:@"邀请提示" content:model.invitation.msg cancelHandler:^(UIAlertAction * _Nonnull action) {
+             QNIMMessageObject *message = [weakSelf.messageCreater createRejectInviteMessageWithInvitationName:@"audioroomupmic" receiverId:model.invitation.initiatorUid];
             [[QNIMChatService sharedOption] sendMessage:message];
             
             [weakSelf getRoomMicInfo];
             
         } confirmHandler:^(UIAlertAction * _Nonnull action) {
                     
-            QNIMMessageObject *message = [weakSelf.messageCreater createAcceptInviteMessageWithInvitationName:@"audioroomupmic" receiverId:model.data.invitation.initiatorUid];
+            QNIMMessageObject *message = [weakSelf.messageCreater createAcceptInviteMessageWithInvitationName:@"audioroomupmic" receiverId:model.invitation.initiatorUid];
            [[QNIMChatService sharedOption] sendMessage:message];
             [weakSelf getRoomMicInfo];
         }];
@@ -297,6 +297,7 @@
         [self getRoomMicInfo];
        
     } else if ([messageModel.action isEqualToString:@"pub_chat_text"]) {//聊天消息
+        
         [self.chatRoomView showMessage:messages.firstObject];
     }
 }

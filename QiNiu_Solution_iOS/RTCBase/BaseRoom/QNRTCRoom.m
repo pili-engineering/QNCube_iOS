@@ -27,7 +27,6 @@
     if (self = [super init]) {
         self.model = model;
         [self roomRequest];
-        [self messageCreater];
     }
     return self;
 }

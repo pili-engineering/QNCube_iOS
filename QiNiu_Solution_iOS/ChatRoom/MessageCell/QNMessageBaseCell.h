@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <QNIMSDK/QNIMSDK.h>
 
-//#import "QNIMMessageModel.h"
+//#import "QNIMTextMsgModel.h"
 
 @interface QNMessageBaseCell : UICollectionViewCell
 

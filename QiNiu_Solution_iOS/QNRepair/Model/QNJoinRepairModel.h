@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //加入房间Model
 
-@class QNJoinRepairUserInfoModel,QNJoinRepairRoomModel,QNIMModel;
+@class QNJoinRepairUserInfoModel,QNJoinRepairRoomModel,QNRepairIMModel;
 
 @interface QNJoinRepairModel : NSObject
 
@@ -25,13 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSArray <QNJoinRepairUserInfoModel *> *allUserList;
 
-@property (nonatomic, strong) QNIMModel *imConfig;
+@property (nonatomic, strong) QNRepairIMModel *imConfig;
 
 @property (nonatomic, copy) NSString *requestId;
 
 @end
 
-@interface QNIMModel : NSObject
+@interface QNRepairIMModel : NSObject
 
 @property (nonatomic, copy) NSString *imGroupId;
 

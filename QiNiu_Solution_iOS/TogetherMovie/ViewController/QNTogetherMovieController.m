@@ -29,7 +29,8 @@
 #import "QNRoomMicInfoModel.h"
 #import "CLPlayerView.h"
 #import "QNMovieModel.h"
-#import "QNIMMessageModel.h"
+#import "QNIMModel.h"
+#import "QNIMTextMsgModel.h"
 #import "QNMovieTogetherChannelModel.h"
 #import <AVFoundation/AVFoundation.h>
 #import "QNMovieTogetherViewModel.h"
@@ -391,11 +392,11 @@
 //发送电影同步信令
 - (void)sendMovieMessageWithCurrentPosition:(NSString *)currentPosition playStatus:(NSString *)playStatus startTimeMillis:(NSString *)startTimeMillis {
     
-    QNIMMessageModel *messageModel = [QNIMMessageModel new];
+    QNIMModel *messageModel = [QNIMModel new];
     
     messageModel.action = @"channelAttributes_change";
     
-    QNIMMessageStrModel *data = [QNIMMessageStrModel new];
+    QNIMTextMsgModel *data = [QNIMTextMsgModel new];
     
     data.key = @"watch_movie_together";
     data.roomId = self.model.roomInfo.roomId;
@@ -411,7 +412,7 @@
     
     data.value = model.mj_JSONString;
     
-    messageModel.data = data;
+    messageModel.data = data.mj_keyValues;
     
     NSString *senderId = [[NSUserDefaults standardUserDefaults] objectForKey:QN_IM_USER_ID_KEY];
     
@@ -517,7 +518,7 @@
 - (void)receiveInvitationAlertWithModel:(QNInvitationModel *)model {
     
     __weak typeof(self)weakSelf = self;
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"邀请提示" message:model.data.invitation.msg preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"邀请提示" message:model.invitation.msg preferredStyle:UIAlertControllerStyleAlert];
     UIView *subView = alertController.view.subviews.lastObject;
     UIView *alertContentView = subView.subviews.lastObject;
     
@@ -527,7 +528,7 @@
     
     UIAlertAction *cancelBtn = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         //发送拒绝连麦信令
-        QNIMMessageObject *message = [weakSelf.messageCreater createRejectInviteMessageWithInvitationName:model.data.invitationName receiverId:model.data.invitation.initiatorUid];
+        QNIMMessageObject *message = [weakSelf.messageCreater createRejectInviteMessageWithInvitationName:model.invitationName receiverId:model.invitation.initiatorUid];
         [weakSelf.chatVc sendMessageWithMessage:message];
         
     }];
@@ -535,7 +536,7 @@
     
     UIAlertAction *changeBtn = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         //发送接收连麦信令
-        QNIMMessageObject *message = [weakSelf.messageCreater createAcceptInviteMessageWithInvitationName:model.data.invitationName receiverId:model.data.invitation.initiatorUid];
+        QNIMMessageObject *message = [weakSelf.messageCreater createAcceptInviteMessageWithInvitationName:model.invitationName receiverId:model.invitation.initiatorUid];
         [weakSelf.chatVc sendMessageWithMessage:message];
         //显示连麦画面
         [weakSelf showRTCView];
@@ -551,8 +552,8 @@
     [alertController setValue:alertControllerStr forKey:@"attributedTitle"];
 
     //修改message
-    NSMutableAttributedString *alertControllerMessageStr = [[NSMutableAttributedString alloc] initWithString:model.data.invitation.msg];
-    [alertControllerMessageStr addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, model.data.invitation.msg.length)];
+    NSMutableAttributedString *alertControllerMessageStr = [[NSMutableAttributedString alloc] initWithString:model.invitation.msg];
+    [alertControllerMessageStr addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, model.invitation.msg.length)];
     [alertController setValue:alertControllerMessageStr forKey:@"attributedMessage"];
     
     alertController.view.tintColor = [UIColor whiteColor];
@@ -907,11 +908,11 @@
             [weakSelf requestAllMicSeat];
         };
         //收到用户进房信令
-        _chatVc.joinRoomBlock = ^(QNIMMessageModel * _Nonnull model) {
+        _chatVc.joinRoomBlock = ^(QNIMTextMsgModel * _Nonnull model) {
             
             QNUserInfo *userInfo = [QNUserInfo new];
-            userInfo.nickname = model.data.senderName;
-            userInfo.userId = model.data.senderId;
+            userInfo.nickname = model.senderName;
+            userInfo.userId = model.senderId;
             
             [weakSelf.allUserList addObject:userInfo];
             weakSelf.onlineView.model = weakSelf.model;
@@ -928,7 +929,7 @@
         //收到用户下麦信令
         _chatVc.sitUpMicBlock = ^(QNMicSeatMessageModel * _Nonnull model) {
             
-            if ([weakSelf.model.roomInfo.creator isEqualToString:model.data.uid]) {
+            if ([weakSelf.model.roomInfo.creator isEqualToString:model.uid]) {
                 [weakSelf showAlertWithTitle:@"房间已经解散了～" content:@"" success:^{
                     [weakSelf conference];
                 }];
@@ -939,7 +940,7 @@
             }
         };
         
-        _chatVc.leaveRoomBlock = ^(QNIMMessageModel * _Nonnull model) {
+        _chatVc.leaveRoomBlock = ^(QNIMTextMsgModel * _Nonnull model) {
             
         };
         [_chatVc.view mas_makeConstraints:^(MASConstraintMaker *make) {

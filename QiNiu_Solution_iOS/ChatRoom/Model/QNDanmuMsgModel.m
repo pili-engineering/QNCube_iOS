@@ -10,7 +10,3 @@
 @implementation QNDanmuMsgModel
 
 @end
-
-@implementation QNDanmuModel
-
-@end

@@ -8,7 +8,8 @@
 
 #import "QNTextMessageCell.h"
 #import <MJExtension/MJExtension.h>
-#import "QNIMMessageModel.h"
+#import "QNIMTextMsgModel.h"
+#import "QNIMModel.h"
 #import <Masonry/Masonry.h>
 #import <QNIMSDK/QNIMSDK.h>
 
@@ -46,20 +47,16 @@ alpha:1.0]
 
 - (void)updateUI:(QNIMMessageObject *)model {
     
-
-        NSString *MessageJsonStr = model.content.mj_JSONString;
-        QNIMMessageModel *messageModel = [QNIMMessageModel mj_objectWithKeyValues:MessageJsonStr];
-        
-    
-        NSString *userName = [messageModel.data.senderName stringByAppendingString:@"："];
-        NSString *sendMsgStr = messageModel.data.msgContent;
+        QNIMModel *msgmodel = [QNIMModel mj_objectWithKeyValues:model.content];
+        QNIMTextMsgModel *messageModel = [QNIMTextMsgModel mj_objectWithKeyValues:msgmodel.data];
+            
+        NSString *userName = [messageModel.senderName stringByAppendingString:@"："];
+        NSString *sendMsgStr = messageModel.msgContent;
         
         NSString *str =[NSString stringWithFormat:@"%@%@",userName,sendMsgStr];
             
         self.textLabel.text = str;
         self.textLabel.textColor = [UIColor whiteColor];
-        
-        
         
 }
 

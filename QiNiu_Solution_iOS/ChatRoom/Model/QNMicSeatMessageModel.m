@@ -11,6 +11,3 @@
 
 @end
 
-@implementation QNUserMicSeatModel
-
-@end

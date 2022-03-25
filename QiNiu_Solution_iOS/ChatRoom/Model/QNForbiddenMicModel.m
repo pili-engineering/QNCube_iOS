@@ -10,7 +10,3 @@
 @implementation QNForbiddenMicModel
 
 @end
-
-@implementation QNForbiddenMsgModel
-
-@end

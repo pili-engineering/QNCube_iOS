@@ -10,7 +10,8 @@
 #import "QNMessageBaseCell.h"
 #import "QNTextMessageCell.h"
 #import <SDWebImage/SDWebImage.h>
-#import "QNIMMessageModel.h"
+#import "QNIMTextMsgModel.h"
+#import "QNIMModel.h"
 #import <MJExtension/MJExtension.h>
 #import "MBProgressHUD+QNShow.h"
 #import <IQKeyboardManager/IQKeyboardManager.h>
@@ -242,16 +243,16 @@ static int clickPraiseBtnTimes  = 0 ;
 
 - (void)touristSendMessage:(NSString *)text {
     
-    QNIMMessageModel *messageModel = [QNIMMessageModel new];
+    QNIMModel *messageModel = [QNIMModel new];
     messageModel.action = @"pubChatText";
     
-    QNIMMessageStrModel *model = [QNIMMessageStrModel new];
+    QNIMTextMsgModel *model = [QNIMTextMsgModel new];
     
     model.senderName = [[NSUserDefaults standardUserDefaults] objectForKey:QN_NICKNAME_KEY];
     model.senderId = [[NSUserDefaults standardUserDefaults] objectForKey:QN_ACCOUNT_ID_KEY];
     model.msgContent = text;
     
-    messageModel.data = model;
+    messageModel.data = model.mj_keyValues;
        
     QNIMMessageObject *rcTextMessage = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:model.senderId.longLongValue toId:0 type:QNIMMessageTypeGroup conversationId:0];
             

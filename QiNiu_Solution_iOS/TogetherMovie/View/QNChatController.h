@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class QNMovieTogetherChannelModel,QNInvitationModel,QNMicSeatMessageModel,QNIMMessageModel;
+@class QNMovieTogetherChannelModel,QNInvitationModel,QNMicSeatMessageModel,QNIMTextMsgModel;
 
 @interface QNChatController : UIViewController
 
@@ -26,9 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) void (^sitUpMicBlock)(QNMicSeatMessageModel *model);//收到下麦信令
 
-@property (nonatomic, copy) void (^joinRoomBlock)(QNIMMessageModel *model);//收到加入房间信令
+@property (nonatomic, copy) void (^joinRoomBlock)(QNIMTextMsgModel *model);//收到加入房间信令
 
-@property (nonatomic, copy) void (^leaveRoomBlock)(QNIMMessageModel *model);//收到离开房间信令
+@property (nonatomic, copy) void (^leaveRoomBlock)(QNIMTextMsgModel *model);//收到离开房间信令
 
 - (void)sendMessageWithMessage:(QNIMMessageObject *)message;
 

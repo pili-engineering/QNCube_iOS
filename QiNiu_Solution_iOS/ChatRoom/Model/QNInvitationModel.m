@@ -15,6 +15,3 @@
 
 @end
 
-@implementation QNInvitationData
-
-@end

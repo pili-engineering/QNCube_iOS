@@ -95,7 +95,7 @@
 		7764C131263832E600A8BC8B /* QNTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7764C0F9263832E500A8BC8B /* QNTextMessageCell.m */; };
 		7764C132263832E600A8BC8B /* QNMessageBaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7764C0FA263832E500A8BC8B /* QNMessageBaseCell.m */; };
 		7764C15426383FE900A8BC8B /* QNRoomUserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7764C15226383FE800A8BC8B /* QNRoomUserView.m */; };
-		7764C15B2639035C00A8BC8B /* QNIMMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7764C15A2639035C00A8BC8B /* QNIMMessageModel.m */; };
+		7764C15B2639035C00A8BC8B /* QNIMTextMsgModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7764C15A2639035C00A8BC8B /* QNIMTextMsgModel.m */; };
 		7769D8D827854F81008FB1F6 /* QNVoiceChatRoomListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7769D8D727854F81008FB1F6 /* QNVoiceChatRoomListController.m */; };
 		7769D8DB278C0BDC008FB1F6 /* QNVoiceChatRoomTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7769D8DA278C0BDC008FB1F6 /* QNVoiceChatRoomTitleCell.m */; };
 		7769D8DE278C121B008FB1F6 /* QNVoiceChatRoomListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7769D8DD278C121B008FB1F6 /* QNVoiceChatRoomListCell.m */; };
@@ -391,8 +391,8 @@
 		7764C10E263832E500A8BC8B /* QNChatRoomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNChatRoomView.h; sourceTree = "<group>"; };
 		7764C15226383FE800A8BC8B /* QNRoomUserView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNRoomUserView.m; sourceTree = "<group>"; };
 		7764C15326383FE900A8BC8B /* QNRoomUserView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNRoomUserView.h; sourceTree = "<group>"; };
-		7764C1592639035C00A8BC8B /* QNIMMessageModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNIMMessageModel.h; sourceTree = "<group>"; };
-		7764C15A2639035C00A8BC8B /* QNIMMessageModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNIMMessageModel.m; sourceTree = "<group>"; };
+		7764C1592639035C00A8BC8B /* QNIMTextMsgModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNIMTextMsgModel.h; sourceTree = "<group>"; };
+		7764C15A2639035C00A8BC8B /* QNIMTextMsgModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNIMTextMsgModel.m; sourceTree = "<group>"; };
 		7769D8D627854F81008FB1F6 /* QNVoiceChatRoomListController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNVoiceChatRoomListController.h; sourceTree = "<group>"; };
 		7769D8D727854F81008FB1F6 /* QNVoiceChatRoomListController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNVoiceChatRoomListController.m; sourceTree = "<group>"; };
 		7769D8D9278C0BDB008FB1F6 /* QNVoiceChatRoomTitleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNVoiceChatRoomTitleCell.h; sourceTree = "<group>"; };
@@ -927,8 +927,8 @@
 				777B7CE027E1E26F00681585 /* QNMessageCreater.m */,
 				77F4279B27ED6862007999A4 /* QNForbiddenMicModel.h */,
 				77F4279C27ED6862007999A4 /* QNForbiddenMicModel.m */,
-				7764C1592639035C00A8BC8B /* QNIMMessageModel.h */,
-				7764C15A2639035C00A8BC8B /* QNIMMessageModel.m */,
+				7764C1592639035C00A8BC8B /* QNIMTextMsgModel.h */,
+				7764C15A2639035C00A8BC8B /* QNIMTextMsgModel.m */,
 				77F4279E27ED6EFF007999A4 /* QNDanmuMsgModel.h */,
 				77F4279F27ED6EFF007999A4 /* QNDanmuMsgModel.m */,
 				77F4F58F2761B54500B749FF /* QNMicSeatMessageModel.h */,
@@ -1653,7 +1653,7 @@
 				775CE16D275F0E0B006A7F0C /* QNPlayingMovieCell.m in Sources */,
 				7732390E2759F5D100666081 /* QNMovieOnlineView.m in Sources */,
 				775CE162275DB62F006A7F0C /* UILabel+Han.m in Sources */,
-				7764C15B2639035C00A8BC8B /* QNIMMessageModel.m in Sources */,
+				7764C15B2639035C00A8BC8B /* QNIMTextMsgModel.m in Sources */,
 				77808449261EF126008992BB /* QNTabBarViewController.m in Sources */,
 				77FC1C392631395D006F8731 /* QNNetworkUtil.m in Sources */,
 				7714E5CA2701BFCA004B7859 /* QNRepairListModel.m in Sources */,

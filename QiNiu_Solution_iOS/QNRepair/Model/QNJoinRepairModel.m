@@ -21,6 +21,6 @@
 
 @end
 
-@implementation QNIMModel
+@implementation QNRepairIMModel
 
 @end

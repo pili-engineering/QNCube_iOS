@@ -16,7 +16,7 @@
 #import <YYCategories/YYCategories.h>
 #import "QNRoomUserView.h"
 #import "QNChatRoomView.h"
-#import "QNIMMessageModel.h"
+#import "QNIMTextMsgModel.h"
 #import "MBProgressHUD+QNShow.h"
 #import <SDWebImage/SDWebImage.h>
 #import "QNInterviewListViewModel.h"

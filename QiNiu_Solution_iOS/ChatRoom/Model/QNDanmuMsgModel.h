@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface QNDanmuModel : NSObject
+@interface QNDanmuMsgModel : NSObject
 
 @property(nonatomic, strong) NSString *content;
 
@@ -20,14 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSString *senderRoomId;
 
 @property(nonatomic, strong) NSString *senderAvatar;
-
-@end
-
-@interface QNDanmuMsgModel : NSObject
-
-@property(nonatomic, copy) NSString *action;
-
-@property(nonatomic, strong) QNDanmuModel *data;
 
 @end
 

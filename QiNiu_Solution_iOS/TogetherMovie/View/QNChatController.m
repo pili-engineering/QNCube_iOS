@@ -13,11 +13,12 @@
 #import "CSRecord.h"
 #import <Masonry/Masonry.h>
 #import <QNIMSDK/QNIMSDK.h>
-#import "QNIMMessageModel.h"
+#import "QNIMTextMsgModel.h"
 #import <MJExtension/MJExtension.h>
 #import "QNMovieTogetherChannelModel.h"
 #import "QNInvitationModel.h"
 #import "QNMicSeatMessageModel.h"
+#import "QNIMModel.h"
 
 #define ScreenWidth  [UIScreen mainScreen].bounds.size.width
 #define ScreenHight [UIScreen mainScreen].bounds.size.height
@@ -102,17 +103,18 @@
 
 - (void)sendMessageWithAction:(NSString *)action content:(NSString *)content {
     
-    QNIMMessageModel *messageModel = [QNIMMessageModel new];
+    
+    QNIMModel *messageModel = [QNIMModel new];
     messageModel.action = action;
     
-    QNIMMessageStrModel *strModel = [QNIMMessageStrModel new];
+    QNIMTextMsgModel *strModel = [QNIMTextMsgModel new];
     
     strModel.senderName = [[NSUserDefaults standardUserDefaults] objectForKey:QN_NICKNAME_KEY];
     strModel.senderId = [[NSUserDefaults standardUserDefaults] objectForKey:QN_IM_USER_ID_KEY];
     strModel.sendAvatar = [[NSUserDefaults standardUserDefaults] objectForKey:QN_USER_AVATAR_KEY];
     strModel.msgContent = content;
     
-    messageModel.data = strModel;
+    messageModel.data = strModel.mj_keyValues;
     
     QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:strModel.senderId.longLongValue toId:self.groupId.longLongValue type:QNIMMessageTypeGroup conversationId:self.groupId.longLongValue];
     
@@ -257,13 +259,16 @@
 //收到message
 - (void)receivedMessages:(NSArray<QNIMMessageObject *> *)messages {
         
-    QNIMMessageModel *messageModel = [QNIMMessageModel mj_objectWithKeyValues:messages.firstObject.content];
+    QNIMModel *messageModel = [QNIMModel mj_objectWithKeyValues:messages.firstObject.content];
     
     if ([messageModel.action isEqualToString:@"pubChatText"]) {//聊天消息
+        
+        QNIMTextMsgModel *message = [QNIMTextMsgModel mj_objectWithKeyValues:messageModel.data];
+        
         CSMessageModel *model = [[CSMessageModel alloc] init];
         model.messageSenderType = MessageSenderTypeOther;
         model.messageType = MessageTypeText;
-        model.messageText = messageModel.data.msgContent;
+        model.messageText = message.msgContent;
         model.serverTimestamp = messages.firstObject.serverTimestamp;
        __block BOOL same = false;
         [self.dataArray enumerateObjectsUsingBlock:^(CSMessageModel   * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -279,14 +284,14 @@
                                         animated:YES
                                   scrollPosition:UITableViewScrollPositionMiddle];
         }
-            
-        
         
     } else if ([messageModel.action isEqualToString:@"welcome"]) {//欢迎消息
         
+        QNIMTextMsgModel *message = [QNIMTextMsgModel mj_objectWithKeyValues:messageModel.data];
+        
         CSMessageModel *model = [[CSMessageModel alloc] init];
         model.showMessageTime=YES;
-        model.messageTime = [NSString stringWithFormat:@"欢迎用户 %@ 进入房间",messageModel.data.senderName];
+        model.messageTime = [NSString stringWithFormat:@"欢迎用户 %@ 进入房间",message.senderName];
         model.messageSenderType = MessageSenderTypeMe;
         model.messageType = MessageTypeJoin;
         model.serverTimestamp = messages.firstObject.serverTimestamp;
@@ -304,26 +309,27 @@
                                          animated:YES
                                    scrollPosition:UITableViewScrollPositionMiddle];
              if (self.joinRoomBlock) {
-                 self.joinRoomBlock(messageModel);
+                 self.joinRoomBlock(message);
              }
          }
         
         
     } else if ([messageModel.action isEqualToString:@"quit_room"]) {//离开消息
       
+        QNIMTextMsgModel *message = [QNIMTextMsgModel mj_objectWithKeyValues:messageModel.data];
         if (self.leaveRoomBlock) {
-            self.leaveRoomBlock(messageModel);
+            self.leaveRoomBlock(message);
         }
     } else if ([messageModel.action isEqualToString:@"channelAttributes_change"]) {//电影同步消息
-        
-        QNMovieTogetherChannelModel *model = [QNMovieTogetherChannelModel mj_objectWithKeyValues:messageModel.data.value.mj_keyValues];
+        QNIMTextMsgModel *message = [QNIMTextMsgModel mj_objectWithKeyValues:messageModel.data];
+        QNMovieTogetherChannelModel *model = [QNMovieTogetherChannelModel mj_objectWithKeyValues:message.value.mj_keyValues];
         if (self.movieSynchronousBlock) {
             self.movieSynchronousBlock(model);
         }
         
     } else if ([messageModel.action isEqualToString:@"invite_send"]) {//连麦邀请消息
         
-        QNInvitationModel *model = [QNInvitationModel mj_objectWithKeyValues:messages.firstObject.content];
+        QNInvitationModel *model = [QNInvitationModel mj_objectWithKeyValues:messageModel.data];
         if (self.invitationBlock) {
             self.invitationBlock(model);
         }
@@ -334,20 +340,20 @@
         
     } else if ([messageModel.action isEqualToString:@"invite_accept"]) {//连麦被接受消息
         
-        QNInvitationModel *model = [QNInvitationModel mj_objectWithKeyValues:messages.firstObject.content];
+        QNInvitationModel *model = [QNInvitationModel mj_objectWithKeyValues:messageModel.data];
         if (self.invitationAcceptBlock) {
             self.invitationAcceptBlock(model);
         }
         
     } else if ([messageModel.action isEqualToString:@"rtc_sitDown"]) {//用户上麦信息
         
-        QNMicSeatMessageModel *model = [QNMicSeatMessageModel mj_objectWithKeyValues:messages.firstObject.content];
+        QNMicSeatMessageModel *model = [QNMicSeatMessageModel mj_objectWithKeyValues:messageModel.data];
         if (self.sitDownMicBlock) {
             self.sitDownMicBlock(model);
         }
     } else if ([messageModel.action isEqualToString:@"rtc_sitUp"]) {//用户下麦信息
         
-        QNMicSeatMessageModel *model = [QNMicSeatMessageModel mj_objectWithKeyValues:messages.firstObject.content];
+        QNMicSeatMessageModel *model = [QNMicSeatMessageModel mj_objectWithKeyValues:messageModel.data];
         if (self.sitUpMicBlock) {
             self.sitUpMicBlock(model);
         }

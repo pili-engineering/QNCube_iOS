@@ -1,5 +1,5 @@
 //
-//  QNIMMessageModel.h
+//  QNIMTextMsgModel.h
 //  QiNiu_Solution_iOS
 //
 //  Created by 郭茜 on 2021/4/28.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface QNIMMessageStrModel : NSObject
+@interface QNIMTextMsgModel : NSObject
 
 @property(nonatomic, strong) NSString *senderId;
 
@@ -24,14 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *value;
 
 @property (nonatomic, copy) NSString *roomId;
-
-@end
-
-@interface QNIMMessageModel : NSObject
-
-@property(nonatomic, copy) NSString *action;
-
-@property(nonatomic, strong) QNIMMessageStrModel *data;
 
 @end
 
