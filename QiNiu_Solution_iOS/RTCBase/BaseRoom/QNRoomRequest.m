@@ -158,11 +158,13 @@
 }
 
 //请求下麦接口
-- (void)requestDownMicSeat {
+- (void)requestDownMicSeatSuccess:(void (^)(void))success {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"roomId"] = self.roomId;
     params[@"type"] = self.type;
+    params[@"uid"] = QN_User_id;
     [QNNetworkUtil postRequestWithAction:@"base/downMic" params:params success:^(NSDictionary *responseData) {
+        success();
         } failure:^(NSError *error) {
         }];
 }

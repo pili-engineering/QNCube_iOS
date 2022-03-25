@@ -28,6 +28,9 @@
 #import "QNGiftView.h"
 #import "QNSendGiftModel.h"
 #import "QNGiftMsgModel.h"
+#import "QNBottomUserOperationView.h"
+#import "QNForbiddenMicModel.h"
+#import "QNMicSeatMessageModel.h"
 
 @interface QNVoiceChatRoomController ()<QNRTCClientDelegate,QNIMChatServiceProtocol,UICollectionViewDelegate,UICollectionViewDataSource,JPGiftViewDelegate>
 
@@ -35,13 +38,13 @@
 
 @property(nonatomic,strong) QNGiftView *giftView;
 
+@property(nonatomic,strong) QNBottomUserOperationView *userOpetationView;
+
 @property (nonatomic, strong) UICollectionView *collectionView;
 
 @property (nonatomic, strong) UILabel *titleLabel;
 
 @property (nonatomic, strong) UIImageView *masterSeat;//房主座位
-
-@property (nonatomic, strong) NSMutableArray <QNUserInfo *> *allUserList;
 
 @property (nonatomic, strong) NSMutableArray <QNRTCMicsInfo *> *onMicUserList;
 
@@ -165,7 +168,6 @@
     [self.roomRequest requestJoinRoomWithParams:[QNAttrsModel mj_keyValuesArrayWithObjectArray:arr] success:^(QNRoomDetailModel * roomDetailodel) {
         
         self.model = roomDetailodel;
-        self.allUserList = self.model.allUserList;
         QNUserInfo *userInfo = [QNUserInfo new];
         userInfo.role = self.role;
         self.model.userInfo = userInfo;
@@ -189,7 +191,6 @@
     [self.roomRequest requestRoomInfoSuccess:^(QNRoomDetailModel * _Nonnull roomDetailodel) {
             
         self.model = roomDetailodel;
-        self.allUserList = roomDetailodel.allUserList;
         
         QNUserInfo *userInfo = [QNUserInfo new];
         userInfo.role = self.role;
@@ -228,13 +229,23 @@
         }];
 }
 
+//请求下麦接口
+- (void)requestDownMicSeat {
+    [self.roomRequest requestDownMicSeatSuccess:^{
+        QNIMMessageObject *message = [self.messageCreater createDownMicMessage];
+        [[QNIMChatService sharedOption] sendMessage:message];
+        [self.rtcClient unpublish:@[self.localAudioTrack]];
+        [self getRoomMicInfo];
+    }];
+}
+
 //离开房间
 - (void)requestLeave {
     
     QNIMMessageObject *message = [self.messageCreater createLeaveRoomMessage];
     [[QNIMChatService sharedOption] sendMessage:message];
     [self.chatRoomView sendMessage:message];
-    [self.roomRequest requestDownMicSeat];
+    [self.roomRequest requestDownMicSeatSuccess:^{}];
     [self.roomRequest requestLeaveRoom];
     [self dismissViewControllerAnimated:YES completion:nil];
     [self leaveRoom];
@@ -335,6 +346,26 @@
     } else if ([messageModel.action isEqualToString:@"pub_chat_text"]) {//聊天消息
         
         [self.chatRoomView showMessage:messages.firstObject];
+        
+    } else if ([messageModel.action isEqualToString:@"rtc_forbiddenAudio"]) {//禁麦消息
+        
+        QNForbiddenMicModel *model = [QNForbiddenMicModel mj_objectWithKeyValues:messageModel.data];
+        if ([model.uid isEqualToString:QN_User_id]) {
+            [self.localAudioTrack updateMute:model.isForbidden];
+            if (model.isForbidden) {
+                [MBProgressHUD showText:@"您已被房主禁麦"];
+            } else {
+                [MBProgressHUD showText:@"您已被房主开麦，可以开始说话了"];
+            }
+        }
+        
+    } else if ([messageModel.action isEqualToString:@"rtc_kickOutFromMicSeat"]) {//踢麦消息
+        
+        QNMicSeatMessageModel *model = [QNMicSeatMessageModel mj_objectWithKeyValues:messageModel.data];
+        if ([model.uid isEqualToString:QN_User_id]) {
+            [MBProgressHUD showText:@"您已被房主下麦"];
+            [self requestDownMicSeat];
+        }
     }
 }
 
@@ -346,6 +377,7 @@
     sendModel.defaultCount = 0;
     sendModel.sendCount = model.number;
     sendModel.giftName = model.sendGift.giftName;
+    //通过礼物名字找到本地的礼物图
     for (QNSendGiftModel *gift in self.giftView.dataArray) {
         if ([model.sendGift.giftName isEqualToString:gift.giftName]) {
             sendModel.giftImage = gift.giftImage;
@@ -386,6 +418,12 @@
     [cell updateWithModel:self.onMicUserList[indexPath.item]];
     __weak typeof(self)weakSelf = self;
     cell.onSeatBlock = ^{
+        
+        if ([weakSelf isAdminUser:QN_User_id]) {
+            [weakSelf.userOpetationView showWithUserInfo:self.onMicUserList[indexPath.item]];
+            return;
+        }
+        
         [weakSelf sendInvitationUpMic];
     };
     return cell;
@@ -393,6 +431,7 @@
 
 //请求上麦
 - (void)sendInvitationUpMic {
+    
     if ([self isOnMic]) {
         [MBProgressHUD showText:@"您已经在麦上"];
         [self getRoomMicInfo];
@@ -401,6 +440,10 @@
     
     QNIMMessageObject *message = [self.messageCreater createInviteMessageWithInvitationName:@"audioroomupmic" receiverId:self.model.roomInfo.creator];
     [[QNIMChatService sharedOption] sendMessage:message];
+    
+    QNIMMessageObject *applyMessage = [self.messageCreater createChatMessage:@"申请连麦，等待房主同意..."];
+    [[QNIMChatService sharedOption] sendMessage:applyMessage];
+    [self.chatRoomView sendMessage:applyMessage];
 }
 
 //判断是否已经在麦上
@@ -516,14 +559,24 @@
     if (!_giftView) {
         _giftView = [[QNGiftView alloc] init];
         _giftView.delegate = self;
-        NSString *filePath=[[NSBundle mainBundle]pathForResource:@"giftData" ofType:@"json"];
-        NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
-        NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
-        NSArray *data = [responseObject objectForKey:@"data"];
-        NSMutableArray *dataArr = [NSMutableArray arrayWithArray:data];
-        self.giftView.dataArray = [QNSendGiftModel mj_objectArrayWithKeyValuesArray:dataArr];
     }
     return _giftView;
+}
+
+- (QNBottomUserOperationView *)userOpetationView {
+    if (!_userOpetationView) {
+        _userOpetationView = [[QNBottomUserOperationView alloc]initWithAllowVideoOperation:NO];
+        __weak typeof(self)weakSelf = self;
+        _userOpetationView.forbiddenAudioBlock = ^(QNRTCMicsInfo * _Nonnull userInfo, BOOL forbiddenAudio) {
+            QNIMMessageObject *message = [weakSelf.messageCreater createForbiddenAudio:forbiddenAudio userId:userInfo.uid msg:@""];
+            [[QNIMChatService sharedOption] sendMessage:message];
+        };
+        _userOpetationView.kickOutMicBlock = ^(QNRTCMicsInfo * _Nonnull userInfo) {
+            QNIMMessageObject *message = [weakSelf.messageCreater createKickOutMicMessageWithUid:userInfo.uid msg:@""];
+            [[QNIMChatService sharedOption] sendMessage:message];
+        };
+    }
+    return _userOpetationView;
 }
 @end
 

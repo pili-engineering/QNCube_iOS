@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestUpMicSeatWithUserExtRoleType:(NSString *)userExtRoleType  clientRoleType:(QNClientRoleType)clientRoleType success:(void (^)(void))success failure:(void (^)(NSError *error))failure;
 
 //请求下麦接口
-- (void)requestDownMicSeat;
+- (void)requestDownMicSeatSuccess:(void (^)(void))success;
 
 //房间心跳
 - (void)requestRoomHeartBeatWithInterval:(NSString *)interval;

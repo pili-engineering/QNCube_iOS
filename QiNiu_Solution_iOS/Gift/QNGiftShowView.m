@@ -78,7 +78,7 @@ static const NSInteger animationTime = 5;
     self.finishModel = giftModel;
     [self.userIconView sd_setImageWithURL:[NSURL URLWithString:giftModel.userIcon] placeholderImage:[UIImage imageNamed:@""]];
     self.userNameLabel.text = giftModel.userName;
-    self.giftNameLabel.text = [NSString stringWithFormat:@"送 %@",giftModel.giftName];
+    self.giftNameLabel.text = [NSString stringWithFormat:@"送出 %@",giftModel.giftName];
     //本地图片
     self.giftImageView.image = [UIImage imageNamed:giftModel.giftImage];
     //网络图片

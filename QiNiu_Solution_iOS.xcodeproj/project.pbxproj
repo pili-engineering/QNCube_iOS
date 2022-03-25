@@ -174,6 +174,7 @@
 		77F427D327EDBEA6007999A4 /* lu.gif in Resources */ = {isa = PBXBuildFile; fileRef = 77F427CD27EDBEA5007999A4 /* lu.gif */; };
 		77F427D427EDBEA6007999A4 /* shengdan.gif in Resources */ = {isa = PBXBuildFile; fileRef = 77F427CE27EDBEA5007999A4 /* shengdan.gif */; };
 		77F427D827EDC184007999A4 /* giftData.json in Resources */ = {isa = PBXBuildFile; fileRef = 77F427D727EDC184007999A4 /* giftData.json */; };
+		77F427DB27EDDC23007999A4 /* QNBottomUserOperationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F427DA27EDDC23007999A4 /* QNBottomUserOperationView.m */; };
 		77F4F58E2760FF3000B749FF /* QNInvitationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F4F58D2760FF3000B749FF /* QNInvitationModel.m */; };
 		77F4F5912761B54500B749FF /* QNMicSeatMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F4F5902761B54500B749FF /* QNMicSeatMessageModel.m */; };
 		77F4F5972761D56100B749FF /* QNMovieMicController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F4F5962761D56100B749FF /* QNMovieMicController.m */; };
@@ -552,6 +553,8 @@
 		77F427CD27EDBEA5007999A4 /* lu.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = lu.gif; sourceTree = "<group>"; };
 		77F427CE27EDBEA5007999A4 /* shengdan.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = shengdan.gif; sourceTree = "<group>"; };
 		77F427D727EDC184007999A4 /* giftData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = giftData.json; sourceTree = "<group>"; };
+		77F427D927EDDC23007999A4 /* QNBottomUserOperationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNBottomUserOperationView.h; sourceTree = "<group>"; };
+		77F427DA27EDDC23007999A4 /* QNBottomUserOperationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNBottomUserOperationView.m; sourceTree = "<group>"; };
 		77F4F58C2760FF3000B749FF /* QNInvitationModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNInvitationModel.h; sourceTree = "<group>"; };
 		77F4F58D2760FF3000B749FF /* QNInvitationModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNInvitationModel.m; sourceTree = "<group>"; };
 		77F4F58F2761B54500B749FF /* QNMicSeatMessageModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNMicSeatMessageModel.h; sourceTree = "<group>"; };
@@ -1010,6 +1013,8 @@
 				77F61AA327E20C0B0031C415 /* QNVoiceChatRoomCell.m */,
 				77F61AB927EAF6CE0031C415 /* QNVoiceChatBottomOperationView.h */,
 				77F61ABA27EAF6CF0031C415 /* QNVoiceChatBottomOperationView.m */,
+				77F427D927EDDC23007999A4 /* QNBottomUserOperationView.h */,
+				77F427DA27EDDC23007999A4 /* QNBottomUserOperationView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1776,6 +1781,7 @@
 				77AF808F2620385A0096B2FE /* QNAddInterViewViewModel.m in Sources */,
 				772FCC3D2663F16800EA25EE /* QNPageControl.m in Sources */,
 				777B7CDD27E1D36B00681585 /* QNRoomRequest.m in Sources */,
+				77F427DB27EDDC23007999A4 /* QNBottomUserOperationView.m in Sources */,
 				77AF817D2626D95D0096B2FE /* QNInterViewListModel.m in Sources */,
 				7764C127263832E600A8BC8B /* QNInputBarControl.m in Sources */,
 				775D7442261FF9B800A70C36 /* QNInterViewListCell.m in Sources */,

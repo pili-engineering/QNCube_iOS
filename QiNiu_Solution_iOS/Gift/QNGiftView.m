@@ -57,15 +57,24 @@ static NSString *cellID = @"QNGiftCollectionViewCell";
         
         self.backgroundColor = [UIColor clearColor];
         self.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-        [self p_SetUI];
+        
+        [self setUI];
+        [self setData];
     }
     return self;
 }
 
+- (void)setData {
+    NSString *filePath=[[NSBundle mainBundle]pathForResource:@"giftData" ofType:@"json"];
+    NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
+    NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
+    NSArray *data = [responseObject objectForKey:@"data"];
+    NSMutableArray *dataArr = [NSMutableArray arrayWithArray:data];
+    self.dataArray = [QNSendGiftModel mj_objectArrayWithKeyValuesArray:dataArr];
+}
 
 #pragma mark -设置UI
-- (void)p_SetUI {
+- (void)setUI {
     
     UIView *bottomView = [[UIView alloc] initWithFrame: CGRectMake(0, self.frame.size.height-Bottom_Margin(44), self.frame.size.width, Bottom_Margin(44))];
     bottomView.backgroundColor = [UIColor blackColor];
