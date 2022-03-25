@@ -24,10 +24,16 @@
 #import "QNVoiceChatRoomCell.h"
 #import "QNInvitationModel.h"
 #import "QNVoiceChatBottomOperationView.h"
+#import "QNGiftShowManager.h"
+#import "QNGiftView.h"
+#import "QNSendGiftModel.h"
+#import "QNGiftMsgModel.h"
 
-@interface QNVoiceChatRoomController ()<QNRTCClientDelegate,QNIMChatServiceProtocol,UICollectionViewDelegate,UICollectionViewDataSource>
+@interface QNVoiceChatRoomController ()<QNRTCClientDelegate,QNIMChatServiceProtocol,UICollectionViewDelegate,UICollectionViewDataSource,JPGiftViewDelegate>
 
 @property (nonatomic, strong) QNChatRoomView * chatRoomView;
+
+@property(nonatomic,strong) QNGiftView *giftView;
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 
@@ -92,12 +98,41 @@
     bottomButtonView.quitBlock = ^{
         [weakSelf quitRoom];
     };
+    bottomButtonView.giftBlock = ^{
+        [weakSelf.giftView showGiftView];
+    };
     bottomButtonView.textBlock = ^(NSString * _Nonnull text) {
         QNIMMessageObject *message = [weakSelf.messageCreater createChatMessage:text];
         [[QNIMChatService sharedOption] sendMessage:message];
         [weakSelf.chatRoomView sendMessage:message];
     };
     [self.view addSubview:bottomButtonView];
+}
+
+#pragma mark  --------JPGiftViewDelegate---------
+//点击赠送礼物的回调
+- (void)giftViewSendGiftInView:(QNGiftView *)giftView data:(QNSendGiftModel *)model {
+        
+    model.userIcon = QN_User_avatar;
+    model.userName = QN_User_nickname;
+    model.defaultCount = 0;
+    model.sendCount = 1;
+        
+    [[QNGiftShowManager sharedManager] showGiftViewWithBackView:self.view info:model completeBlock:^(BOOL finished) {
+        NSLog(@"赠送了礼物");
+    }];
+    [self sendGiftMessage:model];
+}
+
+//发送礼物信令和消息
+-(void)sendGiftMessage:(QNSendGiftModel *)model {
+    QNGiftModel *gift = [QNGiftModel new];
+    gift.giftName = model.giftName;
+    QNIMMessageObject *message = [self.messageCreater createGiftMessage:gift number:model.sendCount extMsg:@""];
+    [[QNIMChatService sharedOption] sendMessage:message];
+    QNIMMessageObject *showMsg = [self.messageCreater createChatMessage:[NSString stringWithFormat:@"送出了%@个%@",@(model.sendCount),model.giftName]];
+    [[QNIMChatService sharedOption] sendMessage:showMsg];
+    [self.chatRoomView sendMessage:showMsg];
 }
 
 - (void)quitRoom {
@@ -241,10 +276,6 @@
     [self getRoomMicInfo];
 }
 
-- (void)messageStatusChanged:(QNIMMessageObject *)message error:(QNIMError *)error {
-    
-}
-
 - (void)receivedMessages:(NSArray<QNIMMessageObject *> *)messages {
     
     QNIMModel *messageModel = [QNIMModel mj_objectWithKeyValues:messages.firstObject.content];
@@ -267,7 +298,12 @@
             [weakSelf getRoomMicInfo];
         }];
         
-    } else if ([messageModel.action isEqualToString:@"invite_reject"]) {//连麦被拒绝消息
+    } else if ([messageModel.action isEqualToString:@"living_gift"]) {//收到礼物消息
+        
+        QNGiftMsgModel *model = [QNGiftMsgModel mj_objectWithKeyValues:messageModel.data];
+        [self receivedGift:model];
+        
+    }  else if ([messageModel.action isEqualToString:@"invite_reject"]) {//连麦被拒绝消息
         
         [MBProgressHUD showText:@"对方拒绝了你的连麦申请"];
         
@@ -300,6 +336,24 @@
         
         [self.chatRoomView showMessage:messages.firstObject];
     }
+}
+
+//收到礼物信令的操作
+- (void)receivedGift:(QNGiftMsgModel *)model {
+    QNSendGiftModel *sendModel = [QNSendGiftModel new];
+    sendModel.userIcon = QN_User_avatar;
+    sendModel.userName = QN_User_nickname;
+    sendModel.defaultCount = 0;
+    sendModel.sendCount = model.number;
+    sendModel.giftName = model.sendGift.giftName;
+    for (QNSendGiftModel *gift in self.giftView.dataArray) {
+        if ([model.sendGift.giftName isEqualToString:gift.giftName]) {
+            sendModel.giftImage = gift.giftImage;
+            sendModel.giftGifImage = gift.giftGifImage;
+        }
+    }
+    [[QNGiftShowManager sharedManager] showGiftViewWithBackView:self.view info:sendModel completeBlock:^(BOOL finished) {
+    }];
 }
 
 - (void)leaveToRoomList {
@@ -441,7 +495,6 @@
         layout.minimumInteritemSpacing = 10;
         layout.itemSize = CGSizeMake((kScreenWidth - 80)/3, (kScreenWidth - 80)/3);
         layout.scrollDirection = UICollectionViewScrollDirectionVertical;
-        
         _collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:layout];
         [_collectionView setBackgroundColor:[UIColor clearColor]];
         _collectionView.delegate = self;
@@ -459,5 +512,18 @@
     return _collectionView;
 }
 
+- (QNGiftView *)giftView{
+    if (!_giftView) {
+        _giftView = [[QNGiftView alloc] init];
+        _giftView.delegate = self;
+        NSString *filePath=[[NSBundle mainBundle]pathForResource:@"giftData" ofType:@"json"];
+        NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
+        NSDictionary *responseObject = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
+        NSArray *data = [responseObject objectForKey:@"data"];
+        NSMutableArray *dataArr = [NSMutableArray arrayWithArray:data];
+        self.giftView.dataArray = [QNSendGiftModel mj_objectArrayWithKeyValuesArray:dataArr];
+    }
+    return _giftView;
+}
 @end
 

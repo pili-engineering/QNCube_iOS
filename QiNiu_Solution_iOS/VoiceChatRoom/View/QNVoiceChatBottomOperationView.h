@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) void (^quitBlock)(void);
 
+@property (nonatomic, copy) void (^giftBlock)(void);
+
 @property (nonatomic, copy) void (^textBlock)(NSString *text);
 
 @end

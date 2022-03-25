@@ -22,7 +22,7 @@
         
         UIView *rightView = [[UIView alloc]init];
         [self addSubview:rightView];
-        CGFloat rightViewWidth = kScreenWidth - kScreenWidth*2/3 - 15;
+        CGFloat rightViewWidth = kScreenWidth - kScreenWidth/2 - 15;
         
         [rightView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.commentTf);
@@ -31,9 +31,9 @@
             make.height.mas_equalTo(40);
         }];
         
-        NSString *selectedImage[] = {@"icon_microphone_on", @"icon_quit_show"};
-        NSString *normalImage[] = {@"icon_microphone_off",@"icon_quit_show"};
-        SEL selectors[] = {@selector(microphoneAction:),@selector(quitRoom)};
+        NSString *selectedImage[] = {@"icon_gift",@"icon_microphone_on", @"icon_quit_show"};
+        NSString *normalImage[] = {@"icon_gift",@"icon_microphone_off",@"icon_quit_show"};
+        SEL selectors[] = {@selector(giftAction),@selector(microphoneAction:),@selector(quitRoom)};
         CGFloat buttonWidth = 40;
         NSInteger space = (rightViewWidth - buttonWidth * ARRAY_SIZE(normalImage))/(ARRAY_SIZE(normalImage)+1);
         
@@ -54,6 +54,12 @@
     }
     return self;
     
+}
+
+- (void)giftAction {
+    if (self.giftBlock) {
+        self.giftBlock();
+    }
 }
 
 - (void)microphoneAction:(UIButton *)button {
@@ -100,7 +106,7 @@
             make.centerY.equalTo(self);
             make.left.equalTo(self).offset(15);
             make.height.mas_equalTo(40);
-            make.width.mas_equalTo(kScreenWidth*2/3);
+            make.width.mas_equalTo(kScreenWidth/2);
         }];
         
     }
