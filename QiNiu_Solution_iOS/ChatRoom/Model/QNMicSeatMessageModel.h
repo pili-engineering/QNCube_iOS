@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,strong) QNUserExtension *userExtension;
 
+@property (nonatomic, copy)NSString *msg;
+
 @end
 
 @interface QNMicSeatMessageModel : NSObject
@@ -28,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) NSString *action;
 
 @property(nonatomic, strong) QNUserMicSeatModel *data;
+
+@property(nonatomic, copy) NSString *msg;
 
 @end
 

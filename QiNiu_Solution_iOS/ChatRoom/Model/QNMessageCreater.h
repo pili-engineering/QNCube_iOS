@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class QNIMMessageObject;
+@class QNIMMessageObject,QNGiftModel;
 
 @interface QNMessageCreater : NSObject
 
@@ -24,11 +24,32 @@ NS_ASSUME_NONNULL_BEGIN
 //聊天消息
 - (QNIMMessageObject *)createChatMessage:(NSString *)content;
 
+//弹幕消息
+- (QNIMMessageObject *)createDanmuMessage:(NSString *)content;
+
+//礼物消息
+- (QNIMMessageObject *)createGiftMessage:(QNGiftModel *)giftModel number:(NSInteger)number extMsg:(NSString *)extMsg;
+
+//点赞消息
+- (QNIMMessageObject *)createHeartMessage:(NSInteger)count;
+
 //上麦信令
 - (QNIMMessageObject *)createOnMicMessage;
 
 //下麦信令
 - (QNIMMessageObject *)createDownMicMessage;
+
+//禁音频信令
+- (QNIMMessageObject *)createForbiddenAudio:(BOOL)isForbidden userId:(NSString *)userId msg:(NSString *)msg;
+
+//禁视频信令
+- (QNIMMessageObject *)createForbiddenVideo:(BOOL)isForbidden userId:(NSString *)userId msg:(NSString *)msg;
+
+//踢麦信令
+- (QNIMMessageObject *)createKickOutMicMessageWithUid:(NSString *)uid msg:(NSString *)msg;
+
+//踢出房间信令
+- (QNIMMessageObject *)createKickOutRoomMessage:(NSString *)uid msg:(NSString *)msg;
 
 //邀请信令
 - (QNIMMessageObject *)createInviteMessageWithInvitationName:(NSString *)invitationName receiverId:(NSString *)receiverId;
