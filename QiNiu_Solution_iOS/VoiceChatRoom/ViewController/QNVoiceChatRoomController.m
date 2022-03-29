@@ -131,6 +131,7 @@
 -(void)sendGiftMessage:(QNSendGiftModel *)model {
     QNGiftModel *gift = [QNGiftModel new];
     gift.giftName = model.giftName;
+    gift.giftId = model.giftId;
     QNIMMessageObject *message = [self.messageCreater createGiftMessage:gift number:model.sendCount extMsg:@""];
     [[QNIMChatService sharedOption] sendMessage:message];
     QNIMMessageObject *showMsg = [self.messageCreater createChatMessage:[NSString stringWithFormat:@"送出了%@个%@",@(model.sendCount),model.giftName]];
@@ -358,11 +359,10 @@
                 [MBProgressHUD showText:@"您已被房主开麦，可以开始说话了"];
             }
         }
-        
     } else if ([messageModel.action isEqualToString:@"rtc_kickOutFromMicSeat"]) {//踢麦消息
         
-        QNMicSeatMessageModel *model = [QNMicSeatMessageModel mj_objectWithKeyValues:messageModel.data];
-        if ([model.uid isEqualToString:QN_User_id]) {
+        QNIMSeatOperationModel *model = [QNIMSeatOperationModel mj_objectWithKeyValues:messageModel.data];
+        if ([model.seat.uid isEqualToString:QN_User_id]) {
             [MBProgressHUD showText:@"您已被房主下麦"];
             [self requestDownMicSeat];
         }
@@ -372,8 +372,8 @@
 //收到礼物信令的操作
 - (void)receivedGift:(QNGiftMsgModel *)model {
     QNSendGiftModel *sendModel = [QNSendGiftModel new];
-    sendModel.userIcon = QN_User_avatar;
-    sendModel.userName = QN_User_nickname;
+    sendModel.userIcon = model.senderAvatar;
+    sendModel.userName = model.senderName;
     sendModel.defaultCount = 0;
     sendModel.sendCount = model.number;
     sendModel.giftName = model.sendGift.giftName;

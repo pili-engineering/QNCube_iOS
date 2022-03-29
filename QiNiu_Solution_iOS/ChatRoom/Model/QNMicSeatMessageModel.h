@@ -25,4 +25,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface QNIMSeatOperationModel : NSObject
+
+@property(nonatomic, strong) QNMicSeatMessageModel *seat;
+
+@property(nonatomic, copy) NSString *msg;
+
+@end
+
 NS_ASSUME_NONNULL_END

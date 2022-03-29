@@ -13,6 +13,8 @@
 @property(nonatomic,copy)NSString *userIcon;
 /** username */
 @property(nonatomic,copy)NSString *userName;
+/** userId */
+@property(nonatomic,copy)NSString *userId;
 /** giftname */
 @property(nonatomic,copy)NSString *giftName;
 /** giftimage */

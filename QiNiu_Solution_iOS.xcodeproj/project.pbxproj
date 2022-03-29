@@ -2021,7 +2021,7 @@
 					"$(PROJECT_DIR)/QiNiu_Solution_iOS/Effect/st_mobile_sdk/lib/ios_sim",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.0.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-all_load",
@@ -2164,7 +2164,7 @@
 					"$(PROJECT_DIR)/QiNiu_Solution_iOS/Effect/st_mobile_sdk/lib/ios_sim",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.0.3;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",

@@ -145,10 +145,13 @@
     micSeat.ownerOpenVideo = NO;
     micSeat.uid = uid;
     
+    QNIMSeatOperationModel *operaqtionModel = [QNIMSeatOperationModel new];
+    operaqtionModel.seat = micSeat;
+    operaqtionModel.msg = msg;
+    
     QNIMModel *messageModel = [QNIMModel new];
     messageModel.action = @"rtc_lockSeat";
-    messageModel.msg = msg;
-    messageModel.data = micSeat.mj_keyValues;
+    messageModel.data = operaqtionModel.mj_keyValues;
     
     QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
     message.senderName = QN_User_nickname;
@@ -163,10 +166,13 @@
     micSeat.ownerOpenVideo = NO;
     micSeat.uid = uid;
     
+    QNIMSeatOperationModel *operaqtionModel = [QNIMSeatOperationModel new];
+    operaqtionModel.seat = micSeat;
+    operaqtionModel.msg = msg;
+    
     QNIMModel *messageModel = [QNIMModel new];
     messageModel.action = @"rtc_kickOutFromMicSeat";
-    messageModel.msg = msg;
-    messageModel.data = micSeat.mj_keyValues;
+    messageModel.data = operaqtionModel.mj_keyValues;
     
     QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
     message.senderName = QN_User_nickname;
@@ -191,14 +197,13 @@
 //生成禁麦信令
 - (QNIMMessageObject *)createForbiddenMessageWithAction:(NSString *)action isFobidden:(BOOL)isForbidden userId:(NSString *)userId msg:(NSString *)msg {
     
-    QNIMModel *model = [QNIMModel new];
-    model.action = action;
-    
     QNForbiddenMicModel *msgModel = [QNForbiddenMicModel new];
     msgModel.uid = userId;
     msgModel.isForbidden = isForbidden;
     msgModel.msg = msg;
     
+    QNIMModel *model = [QNIMModel new];
+    model.action = action;
     model.data = msgModel.mj_keyValues;
     
     QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:model.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
@@ -237,12 +242,6 @@
 //生成邀请信令
 - (QNIMMessageObject *)createInviteMessageWithAction:(NSString *)action invitationName:(NSString *)invitationName receiverId:(NSString *)receiverId {
     
-    QNIMModel *model = [QNIMModel new];
-    model.action = action;
-    
-    QNInvitationModel *invitationData = [QNInvitationModel new];
-    invitationData.invitationName = invitationName;
-    
     QNInvitationInfo *info = [QNInvitationInfo new];
     info.channelId = self.toId;
     info.initiatorUid = QN_User_id;
@@ -250,8 +249,12 @@
     info.receiver =  receiverId;
     info.timeStamp = [self getNowTimeTimestamp3];
     
+    QNInvitationModel *invitationData = [QNInvitationModel new];
+    invitationData.invitationName = invitationName;
     invitationData.invitation = info;
     
+    QNIMModel *model = [QNIMModel new];
+    model.action = action;
     model.data = invitationData.mj_keyValues;
     
     QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:model.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
@@ -262,15 +265,13 @@
 //生成进房/离房/聊天消息
 - (QNIMMessageObject *)messageWithAction:(NSString *)action content:(NSString *)content {
     
-    QNIMModel *messageModel = [QNIMModel new];
-    messageModel.action = action;
-    
     QNIMTextMsgModel *model = [QNIMTextMsgModel new];
-    
     model.senderName = QN_User_nickname;
     model.senderId = QN_IM_userId;
     model.msgContent = content;
     
+    QNIMModel *messageModel = [QNIMModel new];
+    messageModel.action = action;
     messageModel.data = model.mj_keyValues;
     
     QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
