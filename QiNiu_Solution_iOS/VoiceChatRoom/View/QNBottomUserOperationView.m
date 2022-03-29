@@ -85,7 +85,7 @@
         button.titleLabel.textAlignment = NSTextAlignmentCenter;
         SEL itemSelector = NSSelectorFromString(selectors[i]);
         [button addTarget:self action:itemSelector forControlEvents:(UIControlEventTouchUpInside)];
-        button.selected = YES;
+        button.selected = NO;
         [self addSubview:button];
     }
     

@@ -39,10 +39,16 @@ NS_ASSUME_NONNULL_BEGIN
 //下麦信令
 - (QNIMMessageObject *)createDownMicMessage;
 
-//禁音频信令
+//开关麦信令（音频）
+- (QNIMMessageObject *)createMicStatusMessage:(BOOL)openAudio;
+
+//开关麦信令（视频）
+- (QNIMMessageObject *)createCameraStatusMessage:(BOOL)openVideo;
+
+//禁麦信令（音频）
 - (QNIMMessageObject *)createForbiddenAudio:(BOOL)isForbidden userId:(NSString *)userId msg:(NSString *)msg;
 
-//禁视频信令
+//禁麦信令（视频）
 - (QNIMMessageObject *)createForbiddenVideo:(BOOL)isForbidden userId:(NSString *)userId msg:(NSString *)msg;
 
 //踢麦信令

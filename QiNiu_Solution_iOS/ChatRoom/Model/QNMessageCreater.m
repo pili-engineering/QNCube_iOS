@@ -114,24 +114,36 @@
 
 //发送上麦信令
 - (QNIMMessageObject *)createOnMicMessage {
-    QNIMMessageObject *message = [self sendMicMessage:@"rtc_sitDown"];
+    QNIMMessageObject *message = [self sendMicMessage:@"rtc_sitDown" openAudio:YES openVideo:YES];
     return message;
 }
 
 //发送下麦信令
 - (QNIMMessageObject *)createDownMicMessage {
-    QNIMMessageObject *message = [self sendMicMessage:@"rtc_sitUp"];
+    QNIMMessageObject *message = [self sendMicMessage:@"rtc_sitUp" openAudio:NO openVideo:NO];
     return message;
 }
 
-//禁止音频
+//开关麦信令（音频）
+- (QNIMMessageObject *)createMicStatusMessage:(BOOL)openAudio {
+    QNIMMessageObject *message = [self sendMicMessage:@"rtc_microphoneStatus" openAudio:openAudio openVideo:YES];
+    return message;
+}
+
+//开关麦信令（视频）
+- (QNIMMessageObject *)createCameraStatusMessage:(BOOL)openVideo {
+    QNIMMessageObject *message = [self sendMicMessage:@"rtc_cameraStatus" openAudio:YES openVideo:openVideo];
+    return message;
+}
+
+//禁麦音频
 - (QNIMMessageObject *)createForbiddenAudio:(BOOL)isForbidden userId:(NSString *)userId msg:(NSString *)msg {
     
     QNIMMessageObject *message = [self createForbiddenMessageWithAction:@"rtc_forbiddenAudio" isFobidden:isForbidden userId:userId msg:msg];
     return message;
 }
 
-//禁止视频
+//禁麦视频
 - (QNIMMessageObject *)createForbiddenVideo:(BOOL)isForbidden userId:(NSString *)userId msg:(NSString *)msg{
     QNIMMessageObject *message = [self createForbiddenMessageWithAction:@"rtc_forbiddenVideo" isFobidden:isForbidden userId:userId msg:msg];
     return message;
@@ -281,14 +293,14 @@
 }
 
 //上下麦信令
-- (QNIMMessageObject *)sendMicMessage:(NSString *)action {
-    
+- (QNIMMessageObject *)sendMicMessage:(NSString *)action openAudio:(BOOL)openAudio openVideo:(BOOL)openVideo {
+
     QNIMModel *messageModel = [QNIMModel new];
     messageModel.action = action;
     
     QNMicSeatMessageModel *micSeat = [QNMicSeatMessageModel new];
-    micSeat.ownerOpenAudio = YES;
-    micSeat.ownerOpenVideo = YES;
+    micSeat.ownerOpenAudio = openAudio;
+    micSeat.ownerOpenVideo = openVideo;
     micSeat.uid = QN_User_id;
     
     QNUserExtension *user = [QNUserExtension new];
