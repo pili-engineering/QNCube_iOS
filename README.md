@@ -10,25 +10,25 @@
   
 ##  业务场景
 
-  QNInterview          面试场景<br />
-  QNRepair             检修场景<br />
-  QNFunny              娱乐场景<br />
-  QNTogetherMovie      一起看电影场景<br />
-  QNVoiceChatRoom      语聊房场景<br />
+  QNInterview ->        面试场景<br />
+  QNRepair     ->        检修场景<br />
+  QNFunny   ->           娱乐场景<br />
+  QNTogetherMovie   ->   一起看电影场景<br />
+  QNVoiceChatRoom    ->  语聊房场景<br />
   
 ## UI组件
 
-  QNChatRoomView                公聊组件<br />
-  QNChatController              聊天窗组件<br />
-  QNGiftView                    礼物组件<br />
-  QNWhiteBoardViewController    白板<br />
-  QNRTCRoom                     通用房间<br />
+  QNChatRoomView       ->         公聊组件<br />
+  QNChatController      ->        聊天窗组件<br />
+  QNGiftView                ->    礼物组件<br />
+  QNWhiteBoardViewController  ->  白板<br />
+  QNRTCRoom        ->             通用房间<br />
   
 ## 业务组件
 
-  QNNetworkUtil           网络请求<br />
-  MBProgressHUD+QNShow    toast组件<br />
-  QNMessageCreater        信令<br />
+  QNNetworkUtil        ->   网络请求<br />
+  MBProgressHUD+QNShow  ->  toast组件<br />
+  QNMessageCreater     ->   信令<br />
  
 ## pod依赖
 
