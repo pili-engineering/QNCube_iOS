@@ -10,7 +10,7 @@
   
 ##  业务场景
 
-  QNInterview          面试场景
+  QNInterview          面试场景\n
   QNRepair             检修场景
   QNFunny              娱乐场景
   QNTogetherMovie      一起看电影场景
