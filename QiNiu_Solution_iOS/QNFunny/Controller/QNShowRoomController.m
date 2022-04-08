@@ -60,6 +60,7 @@
     [self setupIMUI];
     [self createRemoteSeat];
     [[QNIMChatService sharedOption] addDelegate:self delegateQueue:dispatch_get_main_queue()];
+    [self logButton];
 }
 
 - (void)quitRoom {
@@ -285,7 +286,7 @@
 }
 
 - (void)RTCClient:(QNRTCClient *)client didConnectionStateChanged:(QNConnectionState)state disconnectedInfo:(QNConnectionDisconnectedInfo *)info {
-    
+    [super RTCClient:client didConnectionStateChanged:state disconnectedInfo:info];
     if (state == QNConnectionStateConnected) {
         
         if ([self.model.userInfo.role isEqualToString:@"roomHost"]) {

@@ -9,18 +9,30 @@
 #import "QNRoomUserView.h"
 #import "QNPageControl.h"
 
-@interface QNRTCRoom ()<QNRTCClientDelegate,QNCameraTrackVideoDataDelegate,QNMicrophoneAudioTrackDataDelegate,QNScreenVideoTrackDelegate>
-
+@interface QNRTCRoom ()
+@property (nonatomic, strong) LogTableView *logTableView;//track传输信息tableview
 @property (nonatomic, strong) QNPageControl *pageControl;
-
 @property (nonatomic, strong) NSMutableArray *userViewArray;
+@property (nonatomic, strong) NSMutableArray *logStringArray;
+@property (nonatomic, strong) NSTimer *getstatsTimer;
 
 @end
 
 @implementation QNRTCRoom
 
+- (void)dealloc {
+    [QNRTC deinit];
+    [self.logTableView removeFromSuperview];
+    self.logTableView = nil;
+}
+
 - (void)viewDidLoad {
-    [super viewDidLoad];
+    [super viewDidLoad];    
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [self.logTableView removeFromSuperview];
+    self.logTableView = nil;
 }
 
 - (instancetype)initWithRoomModel:(QNRoomDetailModel *)model {
@@ -29,6 +41,30 @@
         [self roomRequest];
     }
     return self;
+}
+
+- (UIButton *)logButton {
+    if (!_logButton) {
+        _logButton = [[UIButton alloc] init];
+        [_logButton setImage:[UIImage imageNamed:@"log-btn"] forState:(UIControlStateNormal)];
+        [_logButton addTarget:self action:@selector(logAction:) forControlEvents:(UIControlEventTouchUpInside)];
+        [self.view addSubview:_logButton];
+        [_logButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.view).offset(20);
+            make.top.equalTo(self.mas_topLayoutGuide).offset(10);
+        }];
+    }
+    return _logButton;
+}
+
+- (void)logAction:(UIButton *)button {
+    button.selected = !button.isSelected;
+    if (button.selected) {
+        if ([self.logTableView numberOfRowsInSection:0] != self.logStringArray.count) {
+            [self.logTableView reloadData];
+        }
+    }
+    self.logTableView.hidden = !button.selected;
 }
 
 #pragma mark ------房间操作
@@ -491,6 +527,236 @@
     }];
 }
 
+- (void)addLogString:(NSString *)logString {
+    NSLog(@"%@", logString);
+    
+    @synchronized(_logStringArray) {
+        [self.logStringArray addObject:logString];
+    }
+    
+    dispatch_main_async_safe(^{
+        // 只有日志 view 是显示的时候，才去更新 UI
+        if (!self.logTableView.hidden) {
+            [NSObject cancelPreviousPerformRequestsWithTarget:self.logTableView selector:@selector(reloadData) object:nil];
+            [self.logTableView performSelector:@selector(reloadData) withObject:nil afterDelay:.2];
+        }
+    });
+}
+
+
+- (void)clearLogString {
+    
+    @synchronized(_logStringArray) {
+        [_logStringArray removeAllObjects];
+    }
+    
+    dispatch_main_async_safe(^{
+        [self.logTableView reloadData];
+    });
+}
+
+#pragma mark - UITableViewDelegate & UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    @synchronized(_logStringArray) {
+        return 1;
+    }
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    @synchronized(_logStringArray) {
+        return _logStringArray.count;
+    }
+}
+
+static const int cLabelTag = 10;
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"reuseIdentifier"];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:@"reuseIdentifier"];
+        cell.backgroundColor = [UIColor clearColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        UILabel *label = [[UILabel alloc] init];
+        label.numberOfLines = 0;
+        label.textColor = [UIColor whiteColor];
+        label.font = [UIFont systemFontOfSize:14];
+        label.tag = cLabelTag;
+        
+        [cell.contentView addSubview:label];
+        [label mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.top.equalTo(cell.contentView).offset(5);
+            make.right.bottom.equalTo(cell.contentView).offset(-5);
+            
+        }];
+    }
+    
+    UILabel *label = [cell.contentView viewWithTag:cLabelTag];
+    @synchronized(_logStringArray) {
+        if (_logStringArray.count > indexPath.row) {
+            label.text = _logStringArray[indexPath.row];
+        } else {
+            label.text = @"Unknown message";
+        }
+    }
+    
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    return 60;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewAutomaticDimension;
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.logTableView.isScrolling = YES;
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    self.logTableView.isScrolling = decelerate;
+    if (!decelerate) {
+        CGFloat offset = fabs(scrollView.contentSize.height - scrollView.frame.size.height - scrollView.contentOffset.y);
+        NSLog(@"value = %f", offset);
+        // 这里小于 10 就算到底部了
+        self.logTableView.isBottom =  offset < 10;
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    self.logTableView.isScrolling = NO;
+    
+    CGFloat offset = fabs(scrollView.contentSize.height - scrollView.frame.size.height - scrollView.contentOffset.y);
+    NSLog(@"value = %f", offset);
+    // 这里小于 10 就算到底部了
+    self.logTableView.isBottom =  offset < 10;
+}
+
+#pragma mark - 统计信息计算
+
+- (void)startGetStatsTimer {
+    
+    [self stopGetStatsTimer];
+    
+    self.getstatsTimer = [NSTimer timerWithTimeInterval:3
+                                             target:self
+                                           selector:@selector(getStatesTimerAction)
+                                           userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.getstatsTimer forMode:NSRunLoopCommonModes];
+}
+
+- (void)getStatesTimerAction {
+    if (QNConnectionStateConnected != self.rtcClient.roomState && QNConnectionStateReconnected != self.rtcClient.roomState) {
+        return;
+    }
+        
+    NSDictionary* videoTrackStats =  [[NSDictionary alloc] initWithDictionary:[self.rtcClient getLocalVideoTrackStats]];
+    
+    for (NSString * trackID in videoTrackStats.allKeys) {
+        NSString *str = nil;
+        QNLocalVideoTrackStats * videoStats = videoTrackStats[trackID];
+        str = [NSString stringWithFormat:@"本地视频传输信息:\ntrackID：%@\n\n视频码率：%2fbps\n 本地视频丢包率：%f%%\n视频帧率：%ld\n本地 rtt：%ld\nprofile：%ld\n",trackID, videoStats.uplinkBitrate, videoStats.uplinkLostRate, videoStats.uplinkFrameRate, videoStats.uplinkRTT, videoStats.profile];
+        [self addLogString:str];
+    }
+    
+    NSDictionary* audioTrackStats =  [self.rtcClient getLocalAudioTrackStats];
+    for (NSString * trackID in audioTrackStats.allKeys) {
+        NSString *str = nil;
+        QNLocalAudioTrackStats * audioState = audioTrackStats[trackID];
+        str = [NSString stringWithFormat:@"本地音频统计信息:\ntrackID：%@\n音频码率：%.2fbps\n音频丢包率：%f%%\n本地 rtt：%ld\n",trackID, audioState.uplinkBitrate, audioState.uplinkLostRate,audioState.uplinkRTT];
+        [self addLogString:str];
+    }
+    
+    NSDictionary* videoRemoteTrackStats =  [self.rtcClient getRemoteVideoTrackStats];
+    for (NSString * trackID in videoRemoteTrackStats.allKeys) {
+        NSString *str = nil;
+        QNRemoteVideoTrackStats * videoStats = videoRemoteTrackStats[trackID];
+        str = [NSString stringWithFormat:@"远端视频传输信息:\ntrackID：%@\n视频码率：%2fbps\n远端服务器视频丢包率：%f%%\n视频帧率：%@\n远端user视频丢包率：%f%%\n远端 rtt：%ld\n", trackID,videoStats.downlinkBitrate, videoStats.uplinkLostRate, @(videoStats.downlinkFrameRate), videoStats.downlinkLostRate, videoStats.uplinkRTT];
+        [self addLogString:str];
+    }
+    
+    NSDictionary* audioRemoteTrackStats =  [self.rtcClient getRemoteAudioTrackStats];
+    for (NSString * trackID in audioRemoteTrackStats.allKeys) {
+        NSString *str = nil;
+        QNRemoteAudioTrackStats * audioState = audioRemoteTrackStats[trackID];
+        str = [NSString stringWithFormat:@"远端音频传输信息:\ntrackID：%@\n音频码率：%2fbps\n远端服务器音频丢包率：%f%%\n远端user音频丢包率：%f%%\n远端 rtt：%lu\n", trackID,audioState.downlinkBitrate, audioState.downlinkLostRate,audioState.uplinkLostRate,(unsigned long)audioState.uplinkRTT];
+        [self addLogString:str];
+    }
+    
+    NSLog(@"aaron localCount:%ld localAudioCount:%ld remoteVideo:%ld remoteAudio:%lu",videoTrackStats.count,audioTrackStats.count,videoRemoteTrackStats.count,(unsigned long)audioRemoteTrackStats.count);
+}
+
+- (void)stopGetStatsTimer {
+    if (self.getstatsTimer) {
+        [self.getstatsTimer invalidate];
+        self.getstatsTimer = nil;
+    }
+}
+
+/**
+ * 房间状态变更的回调。当状态变为 QNRoomStateReconnecting 时，SDK 会为您自动重连，如果希望退出，直接调用 leaveRoom 即可
+ */
+- (void)RTCClient:(QNRTCClient *)client didConnectionStateChanged:(QNConnectionState)state disconnectedInfo:(QNConnectionDisconnectedInfo *)info {
+    
+    NSDictionary *roomStateDictionary =  @{
+                                           @(QNConnectionStateIdle) : @"Idle",
+                                           @(QNConnectionStateConnecting) : @"Connecting",
+                                           @(QNConnectionStateConnected): @"Connected",
+                                           @(QNConnectionStateReconnecting) : @"Reconnecting",
+                                           @(QNConnectionStateReconnected) : @"Reconnected"
+                                           };
+    NSString *str = [NSString stringWithFormat:@"房间状态变更的回调。当状态变为 QNRoomStateReconnecting 时，SDK 会为您自动重连，如果希望退出，直接调用 leaveRoom 即可:\nroomState: %@\ninfo:%d",  roomStateDictionary[@(state)], info.reason];
+    if (QNConnectionStateConnected == state || QNConnectionStateReconnected == state) {
+        [self startGetStatsTimer];
+    } else {
+        [self stopGetStatsTimer];
+    }
+    [self addLogString:str];
+    if (QNConnectionStateIdle == state) {
+        switch (info.reason) {
+            case QNConnectionDisconnectedReasonKickedOut:{
+                str =[NSString stringWithFormat:@"被远端服务器踢出的回调"];
+                [self addLogString:str];
+            }
+                break;
+            case QNConnectionDisconnectedReasonLeave:{
+                str = [NSString stringWithFormat:@"本地用户离开房间"];
+                [self addLogString:str];
+            }
+                break;
+                
+            default:{
+                str = [NSString stringWithFormat:@"SDK 运行过程中发生错误会通过该方法回调，具体错误码的含义可以见 QNTypeDefines.h 文件:\nerror: %@",  info.error];
+                [self addLogString:str];
+                switch (info.error.code) {
+                    case QNRTCErrorAuthFailed:
+                        NSLog(@"鉴权失败，请检查鉴权");
+                        break;
+                    case QNRTCErrorTokenError:
+                        //关于 token 签算规则, 详情请参考【服务端开发说明.RoomToken 签发服务】https://doc.qnsdk.com/rtn/docs/server_overview#1
+                        NSLog(@"roomToken 错误");
+                        break;
+                    case QNRTCErrorTokenExpired:
+                        NSLog(@"roomToken 过期");
+                        break;
+                    case QNRTCErrorReconnectTokenError:
+                        NSLog(@"重新进入房间超时，请务必调用 leave, 重新进入房间");
+                        break;
+                    default:
+                        break;
+                }
+            }
+                break;
+        }
+    }
+
+}
+
+
 - (void)addRenderViewToSuperView:(QNRoomUserView *)renderView {
     @synchronized(self.renderBackgroundView) {
         if (![[self.renderBackgroundView subviews] containsObject:renderView]) {
@@ -535,6 +801,36 @@
         _userViewArray = [NSMutableArray arrayWithArray:self.renderBackgroundView.subviews];
     }
     return _userViewArray;
+}
+
+- (LogTableView *)logTableView {
+    if (!_logTableView) {
+        _logTableView = [[LogTableView alloc] initWithFrame:self.view.bounds style:(UITableViewStylePlain)];
+        _logTableView.delegate = self;
+        _logTableView.dataSource = self;
+        _logTableView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:.3];
+        _logTableView.separatorColor = [UIColor clearColor];
+        _logTableView.isBottom = YES;
+        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        [window addSubview:_logTableView];
+        
+        [_logTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(window).offset(50);
+            make.top.equalTo(self.mas_topLayoutGuide).offset(40);
+            make.right.equalTo(window).offset(-40);
+            make.height.mas_equalTo(400);
+        }];
+        
+        _logTableView.hidden = YES;
+    }
+    return _logTableView;
+}
+
+- (NSMutableArray *)logStringArray {
+    if (!_logStringArray) {
+        _logStringArray = [[NSMutableArray alloc] init];
+    }
+    return _logStringArray;
 }
 
 -(QNMessageCreater *)messageCreater {

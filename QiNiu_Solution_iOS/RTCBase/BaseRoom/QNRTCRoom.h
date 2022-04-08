@@ -13,18 +13,27 @@
 #import "QNRTCRoomEntity.h"
 #import "QNVideoTrackParams.h"
 #import "QNAudioTrackParams.h"
+#import "LogTableView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class QNTrackInfo;
 
 @interface QNRTCRoom : QNRTCAbsRoom
-
+<
+QNRTCClientDelegate,
+QNCameraTrackVideoDataDelegate,
+QNMicrophoneAudioTrackDataDelegate,
+QNScreenVideoTrackDelegate,
+UITableViewDelegate,
+UITableViewDataSource
+>
 @property (nonatomic, strong)QNRoomDetailModel *model;
 //IM消息创建类
 @property (nonatomic, strong) QNMessageCreater *messageCreater;
 //房间接口请求类
 @property (nonatomic, strong) QNRoomRequest *roomRequest;
+@property (nonatomic, strong) UIButton *logButton;//track传输信息展示button
 //初始化房间
 -(instancetype)initWithRoomModel:(QNRoomDetailModel *)model;
 //本地视频轨道参数

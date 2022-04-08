@@ -71,7 +71,7 @@
     [self setupBottomButtons];
     [self setupLeftButtons];
     [self setupIMUI];
-
+    [self logButton];
 }
 
 //请求进入面试房间token
@@ -379,7 +379,7 @@
 
 /*房间内状态变化的回调*/
 - (void)RTCClient:(QNRTCClient *)client didConnectionStateChanged:(QNConnectionState)state disconnectedInfo:(QNConnectionDisconnectedInfo *)info {
-        
+    [super RTCClient:client didConnectionStateChanged:state disconnectedInfo:info];
         if (QNConnectionStateConnected == state) {
 
             if (self.interviewInfoModel.roleCode == 1) {

@@ -49,7 +49,7 @@
     [[QNIMChatService sharedOption] addDelegate:self delegateQueue:dispatch_get_main_queue()];
 
     [self joinRepairRoom];
-
+    [self logButton];
 }
 
 - (void)joinRepairRoom {
@@ -413,7 +413,7 @@
 }
 
 - (void)RTCClient:(QNRTCClient *)client didConnectionStateChanged:(QNConnectionState)state disconnectedInfo:(QNConnectionDisconnectedInfo *)info {
-    
+    [super RTCClient:client didConnectionStateChanged:state disconnectedInfo:info];
     if (state == QNConnectionStateConnected) {
         
         NSMutableArray *tracks = [NSMutableArray array];        

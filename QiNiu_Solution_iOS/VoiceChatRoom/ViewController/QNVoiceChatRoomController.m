@@ -81,6 +81,7 @@
     [self setupIMUI];
     [self setupBottomView];
     [self requestData];
+    [self logButton];
     
 }
 
@@ -254,6 +255,8 @@
 }
 
 - (void)RTCClient:(QNRTCClient *)client didConnectionStateChanged:(QNConnectionState)state disconnectedInfo:(QNConnectionDisconnectedInfo *)info {
+    
+    [super RTCClient:client didConnectionStateChanged:state disconnectedInfo:info];
     if (state == QNConnectionStateConnected) {
         
         if ([QN_User_id isEqualToString:self.model.roomInfo.creator]) {
