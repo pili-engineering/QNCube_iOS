@@ -116,7 +116,8 @@
 - (UILabel *)SDKVersionLabel {
     if (!_SDKVersionLabel) {
         _SDKVersionLabel = [[UILabel alloc]init];
-        _SDKVersionLabel.text = @"V 1.0.0";
+        NSString *currentVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+        _SDKVersionLabel.text = currentVersion;
         _SDKVersionLabel.textColor = [UIColor colorWithHexString:@"999999"];
         _SDKVersionLabel.textAlignment = NSTextAlignmentRight;
         _SDKVersionLabel.font = [UIFont systemFontOfSize:13];

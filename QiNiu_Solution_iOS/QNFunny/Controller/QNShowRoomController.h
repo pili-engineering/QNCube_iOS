@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QNShowRoomController : QNRTCRoom
 
-@property (nonatomic, strong) QNRoomDetailModel *model;
+
 
 @end
 

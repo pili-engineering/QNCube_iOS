@@ -7,24 +7,21 @@
 
 #import <Foundation/Foundation.h>
 
-@class QNBackgroundInfo;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QNMixStreamParams : NSObject
 
-@property (nonatomic, assign) BOOL isNeed;
+@property (nonatomic, assign) int mixStreamWidth;
 
-@property (nonatomic, assign) NSInteger mixStreamWidth;
+@property (nonatomic, assign) int mixStringHeiht;
 
-@property (nonatomic, assign) NSInteger mixStringHeiht;
-
-@property (nonatomic, assign) NSInteger mixStreamY;
+@property (nonatomic, assign) int mixStreamY;
 //码率
-@property (nonatomic, assign) NSInteger mixBitrate;
+@property (nonatomic, assign) int mixBitrate;
 //帧率
-@property (nonatomic, assign) NSInteger fps;
+@property (nonatomic, assign) int fps;
 //背景参数
-@property (nonatomic, strong) QNBackgroundInfo *backgroundInfo;
+@property (nonatomic, strong) QNTranscodingLiveStreamingImage *backgroundInfo;
 
 @end
 

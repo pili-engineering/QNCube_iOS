@@ -14,6 +14,7 @@
 #import "QNVideoTrackParams.h"
 #import "QNAudioTrackParams.h"
 #import "LogTableView.h"
+#import "QNMixStreamManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,7 +34,10 @@ UITableViewDataSource
 @property (nonatomic, strong) QNMessageCreater *messageCreater;
 //房间接口请求类
 @property (nonatomic, strong) QNRoomRequest *roomRequest;
-@property (nonatomic, strong) UIButton *logButton;//track传输信息展示button
+//混流器
+@property (nonatomic, strong) QNMixStreamManager *mixManager;
+//track传输信息展示button
+@property (nonatomic, strong) UIButton *logButton;
 //初始化房间
 -(instancetype)initWithRoomModel:(QNRoomDetailModel *)model;
 //本地视频轨道参数
@@ -85,9 +89,6 @@ UITableViewDataSource
 - (void)setUserScreenWindowView:(UIView *)faceView uid:(NSString *)uid;
 - (void)setUserExtraTrackWindowView:(UIView *)faceView uid:(NSString *)uid trackTag:(NSString *)trackTag;
 
-//获取混流器
-- (void)getMixStreamHelper;
-
 //获取用户视频Track
 - (QNTrackInfo *)getUserVideoTrackInfo:(NSString *)uid;
 //获取用户音频Track
@@ -107,8 +108,10 @@ UITableViewDataSource
 - (void)clearUserInfo:(NSString *)userId;
 
 - (void)clearAllRemoteUserInfo;
-//是否是房主
+//user是否是房主
 - (BOOL)isAdminUser:(NSString *)userId;
+//自己是否为房主
+- (BOOL)isAdmin;
 
 // 大小窗口切换
 - (void)exchangeWindowSize;

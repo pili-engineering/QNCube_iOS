@@ -116,6 +116,7 @@
 #import "QNIMSDK/QNIMSDK.h"
 #import <Masonry/Masonry.h>
 #import "MBProgressHUD+QNShow.h"
+#import <QNRTCKit/QNRTCKit.h>
 
 /********************* 通用 *********************/
 

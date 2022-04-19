@@ -22,8 +22,6 @@
 
 - (void)dealloc {
     [QNRTC deinit];
-    [self.logTableView removeFromSuperview];
-    self.logTableView = nil;
 }
 
 - (void)viewDidLoad {
@@ -31,8 +29,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    [self.logTableView removeFromSuperview];
-    self.logTableView = nil;
+    self.logTableView.hidden = YES;
 }
 
 - (instancetype)initWithRoomModel:(QNRoomDetailModel *)model {
@@ -240,6 +237,14 @@
 - (BOOL)isAdminUser:(NSString *)userId {
     BOOL isAdmin = NO;
     if ([userId isEqualToString:self.model.roomInfo.creator]) {
+        isAdmin = YES;
+    }
+    return isAdmin;
+}
+
+- (BOOL)isAdmin {
+    BOOL isAdmin = NO;
+    if ([self.model.roomInfo.creator isEqualToString:QN_User_id]) {
         isAdmin = YES;
     }
     return isAdmin;
@@ -528,7 +533,7 @@
 }
 
 - (void)addLogString:(NSString *)logString {
-    NSLog(@"%@", logString);
+//    NSLog(@"%@", logString);
     
     @synchronized(_logStringArray) {
         [self.logStringArray addObject:logString];
@@ -621,7 +626,7 @@ static const int cLabelTag = 10;
     self.logTableView.isScrolling = decelerate;
     if (!decelerate) {
         CGFloat offset = fabs(scrollView.contentSize.height - scrollView.frame.size.height - scrollView.contentOffset.y);
-        NSLog(@"value = %f", offset);
+//        NSLog(@"value = %f", offset);
         // 这里小于 10 就算到底部了
         self.logTableView.isBottom =  offset < 10;
     }
@@ -631,7 +636,7 @@ static const int cLabelTag = 10;
     self.logTableView.isScrolling = NO;
     
     CGFloat offset = fabs(scrollView.contentSize.height - scrollView.frame.size.height - scrollView.contentOffset.y);
-    NSLog(@"value = %f", offset);
+//    NSLog(@"value = %f", offset);
     // 这里小于 10 就算到底部了
     self.logTableView.isBottom =  offset < 10;
 }
@@ -845,6 +850,13 @@ static const int cLabelTag = 10;
         _roomRequest = [[QNRoomRequest alloc]initWithType:self.model.roomType roomId:self.model.roomInfo.roomId];
     }
     return _roomRequest;
+}
+
+- (QNMixStreamManager *)mixManager {
+    if (!_mixManager) {
+        _mixManager = [[QNMixStreamManager alloc]initWithPushUrl:self.model.rtcInfo.publishUrl client:self.rtcClient streamID:self.model.roomInfo.roomId];
+    }
+    return _mixManager;
 }
 
 @end

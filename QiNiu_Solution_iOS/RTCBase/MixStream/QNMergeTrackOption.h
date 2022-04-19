@@ -12,15 +12,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QNMergeTrackOption : NSObject
 
-@property (nonatomic, assign) NSInteger mX;
+//在合流画面中的大小和位置
+@property (nonatomic, assign) CGRect frame;
 
-@property (nonatomic, assign) NSInteger mY;
+//在合流画面中的层次，0 为最底层
+@property (nonatomic, assign) NSUInteger zIndex;
 
-@property (nonatomic, assign) NSInteger mZ ;
-
-@property (nonatomic, assign) NSInteger mWidth;
-
-@property (nonatomic, assign) NSInteger mHeight;
+//图像的填充模式, 默认设置填充模式将继承 QNMergeStreamConfiguration 中数值
+@property (nonatomic, assign) QNVideoFillModeType fillMode;
 
 @end
 

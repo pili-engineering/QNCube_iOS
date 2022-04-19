@@ -106,12 +106,13 @@
 		7769D8F0278C5A16008FB1F6 /* QNVoiceChatRoomBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7769D8EF278C5A16008FB1F6 /* QNVoiceChatRoomBottomView.m */; };
 		7769D900278EEF04008FB1F6 /* QNAISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7769D8FE278EEEF5008FB1F6 /* QNAISDK.framework */; platformFilter = ios; };
 		7769D901278EEF04008FB1F6 /* QNAISDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7769D8FE278EEEF5008FB1F6 /* QNAISDK.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		776B1B172809175C00D85C73 /* QNFunnyLiveController.m in Sources */ = {isa = PBXBuildFile; fileRef = 776B1B162809175C00D85C73 /* QNFunnyLiveController.m */; };
 		776FAF2626FC617D00455BD4 /* QNRTCAbsRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 776FAF2526FC617D00455BD4 /* QNRTCAbsRoom.m */; };
 		776FAF2926FC626800455BD4 /* QNRTCRoomEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 776FAF2826FC626800455BD4 /* QNRTCRoomEntity.m */; };
 		776FAF2C26FC65E900455BD4 /* QNRTCRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 776FAF2B26FC65E900455BD4 /* QNRTCRoom.m */; };
 		776FAF2F26FC757D00455BD4 /* QNVideoTrackParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 776FAF2E26FC757D00455BD4 /* QNVideoTrackParams.m */; };
 		776FAF3226FC773200455BD4 /* QNAudioTrackParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 776FAF3126FC773200455BD4 /* QNAudioTrackParams.m */; };
-		776FAF3926FC7D6700455BD4 /* QNMixStreamHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 776FAF3826FC7D6700455BD4 /* QNMixStreamHelper.m */; };
+		776FAF3926FC7D6700455BD4 /* QNMixStreamManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 776FAF3826FC7D6700455BD4 /* QNMixStreamManager.m */; };
 		776FAF3C26FC7EAF00455BD4 /* QNMixStreamParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 776FAF3B26FC7EAF00455BD4 /* QNMixStreamParams.m */; };
 		776FAF3F26FC7EC400455BD4 /* QNMergeTrackOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 776FAF3E26FC7EC400455BD4 /* QNMergeTrackOption.m */; };
 		7771EA6B2768B57F00EDE1EB /* QNMovieTogetherViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7771EA692768B57F00EDE1EB /* QNMovieTogetherViewModel.m */; };
@@ -427,6 +428,8 @@
 		7769D8EE278C5A16008FB1F6 /* QNVoiceChatRoomBottomView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNVoiceChatRoomBottomView.h; sourceTree = "<group>"; };
 		7769D8EF278C5A16008FB1F6 /* QNVoiceChatRoomBottomView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNVoiceChatRoomBottomView.m; sourceTree = "<group>"; };
 		7769D8FE278EEEF5008FB1F6 /* QNAISDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QNAISDK.framework; sourceTree = "<group>"; };
+		776B1B152809175C00D85C73 /* QNFunnyLiveController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNFunnyLiveController.h; sourceTree = "<group>"; };
+		776B1B162809175C00D85C73 /* QNFunnyLiveController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNFunnyLiveController.m; sourceTree = "<group>"; };
 		776FAF2426FC617D00455BD4 /* QNRTCAbsRoom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNRTCAbsRoom.h; sourceTree = "<group>"; };
 		776FAF2526FC617D00455BD4 /* QNRTCAbsRoom.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNRTCAbsRoom.m; sourceTree = "<group>"; };
 		776FAF2726FC626800455BD4 /* QNRTCRoomEntity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNRTCRoomEntity.h; sourceTree = "<group>"; };
@@ -438,8 +441,8 @@
 		776FAF3026FC773200455BD4 /* QNAudioTrackParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNAudioTrackParams.h; sourceTree = "<group>"; };
 		776FAF3126FC773200455BD4 /* QNAudioTrackParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNAudioTrackParams.m; sourceTree = "<group>"; };
 		776FAF3626FC7B1000455BD4 /* QNRTCRoomLifecycleListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNRTCRoomLifecycleListener.h; sourceTree = "<group>"; };
-		776FAF3726FC7D6700455BD4 /* QNMixStreamHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNMixStreamHelper.h; sourceTree = "<group>"; };
-		776FAF3826FC7D6700455BD4 /* QNMixStreamHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNMixStreamHelper.m; sourceTree = "<group>"; };
+		776FAF3726FC7D6700455BD4 /* QNMixStreamManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNMixStreamManager.h; sourceTree = "<group>"; };
+		776FAF3826FC7D6700455BD4 /* QNMixStreamManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNMixStreamManager.m; sourceTree = "<group>"; };
 		776FAF3A26FC7EAF00455BD4 /* QNMixStreamParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNMixStreamParams.h; sourceTree = "<group>"; };
 		776FAF3B26FC7EAF00455BD4 /* QNMixStreamParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNMixStreamParams.m; sourceTree = "<group>"; };
 		776FAF3D26FC7EC400455BD4 /* QNMergeTrackOption.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNMergeTrackOption.h; sourceTree = "<group>"; };
@@ -1061,6 +1064,8 @@
 				777EF40127329ACA00AC010A /* QNAddShowRoomController.m */,
 				777EF4252738D76C00AC010A /* QNShowRoomController.h */,
 				777EF4262738D76C00AC010A /* QNShowRoomController.m */,
+				776B1B152809175C00D85C73 /* QNFunnyLiveController.h */,
+				776B1B162809175C00D85C73 /* QNFunnyLiveController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1325,8 +1330,8 @@
 		77F4279827EB32BF007999A4 /* MixStream */ = {
 			isa = PBXGroup;
 			children = (
-				776FAF3726FC7D6700455BD4 /* QNMixStreamHelper.h */,
-				776FAF3826FC7D6700455BD4 /* QNMixStreamHelper.m */,
+				776FAF3726FC7D6700455BD4 /* QNMixStreamManager.h */,
+				776FAF3826FC7D6700455BD4 /* QNMixStreamManager.m */,
 				776FAF3A26FC7EAF00455BD4 /* QNMixStreamParams.h */,
 				776FAF3B26FC7EAF00455BD4 /* QNMixStreamParams.m */,
 				776FAF3D26FC7EC400455BD4 /* QNMergeTrackOption.h */,
@@ -1713,6 +1718,7 @@
 				776FAF2626FC617D00455BD4 /* QNRTCAbsRoom.m in Sources */,
 				77F61AA127E2077B0031C415 /* QNAlertViewController.m in Sources */,
 				7714E5C62701BF73004B7859 /* QNRepairListViewModel.m in Sources */,
+				776B1B172809175C00D85C73 /* QNFunnyLiveController.m in Sources */,
 				775E15DC26280AD100BD135C /* QNHomeListView.m in Sources */,
 				77F61ABB27EAF6CF0031C415 /* QNVoiceChatBottomOperationView.m in Sources */,
 				77F427C427ED998A007999A4 /* QNHorizontalLayout.m in Sources */,
@@ -1723,7 +1729,7 @@
 				775E15E326281F9D00BD135C /* NSArray+Sudoku.m in Sources */,
 				775E160A262D66D000BD135C /* NSDate+Operation.m in Sources */,
 				775CE16A275F0982006A7F0C /* QNPlayMovieListController.m in Sources */,
-				776FAF3926FC7D6700455BD4 /* QNMixStreamHelper.m in Sources */,
+				776FAF3926FC7D6700455BD4 /* QNMixStreamManager.m in Sources */,
 				7769D8E4278C3F21008FB1F6 /* QNVoiceChatRoomController.m in Sources */,
 				7714E63627133BC9004B7859 /* QNWhiteBoardSubjectToolbar.m in Sources */,
 				77C689542632B9A100442291 /* QNJoinInterviewModel.m in Sources */,
@@ -2035,7 +2041,7 @@
 					"$(PROJECT_DIR)/QiNiu_Solution_iOS/Effect/st_mobile_sdk/lib/ios_sim",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 2.0.3;
+				MARKETING_VERSION = 2.0.6;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-all_load",
@@ -2178,7 +2184,7 @@
 					"$(PROJECT_DIR)/QiNiu_Solution_iOS/Effect/st_mobile_sdk/lib/ios_sim",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 2.0.3;
+				MARKETING_VERSION = 2.0.6;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",

@@ -30,8 +30,6 @@
     if ([super initWithFrame:frame]) {
         [self itemImageView];
         [self itemLabel];
-        
-        
     }
     return self;
 }
@@ -109,8 +107,9 @@
         [self addSubview:_itemImageView];
         
         [_itemImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.left.equalTo(self).offset(10);
-            make.right.equalTo(self).offset(-10);
+            make.center.equalTo(self);
+            make.height.mas_equalTo(80);
+            make.width.mas_equalTo(100);
         }];
     }
     return _itemImageView;
@@ -126,7 +125,7 @@
         
         [_itemLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.equalTo(self.itemImageView);
-            make.top.equalTo(self.itemImageView.mas_bottom).offset(5);
+            make.top.equalTo(self.itemImageView.mas_bottom).offset(15);
             make.width.equalTo(self.itemImageView);
             make.height.mas_equalTo(15);
         }];

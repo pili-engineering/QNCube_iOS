@@ -20,6 +20,7 @@
 #import "QNIMTextMsgModel.h"
 #import <YYCategories/YYCategories.h>
 #import "QNSeatNumModel.h"
+#import "QNMergeTrackOption.h"
 
 @interface QNShowRoomController ()<QNRTCClientDelegate,UITextFieldDelegate,QNIMChatServiceProtocol>
 
@@ -287,6 +288,7 @@
 
 - (void)RTCClient:(QNRTCClient *)client didConnectionStateChanged:(QNConnectionState)state disconnectedInfo:(QNConnectionDisconnectedInfo *)info {
     [super RTCClient:client didConnectionStateChanged:state disconnectedInfo:info];
+    
     if (state == QNConnectionStateConnected) {
         
         if ([self.model.userInfo.role isEqualToString:@"roomHost"]) {
@@ -294,8 +296,10 @@
         }
         
         [self.roomRequest requestRoomHeartBeatWithInterval:@"3"];
+        if ([self isAdminUser:QN_User_id]) {
+            [self.mixManager startMixStreamJob];
+        }        
     }
-    
 }
 
 - (void)RTCClient:(QNRTCClient *)client didReceiveMessage:(QNMessageInfo *)message {
@@ -310,6 +314,18 @@
                 seatView.userId = message.userId;
             }
         }];
+    }
+}
+
+- (void)RTCClient:(QNRTCClient *)client didUserPublishTracks:(NSArray<QNRemoteTrack *> *)tracks ofUserID:(NSString *)userID {
+    [super RTCClient:client didUserPublishTracks:tracks ofUserID:userID];
+    [self.rtcClient subscribe:tracks];
+    if ([self isAdmin]) {
+        [self.mixManager updateUserAudioMergeOptions:userID isNeed:YES];
+        QNMergeTrackOption *option = [QNMergeTrackOption new];
+        option.frame = CGRectMake(10, 300, 200, 200);
+        option.zIndex = 1;
+        [self.mixManager updateUserCameraMergeOptions:userID option:option];
     }
 }
 
@@ -381,11 +397,6 @@
     
 }
 
-- (void)RTCClient:(QNRTCClient *)client didUserPublishTracks:(NSArray<QNRemoteTrack *> *)tracks ofUserID:(NSString *)userID {
-    
-    
-}
-
 - (void)RTCClient:(QNRTCClient *)client didUserUnpublishTracks:(nonnull NSArray<QNRemoteTrack *> *)tracks ofUserID:(nonnull NSString *)userID {
         
     
@@ -398,8 +409,16 @@
         [self.localVideoTrack play:self.preview];
     }
     self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatioAndFill;
+    __weak typeof(self)weakSelf = self;
     [self.rtcClient publish:@[self.localAudioTrack,self.localVideoTrack] completeCallback:^(BOOL onPublished, NSError *error) {
         
+        if ([weakSelf isAdmin]) {
+            [weakSelf.mixManager updateUserAudioMergeOptions:QN_User_id isNeed:YES];
+            QNMergeTrackOption *option = [QNMergeTrackOption new];
+            option.frame = CGRectMake((kScreenWidth - 200)/2, 80, 200, 200);
+            option.zIndex = 0;
+            [self.mixManager updateUserCameraMergeOptions:QN_User_id option:option];
+        }
     }];
 }
 
