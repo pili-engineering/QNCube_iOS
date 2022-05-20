@@ -45,9 +45,17 @@
 //创建房间
 - (void)requestStartRoomWithName:(NSString *)name success:(void (^)(QNRoomDetailModel *roomDetailodel))success failure:(void (^)(NSError *error))failure {
     
+    NSMutableArray *arr = [NSMutableArray array];
+    
+    QNAttrsModel *model = [QNAttrsModel new];
+    model.key = @"record";
+    model.value = @"true";
+    [arr addObject:model];
+    
     NSMutableDictionary *requestParams = [NSMutableDictionary dictionary];
     requestParams[@"title"] = name;
     requestParams[@"type"] = self.type;
+    requestParams[@"params"] = [QNAttrsModel mj_keyValuesArrayWithObjectArray:arr];
     
     [QNNetworkUtil postRequestWithAction:@"base/createRoom" params:requestParams success:^(NSDictionary *responseData) {
         
@@ -205,6 +213,26 @@
         
     }];
         
+}
+
+//获取直播记录
+- (void)getLiveCodeSuccess:(void (^)(NSArray <QNLiveRecordModel *> * list))success failure:(void (^)(NSError *error))failure {
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"type"] = self.type;
+    params[@"pageNum"] = @(1);
+    params[@"pageSize"] = @(20);
+    [QNNetworkUtil getRequestWithAction:@"record/room" params:params success:^(NSDictionary *responseData) {
+            
+        NSArray <QNLiveRecordModel *> *recordList = [QNLiveRecordModel mj_objectArrayWithKeyValuesArray:responseData[@"list"]];
+        
+        success(recordList);
+        
+        } failure:^(NSError *error) {
+            
+            failure(error);
+        }];
+    
 }
 
 @end

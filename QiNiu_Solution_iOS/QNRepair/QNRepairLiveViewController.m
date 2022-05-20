@@ -89,24 +89,24 @@ PLPlayerDelegate
 
 #pragma mark - PLPlayerDelegate
 
-- (void)player:(nonnull PLPlayer *)player stoppedWithError:(nullable NSError *)error {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"Player Errro: %@", error);
-    });
-}
-
-- (void)player:(PLPlayer *)player width:(int)width height:(int)height {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"Width: %d \nHeight: %d", width, height);
-    });
-}
-
-- (void)player:(PLPlayer *)player willRenderFrame:(CVPixelBufferRef)frame pts:(int64_t)pts sarNumerator:(int)sarNumerator sarDenominator:(int)sarDenominator {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSString *str = [NSString stringWithFormat:@"  VideoBitrate: %.f kb/s \n  VideoFPS: %d", player.videoBitrate, player.videoFPS];
-        NSLog(@"%@", str);
-    });
-}
+//- (void)player:(nonnull PLPlayer *)player stoppedWithError:(nullable NSError *)error {
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        NSLog(@"Player Errro: %@", error);
+//    });
+//}
+//
+//- (void)player:(PLPlayer *)player width:(int)width height:(int)height {
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        NSLog(@"Width: %d \nHeight: %d", width, height);
+//    });
+//}
+//
+//- (void)player:(PLPlayer *)player willRenderFrame:(CVPixelBufferRef)frame pts:(int64_t)pts sarNumerator:(int)sarNumerator sarDenominator:(int)sarDenominator {
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        NSString *str = [NSString stringWithFormat:@"  VideoBitrate: %.f kb/s \n  VideoFPS: %d", player.videoBitrate, player.videoFPS];
+//        NSLog(@"%@", str);
+//    });
+//}
 
 
 @end

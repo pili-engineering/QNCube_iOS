@@ -61,11 +61,16 @@
 
 - (void)createRoom {
     
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"key"] = @"record";
+    dic[@"value"] = @"true";
+    
     NSMutableDictionary *requestParams = [NSMutableDictionary dictionary];
     requestParams[@"title"] = self.nameTf.text;
     requestParams[@"desc"] = self.commendTf.text;
     requestParams[@"type"] = @"show";
 //    requestParams[@"image"] = self.imageStr;
+    requestParams[@"params"] = dic;
     
     
     [QNNetworkUtil postRequestWithAction:@"base/createRoom" params:requestParams success:^(NSDictionary *responseData) {

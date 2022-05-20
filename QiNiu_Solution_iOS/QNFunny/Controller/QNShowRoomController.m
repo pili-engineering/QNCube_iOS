@@ -89,19 +89,9 @@
 }
 
 - (void)leave {
-
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"roomId"] = self.model.roomInfo.roomId;
-    params[@"type"] = @"show";
-    
-    [QNNetworkUtil postRequestWithAction:@"base/leaveRoom" params:params success:^(NSDictionary *responseData) {
-        [self.navigationController popViewControllerAnimated:YES];
-        [self leaveRoom];
-    } failure:^(NSError *error) {
-        [self.navigationController popViewControllerAnimated:YES];
-        [self leaveRoom];
-    }];
-        
+    [self.roomRequest requestLeaveRoom];
+    [self.roomRequest requestDownMicSeatSuccess:^{}];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)joinShowRoom {
@@ -402,6 +392,14 @@
     
 }
 
+- (void)RTCClient:(QNRTCClient *)client didStartLiveStreamingWith:(NSString *)streamID {
+    
+}
+
+- (void)RTCClient:(QNRTCClient *)client didErrorLiveStreamingWith:(NSString *)streamID errorInfo:(QNLiveStreamingErrorInfo *)errorInfo{
+    
+}
+
 //发布自己的音视频流
 - (void)publishOwnTrack {
     
@@ -411,11 +409,11 @@
     self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatioAndFill;
     __weak typeof(self)weakSelf = self;
     [self.rtcClient publish:@[self.localAudioTrack,self.localVideoTrack] completeCallback:^(BOOL onPublished, NSError *error) {
-        
+        [weakSelf.roomRequest requestUpMicSeatWithUserExtRoleType:@"" clientRoleType:QNClientRoleTypeMaster success:^{} failure:^(NSError * _Nonnull error) {}];
         if ([weakSelf isAdmin]) {
             [weakSelf.mixManager updateUserAudioMergeOptions:QN_User_id isNeed:YES];
             QNMergeTrackOption *option = [QNMergeTrackOption new];
-            option.frame = CGRectMake((kScreenWidth - 200)/2, 80, 200, 200);
+            option.frame = CGRectMake(147, 97, 120, 120);
             option.zIndex = 0;
             [self.mixManager updateUserCameraMergeOptions:QN_User_id option:option];
         }

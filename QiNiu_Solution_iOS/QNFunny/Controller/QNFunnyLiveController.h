@@ -9,7 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class QNRoomDetailModel;
+
 @interface QNFunnyLiveController : UIViewController
+
+@property (nonatomic, strong) QNRoomDetailModel *model;
 
 @end
 

@@ -131,13 +131,13 @@
     if (!_mergeConfig) {
         _mergeConfig = [QNTranscodingLiveStreamingConfig defaultConfiguration];
         QNTranscodingLiveStreamingImage *bgInfo = [[QNTranscodingLiveStreamingImage alloc] init];
-        bgInfo.frame = CGRectMake(0, 0, 720, 1280);
+        bgInfo.frame = CGRectMake(0, 0, 414, 736);
         bgInfo.imageUrl = @"http://qrnlrydxa.hn-bkt.clouddn.com/am_room_bg.png";
         _mergeConfig.background = bgInfo;
         _mergeConfig.minBitrateBps = 1000*1000;
         _mergeConfig.maxBitrateBps = 1000*1000;
-        _mergeConfig.width = 720;
-        _mergeConfig.height = 1280;
+        _mergeConfig.width = 414;
+        _mergeConfig.height = 736;
         _mergeConfig.fillMode = QNVideoFillModePreserveAspectRatioAndFill;
         _mergeConfig.publishUrl = self.publishUrl;
         _mergeConfig.streamID = self.streamID;

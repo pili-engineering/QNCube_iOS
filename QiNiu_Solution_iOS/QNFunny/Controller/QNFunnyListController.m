@@ -13,8 +13,8 @@
 #import "QNRoomDetailModel.h"
 #import "QNNetworkUtil.h"
 #import "QNRoomDetailModel.h"
-#import <MJExtension/MJExtension.h>
-
+#import "QNFunnyLiveController.h"
+#import "QNFunnyLiveListController.h"
 
 @interface QNFunnyListController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -47,6 +47,24 @@
     [self requestData];
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"icon_increase"] style:UIBarButtonItemStyleDone target:self action:@selector(addShowRoom)];
     self.navigationItem.rightBarButtonItem = addButton;
+    [self liveHistory];
+}
+
+//直播记录按钮
+- (void)liveHistory {
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(40, kScreenHeight - 60, (kScreenWidth - 80)/2, 38)];
+    [button setTitle:@"直播记录" forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button setBackgroundColor:[UIColor blueColor]];
+    [self.view addSubview:button];
+    [button addTarget:self action:@selector(liveListVc) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)liveListVc {
+    
+    QNFunnyLiveListController *vc = [QNFunnyLiveListController new];
+    [self.navigationController pushViewController:vc animated:YES];
+
 }
 
 - (void)requestData {
@@ -69,6 +87,30 @@
     
     QNAddShowRoomController *vc = [QNAddShowRoomController new];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)showIntoRoomWayAlertWithModel:(QNRoomDetailModel *)model {
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"请选择进房方式" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *cancelBtn = [UIAlertAction actionWithTitle:@"拉流播放" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+        QNFunnyLiveController *vc = [QNFunnyLiveController new];
+        vc.model = model;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+    }];
+    [alertController addAction:cancelBtn];
+    
+    UIAlertAction *changeBtn = [UIAlertAction actionWithTitle:@"加入订阅" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        QNShowRoomController *vc = [[QNShowRoomController alloc]initWithRoomModel:model];
+        [self.navigationController pushViewController:vc animated:YES];
+        
+    }];
+    [alertController addAction:changeBtn];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -96,8 +138,7 @@
     userInfo.role = @"roomAudience";
     model.userInfo = userInfo;
     
-    QNShowRoomController *vc = [[QNShowRoomController alloc]initWithRoomModel:model];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self showIntoRoomWayAlertWithModel:model];
 }
 
 - (UICollectionView *)collectionView {

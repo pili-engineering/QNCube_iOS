@@ -9,6 +9,7 @@
 #import <Masonry/Masonry.h>
 #import <SDWebImage/SDWebImage.h>
 #import "QNRoomDetailModel.h"
+#import "QNLiveRecordModel.h"
 
 @interface QNFunnyListCell ()
 
@@ -39,6 +40,12 @@
     self.imageView.image = [UIImage imageNamed:@"titleImage"];
     self.nameLabel.text = model.title;
     self.numLabel.text = model.totalUsers;
+}
+
+- (void)updateWithRecordModel:(QNLiveRecordModel *)model {
+    self.imageView.image = [UIImage imageNamed:@"titleImage"];
+    self.nameLabel.text = @"";
+    self.numLabel.text = @"";
 }
 
 - (UIImageView *)imageView {

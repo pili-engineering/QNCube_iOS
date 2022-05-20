@@ -107,6 +107,9 @@
 		7769D900278EEF04008FB1F6 /* QNAISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7769D8FE278EEEF5008FB1F6 /* QNAISDK.framework */; platformFilter = ios; };
 		7769D901278EEF04008FB1F6 /* QNAISDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7769D8FE278EEEF5008FB1F6 /* QNAISDK.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		776B1B172809175C00D85C73 /* QNFunnyLiveController.m in Sources */ = {isa = PBXBuildFile; fileRef = 776B1B162809175C00D85C73 /* QNFunnyLiveController.m */; };
+		776B1B1B2825332100D85C73 /* QNLiveRecordModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 776B1B1A2825332100D85C73 /* QNLiveRecordModel.m */; };
+		776B1B1E282534B200D85C73 /* QNFunnyLiveListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 776B1B1D282534B200D85C73 /* QNFunnyLiveListController.m */; };
+		776B1B2128253B5C00D85C73 /* QNFunnyHistotyController.m in Sources */ = {isa = PBXBuildFile; fileRef = 776B1B2028253B5C00D85C73 /* QNFunnyHistotyController.m */; };
 		776FAF2626FC617D00455BD4 /* QNRTCAbsRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 776FAF2526FC617D00455BD4 /* QNRTCAbsRoom.m */; };
 		776FAF2926FC626800455BD4 /* QNRTCRoomEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 776FAF2826FC626800455BD4 /* QNRTCRoomEntity.m */; };
 		776FAF2C26FC65E900455BD4 /* QNRTCRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 776FAF2B26FC65E900455BD4 /* QNRTCRoom.m */; };
@@ -430,6 +433,12 @@
 		7769D8FE278EEEF5008FB1F6 /* QNAISDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QNAISDK.framework; sourceTree = "<group>"; };
 		776B1B152809175C00D85C73 /* QNFunnyLiveController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNFunnyLiveController.h; sourceTree = "<group>"; };
 		776B1B162809175C00D85C73 /* QNFunnyLiveController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNFunnyLiveController.m; sourceTree = "<group>"; };
+		776B1B192825332100D85C73 /* QNLiveRecordModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNLiveRecordModel.h; sourceTree = "<group>"; };
+		776B1B1A2825332100D85C73 /* QNLiveRecordModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNLiveRecordModel.m; sourceTree = "<group>"; };
+		776B1B1C282534B200D85C73 /* QNFunnyLiveListController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNFunnyLiveListController.h; sourceTree = "<group>"; };
+		776B1B1D282534B200D85C73 /* QNFunnyLiveListController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNFunnyLiveListController.m; sourceTree = "<group>"; };
+		776B1B1F28253B5C00D85C73 /* QNFunnyHistotyController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNFunnyHistotyController.h; sourceTree = "<group>"; };
+		776B1B2028253B5C00D85C73 /* QNFunnyHistotyController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNFunnyHistotyController.m; sourceTree = "<group>"; };
 		776FAF2426FC617D00455BD4 /* QNRTCAbsRoom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNRTCAbsRoom.h; sourceTree = "<group>"; };
 		776FAF2526FC617D00455BD4 /* QNRTCAbsRoom.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QNRTCAbsRoom.m; sourceTree = "<group>"; };
 		776FAF2726FC626800455BD4 /* QNRTCRoomEntity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QNRTCRoomEntity.h; sourceTree = "<group>"; };
@@ -1064,6 +1073,10 @@
 				777EF40127329ACA00AC010A /* QNAddShowRoomController.m */,
 				777EF4252738D76C00AC010A /* QNShowRoomController.h */,
 				777EF4262738D76C00AC010A /* QNShowRoomController.m */,
+				776B1B1C282534B200D85C73 /* QNFunnyLiveListController.h */,
+				776B1B1D282534B200D85C73 /* QNFunnyLiveListController.m */,
+				776B1B1F28253B5C00D85C73 /* QNFunnyHistotyController.h */,
+				776B1B2028253B5C00D85C73 /* QNFunnyHistotyController.m */,
 				776B1B152809175C00D85C73 /* QNFunnyLiveController.h */,
 				776B1B162809175C00D85C73 /* QNFunnyLiveController.m */,
 			);
@@ -1307,6 +1320,8 @@
 				776FAF3126FC773200455BD4 /* QNAudioTrackParams.m */,
 				777EF4282738F3A200AC010A /* QNRoomDetailModel.h */,
 				777EF4292738F3A200AC010A /* QNRoomDetailModel.m */,
+				776B1B192825332100D85C73 /* QNLiveRecordModel.h */,
+				776B1B1A2825332100D85C73 /* QNLiveRecordModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1736,6 +1751,7 @@
 				776FAF2926FC626800455BD4 /* QNRTCRoomEntity.m in Sources */,
 				775E1641262EB87100BD135C /* QNLoginInfoModel.m in Sources */,
 				77F4F5912761B54500B749FF /* QNMicSeatMessageModel.m in Sources */,
+				776B1B1B2825332100D85C73 /* QNLiveRecordModel.m in Sources */,
 				77AF81512626CDF60096B2FE /* QNGlobalConfigurationViewModel.m in Sources */,
 				7714E63727133BC9004B7859 /* QNWhiteBoardColorToolbar.m in Sources */,
 				775DD97627663EA60049FCB0 /* QNMovieChooseController.m in Sources */,
@@ -1798,12 +1814,14 @@
 				77AF80AE26244A160096B2FE /* QNPersonInfoTopView.m in Sources */,
 				775CE15A275DB62F006A7F0C /* CSEmojiCollectionViewCell.m in Sources */,
 				77F427C327ED998A007999A4 /* QNGiftShowView.m in Sources */,
+				776B1B2128253B5C00D85C73 /* QNFunnyHistotyController.m in Sources */,
 				77AF808F2620385A0096B2FE /* QNAddInterViewViewModel.m in Sources */,
 				772FCC3D2663F16800EA25EE /* QNPageControl.m in Sources */,
 				777B7CDD27E1D36B00681585 /* QNRoomRequest.m in Sources */,
 				77F427DB27EDDC23007999A4 /* QNBottomUserOperationView.m in Sources */,
 				77AF817D2626D95D0096B2FE /* QNInterViewListModel.m in Sources */,
 				7764C127263832E600A8BC8B /* QNInputBarControl.m in Sources */,
+				776B1B1E282534B200D85C73 /* QNFunnyLiveListController.m in Sources */,
 				775D7442261FF9B800A70C36 /* QNInterViewListCell.m in Sources */,
 				775CE161275DB62F006A7F0C /* CSMessageCell.m in Sources */,
 				776FAF3226FC773200455BD4 /* QNAudioTrackParams.m in Sources */,
@@ -2041,7 +2059,7 @@
 					"$(PROJECT_DIR)/QiNiu_Solution_iOS/Effect/st_mobile_sdk/lib/ios_sim",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 2.0.6;
+				MARKETING_VERSION = 2.0.8;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-all_load",
@@ -2184,7 +2202,7 @@
 					"$(PROJECT_DIR)/QiNiu_Solution_iOS/Effect/st_mobile_sdk/lib/ios_sim",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 2.0.6;
+				MARKETING_VERSION = 2.0.8;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",

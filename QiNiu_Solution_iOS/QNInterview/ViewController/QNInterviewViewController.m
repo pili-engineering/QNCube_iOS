@@ -107,6 +107,10 @@
     room.providePushUrl = [NSString stringWithFormat:@"rtmp://pili-publish.qnsdk.com/sdk-live/%@", self.interviewInfoModel.ID];
     room.provideRoomToken = self.interviewModel.roomToken;
     room.provideMeId = [[NSUserDefaults standardUserDefaults] objectForKey:QN_ACCOUNT_ID_KEY];
+    QNUserExtension *userInfo = [QNUserExtension new];
+    userInfo.clientRoleType = QNClientRoleTypeMaster;
+    
+    room.provideUserExtension = userInfo;
     self.roomEntity = room;
     [self joinRoom:self.roomEntity];
         

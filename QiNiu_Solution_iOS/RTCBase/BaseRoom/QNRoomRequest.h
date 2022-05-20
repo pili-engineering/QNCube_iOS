@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "QNRoomDetailModel.h"
 #import "QNRTCRoomEntity.h"
+#import "QNLiveRecordModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -43,6 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 //请求离开房间接口
 - (void)requestLeaveRoom;
+
+//获取直播记录
+- (void)getLiveCodeSuccess:(void (^)(NSArray <QNLiveRecordModel *> * list))success failure:(void (^)(NSError *error))failure;
 
 @end
 

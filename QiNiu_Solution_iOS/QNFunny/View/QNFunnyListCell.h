@@ -9,11 +9,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class QNRoomDetailModel,QNRoomInfo;
+@class QNRoomDetailModel,QNRoomInfo,QNLiveRecordModel;
 
 @interface QNFunnyListCell : UICollectionViewCell
 
 - (void)updateWithModel:(QNRoomInfo *)model;
+
+- (void)updateWithRecordModel:(QNLiveRecordModel *)model;
 
 @end
 
