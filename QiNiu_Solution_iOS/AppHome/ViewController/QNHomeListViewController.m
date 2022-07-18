@@ -55,6 +55,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [[QNIMClient sharedClient] signInByName:Get_IM_ID password:QN_IM_psw completion:^(QNIMError * _Nonnull error) {
+        NSLog(@"---七牛IM服务器-----%li",[QNIMClient sharedClient].connectStatus);
+        ;
+    }];
     self.tabBarController.tabBar.hidden = NO;
 }
 

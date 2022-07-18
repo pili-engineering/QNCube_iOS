@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "QNInputBarControl.h"
+#import "InputBarControl.h"
 #import <QNIMSDK/QNIMSDK.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol RCChatRoomViewDelegate <NSObject>
+@protocol ChatRoomViewDelegate <NSObject>
 
 -(void)didReceiveQuitMessageWithMessageModel:(QNIMMessageObject *)model;
 
@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QNChatRoomView : UIView
 
-@property(nonatomic, weak) id<RCChatRoomViewDelegate> delegate;
+@property(nonatomic, weak) id<ChatRoomViewDelegate> delegate;
 
 /*!
  消息列表CollectionView和输入框都在这个view里
@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  输入工具栏
  */
-@property(nonatomic,strong) QNInputBarControl *inputBar;
+@property(nonatomic,strong) InputBarControl *inputBar;
 
 
 

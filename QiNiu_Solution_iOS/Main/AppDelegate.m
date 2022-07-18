@@ -18,6 +18,7 @@
 #import <Bugly/Bugly.h>
 #import "QNTabBarViewController.h"
 #import <QNIMSDK/QNIMSDK.h>
+#import <QNLiveKit/QNLiveKit.h>
 
 @interface AppDelegate ()
 @property (nonatomic , copy) NSString *urlStr;
@@ -31,13 +32,11 @@
     [Bugly startWithAppId:QN_BUGLY_APPID];
     [self requestConficInfo];
     [self setUpStatusBar];
-//    [QNRTCEngine enableFileLogging];
     
     [self initializeQNIM];
     
     return YES;
 }
-
 
 ////初始化QNIM
 - (void)initializeQNIM{

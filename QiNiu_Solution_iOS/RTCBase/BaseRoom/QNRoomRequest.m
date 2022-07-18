@@ -85,7 +85,7 @@
         model.allUserList = [QNUserInfo mj_objectArrayWithKeyValuesArray:responseData[@"allUserList"]];
         self.model = model;
         
-        [[NSUserDefaults standardUserDefaults] setObject:model.userInfo.avatar forKey:QN_USER_AVATAR_KEY];
+        [[NSUserDefaults standardUserDefaults] setObject:model.userInfo.avatar forKey:QN_AVATAR_KEY];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         success(model);
@@ -146,11 +146,11 @@
     QNUserExtension *userExtension = [QNUserExtension new];
     userExtension.userExtRoleType = self.model.userInfo.role;
     userExtension.clientRoleType = clientRoleType;
-    userExtension.uid = QN_User_id;
+    userExtension.uid = Get_User_id;
     
     QNUserExtProfile *profile = [QNUserExtProfile new];
-    profile.avatar = QN_User_avatar;
-    profile.name = QN_User_nickname;
+    profile.avatar = Get_avatar;
+    profile.name = Get_Nickname;
     
     userExtension.userExtProfile = profile;
     
@@ -170,7 +170,7 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"roomId"] = self.roomId;
     params[@"type"] = self.type;
-    params[@"uid"] = QN_User_id;
+    params[@"uid"] = Get_User_id;
     [QNNetworkUtil postRequestWithAction:@"base/downMic" params:params success:^(NSDictionary *responseData) {
         success();
         } failure:^(NSError *error) {

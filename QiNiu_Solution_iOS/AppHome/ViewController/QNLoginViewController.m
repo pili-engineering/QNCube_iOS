@@ -16,6 +16,7 @@
 #import <MJExtension/MJExtension.h>
 #import "MBProgressHUD+QNShow.h"
 #import <QNIMSDK/QNIMSDK.h>
+#import <QNLiveKit/QNLiveKit.h>
 
 @interface QNLoginViewController ()
 
@@ -127,6 +128,7 @@
         QNLoginInfoModel *loginModel = [QNLoginInfoModel mj_objectWithKeyValues:responseData];
         [self saveLoginInfoToUserDefaults:loginModel];
         [self connectionIMWithImToken:loginModel.imConfig];
+        [self initQNLiveWithUser:loginModel deviceID:@"1111"];
         
     } failure:^(NSError *error) {
         
@@ -134,6 +136,26 @@
         
     }];
 
+}
+
+//初始化QNLive
+- (void)initQNLiveWithUser:(QNLoginInfoModel *)user deviceID:(NSString *)deviceID {
+    
+    NSString *action = [NSString stringWithFormat:@"live/auth_token?userID=%@&deviceID=%@",user.accountId,deviceID];
+    [QNNetworkUtil getRequestWithAction:action params:nil success:^(NSDictionary *responseData) {
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:responseData[@"accessToken"] forKey:Live_Token];
+        [defaults synchronize];
+        
+        [QLive initWithToken:responseData[@"accessToken"] serverURL:@"https://live-api.qiniu.com/%@" errorBack:^(NSError * _Nonnull error) {
+            
+        }];
+        [QLive setUser:user.avatar nick:user.nickname extension:nil];
+
+        } failure:^(NSError *error) {
+        
+        }];
 }
 
 //记录登录信息
@@ -145,7 +167,7 @@
     [defaults setObject:loginModel.nickname forKey:QN_NICKNAME_KEY];
     
     if (loginModel.imConfig.imUid.length > 0) {
-        [defaults setObject:loginModel.imConfig.imUid forKey:QN_IM_USER_ID_KEY];
+        [defaults setObject:loginModel.imConfig.imUid forKey:QN_IM_ID];
         [defaults setObject:loginModel.imConfig.imUsername forKey:QN_IM_USER_NAME_KEY];
         [defaults setObject:loginModel.imConfig.imPassword forKey:QN_IM_USER_PASSWORD_KEY];
     }

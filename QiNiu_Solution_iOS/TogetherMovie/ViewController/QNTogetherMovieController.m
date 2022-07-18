@@ -21,16 +21,16 @@
 #import <AVKit/AVKit.h>
 #import "QNPlayMovieListController.h"
 #import "QNMovieMemberListController.h"
-#import "QNInvitationModel.h"
-#import "QNMicSeatMessageModel.h"
+#import "InvitationModel.h"
+#import "MicSeatMessageModel.h"
 #import "QNAudioTrackParams.h"
 #import "QNVideoTrackParams.h"
 #import "QNMovieMicController.h"
 #import "QNRoomMicInfoModel.h"
 #import "CLPlayerView.h"
 #import "QNMovieModel.h"
-#import "QNIMModel.h"
-#import "QNIMTextMsgModel.h"
+#import "IMModel.h"
+#import "IMTextMsgModel.h"
 #import "QNMovieTogetherChannelModel.h"
 #import <AVFoundation/AVFoundation.h>
 #import "QNMovieTogetherViewModel.h"
@@ -103,10 +103,10 @@
         self.imGroupId = self.model.imConfig.imGroupId;
         
         [[QNIMGroupService sharedOption] joinGroupWithGroupId:self.model.imConfig.imGroupId message:@"" completion:^(QNIMError * _Nonnull error) {
-            [self.chatVc sendMessageWithAction:@"welcome" content:[NSString stringWithFormat:@"欢迎用户 %@ 进入房间",QN_User_nickname]];
+            [self.chatVc sendMessageWithAction:@"welcome" content:[NSString stringWithFormat:@"欢迎用户 %@ 进入房间",Get_Nickname]];
         }];
         
-        if ([QN_User_id isEqualToString:self.model.roomInfo.creator]) {
+        if ([Get_User_id isEqualToString:self.model.roomInfo.creator]) {
             [self joinRoomOption];
             [self updateRoomAttWithPlayStatus:0 currentPosition:10];
             [self createTrack];
@@ -249,7 +249,7 @@
     QNIMMessageObject *message = [self.messageCreater createOnMicMessage];
     [self.chatVc sendMessageWithMessage:message];
     
-    self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatioAndFill;
+//    self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatioAndFill;
     __weak typeof(self)weakSelf = self;
     [self.rtcClient publish:@[self.localAudioTrack,self.localVideoTrack] completeCallback:^(BOOL onPublished, NSError *error) {
         
@@ -261,17 +261,17 @@
         
         //自己的音频
         QNTranscodingLiveStreamingTrack *audioLayout = [[QNTranscodingLiveStreamingTrack alloc] init];
-        audioLayout.trackId = weakSelf.localAudioTrack.trackID;
+        audioLayout.trackID = weakSelf.localAudioTrack.trackID;
         [weakSelf.layouts addObject:audioLayout];
         
         [weakSelf.layouts removeObject:weakSelf.selfCameraLayout];
         weakSelf.selfCameraLayout = [[QNTranscodingLiveStreamingTrack alloc] init];
-        weakSelf.selfCameraLayout.trackId = weakSelf.localVideoTrack.trackID;
+        weakSelf.selfCameraLayout.trackID = weakSelf.localVideoTrack.trackID;
         weakSelf.selfCameraLayout.frame = CGRectMake(920, 360, 360, 360);
-        weakSelf.selfCameraLayout.zIndex = 2;
+        weakSelf.selfCameraLayout.zOrder = 2;
         [weakSelf.layouts addObject:weakSelf.selfCameraLayout];
         
-        if ([QN_User_id isEqualToString:weakSelf.model.roomInfo.creator]) {
+        if ([Get_User_id isEqualToString:weakSelf.model.roomInfo.creator]) {
 #pragma warning   加入自己的track进入合流画面
 //            [weakSelf.rtcClient setTranscodingLiveStreamingID:weakSelf.model.roomInfo.roomId withTracks:weakSelf.layouts];
         }
@@ -299,7 +299,7 @@
         __weak typeof(self)weakSelf = self;
         _playerView.currentTimeBlock = ^(NSInteger currentTime) {
             NSString *time = [NSString stringWithFormat:@"%ld",currentTime];
-            if ([QN_User_id isEqualToString:weakSelf.model.roomInfo.creator]) {
+            if ([Get_User_id isEqualToString:weakSelf.model.roomInfo.creator]) {
                 [weakSelf sendMovieMessageWithCurrentPosition:time playStatus:@"1" startTimeMillis:@""];
                 if (weakSelf.taskID.length > 0 && weakSelf.isPlaying == NO && currentTime > 10) {
                     [weakSelf updateRoomAttWithPlayStatus:1 currentPosition:currentTime];
@@ -313,7 +313,7 @@
     
     _playerView.continuePlayBlock = ^(NSInteger currentTime) {
         NSString *time = [NSString stringWithFormat:@"%ld",currentTime];
-        if ([QN_User_id isEqualToString:weakSelf.model.roomInfo.creator]) {
+        if ([Get_User_id isEqualToString:weakSelf.model.roomInfo.creator]) {
             [weakSelf sendMovieMessageWithCurrentPosition:time playStatus:@"1" startTimeMillis:@""];
             if (weakSelf.taskID.length > 0 && weakSelf.isPlaying == NO && currentTime > 10) {
                 [weakSelf updateRoomAttWithPlayStatus:1 currentPosition:currentTime];
@@ -327,7 +327,7 @@
     
     _playerView.pausePlayBlock = ^(NSInteger currentTime) {
         NSString *time = [NSString stringWithFormat:@"%ld",currentTime];
-        if ([QN_User_id isEqualToString:weakSelf.model.roomInfo.creator]) {
+        if ([Get_User_id isEqualToString:weakSelf.model.roomInfo.creator]) {
             [weakSelf sendMovieMessageWithCurrentPosition:time playStatus:@"0" startTimeMillis:@""];
             [weakSelf updateRoomAttWithPlayStatus:0 currentPosition:currentTime];
             weakSelf.isPlaying = NO;
@@ -358,7 +358,7 @@
     
     [self chatVc];
         
-    if ([QN_User_id isEqualToString:self.model.roomInfo.creator]) {
+    if ([Get_User_id isEqualToString:self.model.roomInfo.creator]) {
         
         _inviteButton = [[UIButton alloc]init];
         [_inviteButton setImage:[UIImage imageNamed:@"invite_long"] forState:UIControlStateNormal];
@@ -370,10 +370,6 @@
         }];
         [self.view bringSubviewToFront:_inviteButton];
     }
-    
-//    [[QNIMGroupService sharedOption] joinGroupWithGroupId:self.model.imConfig.imGroupId message:@"" completion:^(QNIMError * _Nonnull error) {
-//        [weakSelf.chatVc sendMessageWithAction:@"welcome" content:[NSString stringWithFormat:@"欢迎用户 %@ 进入房间",QN_User_nickname]];
-//    }];
             
 }
 
@@ -392,11 +388,11 @@
 //发送电影同步信令
 - (void)sendMovieMessageWithCurrentPosition:(NSString *)currentPosition playStatus:(NSString *)playStatus startTimeMillis:(NSString *)startTimeMillis {
     
-    QNIMModel *messageModel = [QNIMModel new];
+    IMModel *messageModel = [IMModel new];
     
     messageModel.action = @"channelAttributes_change";
     
-    QNIMTextMsgModel *data = [QNIMTextMsgModel new];
+    IMTextMsgModel *data = [IMTextMsgModel new];
     
     data.key = @"watch_movie_together";
     data.roomId = self.model.roomInfo.roomId;
@@ -407,14 +403,14 @@
     model.playStatus = playStatus.integerValue;
     model.startTimeMillis = startTimeMillis.longLongValue;
     model.videoId = self.movie.movieId;
-    model.videoUid = QN_User_id;
+    model.videoUid = Get_User_id;
     model.movieInfo = self.movie;
     
     data.value = model.mj_JSONString;
     
     messageModel.data = data.mj_keyValues;
     
-    NSString *senderId = [[NSUserDefaults standardUserDefaults] objectForKey:QN_IM_USER_ID_KEY];
+    NSString *senderId = Get_IM_ID;
     
     QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:senderId.longLongValue toId:self.imGroupId.longLongValue type:QNIMMessageTypeGroup conversationId:self.imGroupId.longLongValue];
     [self.chatVc sendMessageWithMessage:message];
@@ -429,8 +425,8 @@
 
 //邀请好友连麦
 - (void)inviteMember {
-    
-    if (self.rtcClient.publishedTracks.count > 0 && [self.rtcClient getSubscribedTracks:self.micVc.userView.userId].count > 0) {
+//    && [self.rtcClient getSubscribedTracks:self.micVc.userView.userId].count > 0
+    if (self.rtcClient.publishedTracks.count > 0) {
         [self addChildViewController:self.micVc];
         [self.view addSubview:self.micVc.view];
         [self.micVc.view mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -515,7 +511,7 @@
         
 }
 
-- (void)receiveInvitationAlertWithModel:(QNInvitationModel *)model {
+- (void)receiveInvitationAlertWithModel:(InvitationModel *)model {
     
     __weak typeof(self)weakSelf = self;
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"邀请提示" message:model.invitation.msg preferredStyle:UIAlertControllerStyleAlert];
@@ -762,9 +758,9 @@
         
         [self.layouts removeObject:self.remoteCameraLayout];
         self.remoteCameraLayout = [[QNTranscodingLiveStreamingTrack alloc] init];
-        self.remoteCameraLayout.trackId = videoTrack.trackID;
+        self.remoteCameraLayout.trackID = videoTrack.trackID;
         self.remoteCameraLayout.frame = CGRectMake(0, 360, 360, 360);
-        self.remoteCameraLayout.zIndex = 1;
+        self.remoteCameraLayout.zOrder = 1;
         [self.layouts addObject:self.remoteCameraLayout];
         
         if ([[[NSUserDefaults standardUserDefaults] objectForKey:QN_ACCOUNT_ID_KEY] isEqualToString:self.model.roomInfo.creator]) {
@@ -776,16 +772,17 @@
         if (!self.remoteMovieLayout) {
             [self.layouts removeObject:self.remoteMovieLayout];
             self.remoteMovieLayout = [[QNTranscodingLiveStreamingTrack alloc] init];
-            self.remoteMovieLayout.trackId = videoTrack.trackID;
+            self.remoteMovieLayout.trackID = videoTrack.trackID;
             self.remoteMovieLayout.frame = CGRectMake(0, 0, 1280, 720);
-            self.remoteMovieLayout.zIndex = 0;
+            self.remoteMovieLayout.zOrder = 0;
             [self.layouts addObject:self.remoteMovieLayout];
             if ([[[NSUserDefaults standardUserDefaults] objectForKey:QN_ACCOUNT_ID_KEY] isEqualToString:self.model.roomInfo.creator] && self.remoteMovieLayout) {
 //                [self.rtcClient setTranscodingLiveStreamingID:self.model.roomInfo.roomId withTracks:self.layouts];
             }
         }
-                
-        NSArray <QNTrack *> *tracks = [self.rtcClient getSubscribedTracks:userID];
+        QNRemoteUser *user = [self.rtcClient getRemoteUser:userID];
+        NSMutableArray *tracks = [[NSMutableArray alloc]initWithArray:user.videoTrack];
+        [tracks addObjectsFromArray:user.audioTrack];
         [self.rtcClient unsubscribe:tracks];
         
         
@@ -897,18 +894,18 @@
                     
         };
         //收到邀请信令
-        _chatVc.invitationBlock = ^(QNInvitationModel * _Nonnull model) {
+        _chatVc.invitationBlock = ^(InvitationModel * _Nonnull model) {
             [weakSelf receiveInvitationAlertWithModel:model];
         };
         //收到接受连麦信令
-        _chatVc.invitationAcceptBlock = ^(QNInvitationModel * _Nonnull model) {
+        _chatVc.invitationAcceptBlock = ^(InvitationModel * _Nonnull model) {
             //显示连麦画面
             [weakSelf showRTCView];
             //请求房间麦位信息
             [weakSelf requestAllMicSeat];
         };
         //收到用户进房信令
-        _chatVc.joinRoomBlock = ^(QNIMTextMsgModel * _Nonnull model) {
+        _chatVc.joinRoomBlock = ^(IMTextMsgModel * _Nonnull model) {
             
             QNUserInfo *userInfo = [QNUserInfo new];
             userInfo.nickname = model.senderName;
@@ -922,12 +919,12 @@
         };
 
         //收到用户上麦信令
-        _chatVc.sitDownMicBlock = ^(QNMicSeatMessageModel * _Nonnull model) {
+        _chatVc.sitDownMicBlock = ^(MicSeatMessageModel * _Nonnull model) {
             
         };
         
         //收到用户下麦信令
-        _chatVc.sitUpMicBlock = ^(QNMicSeatMessageModel * _Nonnull model) {
+        _chatVc.sitUpMicBlock = ^(MicSeatMessageModel * _Nonnull model) {
             
             if ([weakSelf.model.roomInfo.creator isEqualToString:model.uid]) {
                 [weakSelf showAlertWithTitle:@"房间已经解散了～" content:@"" success:^{
@@ -940,7 +937,7 @@
             }
         };
         
-        _chatVc.leaveRoomBlock = ^(QNIMTextMsgModel * _Nonnull model) {
+        _chatVc.leaveRoomBlock = ^(IMTextMsgModel * _Nonnull model) {
             
         };
         [_chatVc.view mas_makeConstraints:^(MASConstraintMaker *make) {

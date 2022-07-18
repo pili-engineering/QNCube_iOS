@@ -39,7 +39,7 @@
         make.centerY.equalTo(self.label);
     }];
     
-    self.preView = [[QNGLKView alloc]init];
+    self.preView = [[QNVideoGLView alloc]init];
     [self.view addSubview:self.preView];
     [self.preView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view);

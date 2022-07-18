@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface QNApplyOnSeatView : QNGLKView
+@interface QNApplyOnSeatView : QNVideoGLView
 
 @property (nonatomic, assign) BOOL isSeat;
 

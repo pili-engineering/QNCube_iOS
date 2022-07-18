@@ -19,7 +19,7 @@
 
     params[@"version"] = version;
     params[@"msg"] = @"更新";
-    params[@"packagePage"] = @"http://fir.qnsdk.com/9l5z";
+    params[@"packagePage"] = @"http://fir.qnsdk.com/cube";
     params[@"arch"] = @"ios";
     
     [QNNetworkUtil postRequestWithAction:@"v2/app/updates" params:params success:^(NSDictionary *responseData) {

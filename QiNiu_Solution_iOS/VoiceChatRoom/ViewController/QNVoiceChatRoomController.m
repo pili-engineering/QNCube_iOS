@@ -13,30 +13,30 @@
 #import "QNVoiceChatRoomBottomView.h"
 #import "QNVoiceChatRoomListController.h"
 #import "QNAudioTrackParams.h"
-#import "QNIMTextMsgModel.h"
-#import "QNIMModel.h"
+#import "IMTextMsgModel.h"
+#import "IMModel.h"
 #import <YYCategories/YYCategories.h>
 #import "QNChatRoomView.h"
 #import "QNApplyOnSeatView.h"
 #import "QNRoomRequest.h"
 #import "QNMessageCreater.h"
-#import "QNAlertViewController.h"
+#import "AlertViewController.h"
 #import "QNVoiceChatRoomCell.h"
-#import "QNInvitationModel.h"
+#import "InvitationModel.h"
 #import "QNVoiceChatBottomOperationView.h"
-#import "QNGiftShowManager.h"
-#import "QNGiftView.h"
-#import "QNSendGiftModel.h"
-#import "QNGiftMsgModel.h"
+#import "GiftShowManager.h"
+#import "GiftView.h"
+#import "SendGiftModel.h"
+#import "GiftMsgModel.h"
 #import "QNBottomUserOperationView.h"
-#import "QNForbiddenMicModel.h"
-#import "QNMicSeatMessageModel.h"
+#import "ForbiddenMicModel.h"
+#import "MicSeatMessageModel.h"
 
-@interface QNVoiceChatRoomController ()<QNRTCClientDelegate,QNIMChatServiceProtocol,UICollectionViewDelegate,UICollectionViewDataSource,JPGiftViewDelegate>
+@interface QNVoiceChatRoomController ()<QNRTCClientDelegate,QNIMChatServiceProtocol,UICollectionViewDelegate,UICollectionViewDataSource,GiftViewDelegate>
 
 @property (nonatomic, strong) QNChatRoomView * chatRoomView;
 
-@property(nonatomic,strong) QNGiftView *giftView;
+@property(nonatomic,strong) GiftView *giftView;
 
 @property(nonatomic,strong) QNBottomUserOperationView *userOpetationView;
 
@@ -113,23 +113,23 @@
     [self.view addSubview:bottomButtonView];
 }
 
-#pragma mark  --------JPGiftViewDelegate---------
+#pragma mark  --------GiftViewDelegate---------
 //点击赠送礼物的回调
-- (void)giftViewSendGiftInView:(QNGiftView *)giftView data:(QNSendGiftModel *)model {
+- (void)giftViewSendGiftInView:(GiftView *)giftView data:(SendGiftModel *)model {
         
-    model.userIcon = QN_User_avatar;
-    model.userName = QN_User_nickname;
+    model.userIcon = Get_avatar;
+    model.userName = Get_Nickname;
     model.defaultCount = 0;
     model.sendCount = 1;
         
-    [[QNGiftShowManager sharedManager] showGiftViewWithBackView:self.view info:model completeBlock:^(BOOL finished) {
+    [[GiftShowManager sharedManager] showGiftViewWithBackView:self.view info:model completeBlock:^(BOOL finished) {
         NSLog(@"赠送了礼物");
     }];
     [self sendGiftMessage:model];
 }
 
 //发送礼物信令和消息
--(void)sendGiftMessage:(QNSendGiftModel *)model {
+-(void)sendGiftMessage:(SendGiftModel *)model {
     QNGiftModel *gift = [QNGiftModel new];
     gift.giftName = model.giftName;
     gift.giftId = model.giftId;
@@ -141,8 +141,8 @@
 }
 
 - (void)quitRoom {
-    if ([QN_User_id isEqualToString:self.model.roomInfo.creator]) {
-        [QNAlertViewController showBaseAlertWithTitle:@"确定要关闭房间？" content:@"关闭房间后，其他成员也将被踢出房间" handler:^(UIAlertAction * _Nonnull action) {
+    if ([Get_User_id isEqualToString:self.model.roomInfo.creator]) {
+        [AlertViewController showBaseAlertWithTitle:@"确定要关闭房间？" content:@"关闭房间后，其他成员也将被踢出房间" handler:^(UIAlertAction * _Nonnull action) {
             [self requestLeave];
         }];
     } else {
@@ -259,7 +259,7 @@
     [super RTCClient:client didConnectionStateChanged:state disconnectedInfo:info];
     if (state == QNConnectionStateConnected) {
         
-        if ([QN_User_id isEqualToString:self.model.roomInfo.creator]) {
+        if ([Get_User_id isEqualToString:self.model.roomInfo.creator]) {
             [self requestUpMicSeat];
         } else {
             [self getRoomMicInfo];
@@ -278,7 +278,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         
         if ([userID isEqualToString:self.model.roomInfo.creator]) {
-            [QNAlertViewController showBaseAlertWithTitle:@"房间已解散" content:@"房主离开后，其他成员也将被踢出房间" handler:^(UIAlertAction * _Nonnull action) {
+            [AlertViewController showBaseAlertWithTitle:@"房间已解散" content:@"房主离开后，其他成员也将被踢出房间" handler:^(UIAlertAction * _Nonnull action) {
                 [self requestLeave];
             }];
         }
@@ -293,14 +293,14 @@
 
 - (void)receivedMessages:(NSArray<QNIMMessageObject *> *)messages {
     
-    QNIMModel *messageModel = [QNIMModel mj_objectWithKeyValues:messages.firstObject.content];
+    IMModel *messageModel = [IMModel mj_objectWithKeyValues:messages.firstObject.content];
     
     __weak typeof(self)weakSelf = self;
     if ([messageModel.action isEqualToString:@"invite_send"]) {//连麦邀请消息
         
-        QNInvitationModel *model = [QNInvitationModel mj_objectWithKeyValues:messageModel.data];
+        InvitationModel *model = [InvitationModel mj_objectWithKeyValues:messageModel.data];
         
-        [QNAlertViewController showBlackAlertWithTitle:@"邀请提示" content:model.invitation.msg cancelHandler:^(UIAlertAction * _Nonnull action) {
+        [AlertViewController showBlackAlertWithTitle:@"邀请提示" content:model.invitation.msg cancelHandler:^(UIAlertAction * _Nonnull action) {
              QNIMMessageObject *message = [weakSelf.messageCreater createRejectInviteMessageWithInvitationName:@"audioroomupmic" receiverId:model.invitation.initiatorUid];
             [[QNIMChatService sharedOption] sendMessage:message];
             
@@ -315,7 +315,7 @@
         
     } else if ([messageModel.action isEqualToString:@"living_gift"]) {//收到礼物消息
         
-        QNGiftMsgModel *model = [QNGiftMsgModel mj_objectWithKeyValues:messageModel.data];
+        GiftMsgModel *model = [GiftMsgModel mj_objectWithKeyValues:messageModel.data];
         [self receivedGift:model];
         
     }  else if ([messageModel.action isEqualToString:@"invite_reject"]) {//连麦被拒绝消息
@@ -353,8 +353,8 @@
         
     } else if ([messageModel.action isEqualToString:@"rtc_forbiddenAudio"]) {//禁麦消息
         
-        QNForbiddenMicModel *model = [QNForbiddenMicModel mj_objectWithKeyValues:messageModel.data];
-        if ([model.uid isEqualToString:QN_User_id]) {
+        ForbiddenMicModel *model = [ForbiddenMicModel mj_objectWithKeyValues:messageModel.data];
+        if ([model.uid isEqualToString:Get_User_id]) {
             [self.localAudioTrack updateMute:model.isForbidden];
             if (model.isForbidden) {
                 [MBProgressHUD showText:@"您已被房主禁麦"];
@@ -365,7 +365,7 @@
     } else if ([messageModel.action isEqualToString:@"rtc_kickOutFromMicSeat"]) {//踢麦消息
         
         QNIMSeatOperationModel *model = [QNIMSeatOperationModel mj_objectWithKeyValues:messageModel.data];
-        if ([model.seat.uid isEqualToString:QN_User_id]) {
+        if ([model.seat.uid isEqualToString:Get_User_id]) {
             [MBProgressHUD showText:@"您已被房主下麦"];
             [self requestDownMicSeat];
         }
@@ -373,21 +373,21 @@
 }
 
 //收到礼物信令的操作
-- (void)receivedGift:(QNGiftMsgModel *)model {
-    QNSendGiftModel *sendModel = [QNSendGiftModel new];
+- (void)receivedGift:(GiftMsgModel *)model {
+    SendGiftModel *sendModel = [SendGiftModel new];
     sendModel.userIcon = model.senderAvatar;
     sendModel.userName = model.senderName;
     sendModel.defaultCount = 0;
     sendModel.sendCount = model.number;
     sendModel.giftName = model.sendGift.giftName;
     //通过礼物名字找到本地的礼物图
-    for (QNSendGiftModel *gift in self.giftView.dataArray) {
+    for (SendGiftModel *gift in self.giftView.dataArray) {
         if ([model.sendGift.giftName isEqualToString:gift.giftName]) {
             sendModel.giftImage = gift.giftImage;
             sendModel.giftGifImage = gift.giftGifImage;
         }
     }
-    [[QNGiftShowManager sharedManager] showGiftViewWithBackView:self.view info:sendModel completeBlock:^(BOOL finished) {
+    [[GiftShowManager sharedManager] showGiftViewWithBackView:self.view info:sendModel completeBlock:^(BOOL finished) {
     }];
 }
 
@@ -422,7 +422,7 @@
     __weak typeof(self)weakSelf = self;
     cell.onSeatBlock = ^{
         
-        if ([weakSelf isAdminUser:QN_User_id]) {
+        if ([weakSelf isAdminUser:Get_User_id]) {
             [weakSelf.userOpetationView showWithUserInfo:self.onMicUserList[indexPath.item]];
             return;
         }
@@ -451,11 +451,11 @@
 
 //判断是否已经在麦上
 - (BOOL)isOnMic {
-    if ([QN_User_id isEqualToString:self.model.roomInfo.creator]) {
+    if ([Get_User_id isEqualToString:self.model.roomInfo.creator]) {
         return YES;
     }
     for (QNRTCMicsInfo  *mic in self.onMicUserList) {
-        if ([QN_User_id isEqualToString:mic.uid]) {
+        if ([Get_User_id isEqualToString:mic.uid]) {
             return YES;
         }
     }
@@ -558,9 +558,9 @@
     return _collectionView;
 }
 
-- (QNGiftView *)giftView{
+- (GiftView *)giftView{
     if (!_giftView) {
-        _giftView = [[QNGiftView alloc] init];
+        _giftView = [[GiftView alloc] init];
         _giftView.delegate = self;
     }
     return _giftView;

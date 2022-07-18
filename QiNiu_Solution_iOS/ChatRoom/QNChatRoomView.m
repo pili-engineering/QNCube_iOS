@@ -7,11 +7,11 @@
 //
 
 #import "QNChatRoomView.h"
-#import "QNMessageBaseCell.h"
-#import "QNTextMessageCell.h"
+#import "MessageBaseCell.h"
+#import "TextMessageCell.h"
 #import <SDWebImage/SDWebImage.h>
-#import "QNIMTextMsgModel.h"
-#import "QNIMModel.h"
+#import "IMTextMsgModel.h"
+#import "IMModel.h"
 #import <MJExtension/MJExtension.h>
 #import "MBProgressHUD+QNShow.h"
 #import <IQKeyboardManager/IQKeyboardManager.h>
@@ -34,7 +34,7 @@ static NSString * const banNotifyContent = @"您已被管理员禁言";
 //  用于记录点赞消息连续点击的次数
 static int clickPraiseBtnTimes  = 0 ;
 
-@interface QNChatRoomView ()<QNInputBarControlDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate,QNIMChatServiceProtocol>
+@interface QNChatRoomView ()<InputBarControlDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate,QNIMChatServiceProtocol>
 
 /*!
  聊天内容的消息Cell数据模型的数据源
@@ -91,8 +91,8 @@ static int clickPraiseBtnTimes  = 0 ;
         
         [self.commentBtn setFrame:CGRectMake(10, 10, 35, 35)];
         
-        [self registerClass:[QNTextMessageCell class]forCellWithReuseIdentifier:textCellIndentifier];
-        [self registerClass:[QNTextMessageCell class]forCellWithReuseIdentifier:startAndEndCellIndentifier];
+        [self registerClass:[TextMessageCell class]forCellWithReuseIdentifier:textCellIndentifier];
+        [self registerClass:[TextMessageCell class]forCellWithReuseIdentifier:startAndEndCellIndentifier];
         
 //        [[QNIMChatService sharedOption] addDelegate:self delegateQueue:dispatch_get_main_queue()];
         
@@ -216,7 +216,7 @@ static int clickPraiseBtnTimes  = 0 ;
 
 
 
-#pragma mark - QNInputBarControlDelegate
+#pragma mark - InputBarControlDelegate
 //  根据inputBar 回调来修改页面布局
 - (void)onInputBarControlContentSizeChanged:(CGRect)frame withAnimationDuration:(CGFloat)duration andAnimationCurve:(UIViewAnimationCurve)curve ifKeyboardShow:(BOOL)ifKeyboardShow {
     CGRect originFrame = self.frame;
@@ -243,10 +243,10 @@ static int clickPraiseBtnTimes  = 0 ;
 
 - (void)touristSendMessage:(NSString *)text {
     
-    QNIMModel *messageModel = [QNIMModel new];
+    IMModel *messageModel = [IMModel new];
     messageModel.action = @"pubChatText";
     
-    QNIMTextMsgModel *model = [QNIMTextMsgModel new];
+    IMTextMsgModel *model = [IMTextMsgModel new];
     
     model.senderName = [[NSUserDefaults standardUserDefaults] objectForKey:QN_NICKNAME_KEY];
     model.senderId = [[NSUserDefaults standardUserDefaults] objectForKey:QN_ACCOUNT_ID_KEY];
@@ -315,8 +315,8 @@ static int clickPraiseBtnTimes  = 0 ;
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     QNIMMessageObject *messageContent =
     [self.conversationDataRepository objectAtIndex:indexPath.row];
-    QNMessageBaseCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:ConversationMessageCollectionViewCell forIndexPath:indexPath];;
-        QNTextMessageCell *__cell = nil;
+    MessageBaseCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:ConversationMessageCollectionViewCell forIndexPath:indexPath];;
+        TextMessageCell *__cell = nil;
         NSString *indentifier = textCellIndentifier;
         
         __cell = [collectionView dequeueReusableCellWithReuseIdentifier:indentifier forIndexPath:indexPath];
@@ -406,9 +406,9 @@ static int clickPraiseBtnTimes  = 0 ;
     return _conversationMessageCollectionView;
 }
 
-- (QNInputBarControl *)inputBar {
+- (InputBarControl *)inputBar {
     if (!_inputBar) {
-        _inputBar = [[QNInputBarControl alloc] initWithStatus:RCCRBottomBarStatusDefault];
+        _inputBar = [[InputBarControl alloc] initWithStatus:RCCRBottomBarStatusDefault];
         [_inputBar setDelegate:self];
     }
     return _inputBar;

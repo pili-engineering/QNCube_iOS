@@ -62,16 +62,17 @@
 
 //设置某个用户的音频混流参数
 - (void)updateUserAudioMergeOptions:(NSString *)uid isNeed:(BOOL)isNeed {
+    QNRemoteUser *user = [self.client getRemoteUser:uid];
+    NSMutableArray <QNTrack *>*tracks = [[NSMutableArray alloc]initWithArray:user.videoTrack];
+    [tracks addObjectsFromArray:user.audioTrack];
     
-    NSArray <QNTrack *>*tracks = [self.client getSubscribedTracks:uid];
-    
-    if ([uid isEqualToString:QN_User_id]) {
+    if ([uid isEqualToString:Get_User_id]) {
         tracks = [self.client publishedTracks];
     }
     for (QNTrack *t in tracks) {
         if (t.kind == QNTrackKindAudio) {
             QNTranscodingLiveStreamingTrack *layout = [[QNTranscodingLiveStreamingTrack alloc] init];
-            layout.trackId = t.trackID;
+            layout.trackID = t.trackID;
             if (isNeed) {
                 [self.client setTranscodingLiveStreamingID:self.streamID withTracks:@[layout]];
             } else {
@@ -83,13 +84,15 @@
 
 //设置某个用户的摄像头混流参数
 - (void)updateUserCameraMergeOptions:(NSString *)uid option:(QNMergeTrackOption *)option {
-    NSArray <QNTrack *>*tracks = [self.client getSubscribedTracks:uid];
+    QNRemoteUser *user = [self.client getRemoteUser:uid];
+    NSMutableArray <QNTrack *>*tracks = [[NSMutableArray alloc]initWithArray:user.videoTrack];
+    [tracks addObjectsFromArray:user.audioTrack];
     for (QNTrack *t in tracks) {
         if (t.kind == QNTrackKindVideo && [t.tag isEqualToString:@"camera"]) {
             QNTranscodingLiveStreamingTrack *layout = [[QNTranscodingLiveStreamingTrack alloc] init];
-            layout.trackId = t.trackID;
+            layout.trackID = t.trackID;
             layout.frame = option.frame;
-            layout.zIndex = option.zIndex;
+            layout.zOrder = option.zIndex;
             layout.fillMode= option.fillMode;
             [self.client setTranscodingLiveStreamingID:self.streamID withTracks:@[layout]];
         }
@@ -98,13 +101,15 @@
 
 //设置某个用户的共享屏幕混流参数
 -(void)updateUserScreenMergeOptions:(NSString *)uid option:(QNMergeTrackOption *)option {
-    NSArray <QNTrack *>*tracks = [self.client getSubscribedTracks:uid];
+    QNRemoteUser *user = [self.client getRemoteUser:uid];
+    NSMutableArray <QNTrack *>*tracks = [[NSMutableArray alloc]initWithArray:user.videoTrack];
+    [tracks addObjectsFromArray:user.audioTrack];
     for (QNTrack *t in tracks) {
         if (t.kind == QNTrackKindVideo && [t.tag isEqualToString:@"screen"]) {
             QNTranscodingLiveStreamingTrack *layout = [[QNTranscodingLiveStreamingTrack alloc] init];
-            layout.trackId = t.trackID;
+            layout.trackID = t.trackID;
             layout.frame = option.frame;
-            layout.zIndex = option.zIndex;
+            layout.zOrder = option.zIndex;
             layout.fillMode= option.fillMode;
             [self.client setTranscodingLiveStreamingID:self.streamID withTracks:@[layout]];
         }

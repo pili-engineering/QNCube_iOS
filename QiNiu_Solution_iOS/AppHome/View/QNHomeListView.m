@@ -15,6 +15,7 @@
 #import "QNFunnyListController.h"
 #import "QNMovieListController.h"
 #import "QNVoiceChatRoomListController.h"
+#import <QNLiveKit/QNLiveKit.h>
 
 @interface QNHomeListView ()
 
@@ -42,6 +43,13 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:itemSelector];
     self.userInteractionEnabled = YES;
     [self addGestureRecognizer:tap];
+}
+
+- (void)pkClicked {
+    [QLive setUser:Get_avatar nick:Get_Nickname extension:nil];
+    QLiveListController *vc = [QLiveListController new];
+    [self topViewController].tabBarController.tabBar.hidden = YES;
+    [[self topViewController].navigationController pushViewController:vc animated:YES];
 }
 
 //面试点击

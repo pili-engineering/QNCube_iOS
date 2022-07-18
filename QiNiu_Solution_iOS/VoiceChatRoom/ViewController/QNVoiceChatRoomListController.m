@@ -13,7 +13,7 @@
 #import "QNNetworkUtil.h"
 #import "QNRoomDetailModel.h"
 #import <MJExtension/MJExtension.h>
-#import "QNAlertViewController.h"
+#import "AlertViewController.h"
 
 @interface QNVoiceChatRoomListController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -66,7 +66,7 @@
 
 - (void)addRoom {
     
-    [QNAlertViewController showTextAlertWithTitle:@"设置房间名" content:@"" cancelHandler:^(UIAlertAction * _Nonnull action) {
+    [AlertViewController showTextAlertWithTitle:@"设置房间名" content:@"" cancelHandler:^(UIAlertAction * _Nonnull action) {
             
     } confirmHandler:^(NSString * _Nonnull text) {
         [self startRoomWithName:text];

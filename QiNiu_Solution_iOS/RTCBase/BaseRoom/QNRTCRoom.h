@@ -23,9 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QNRTCRoom : QNRTCAbsRoom
 <
 QNRTCClientDelegate,
-QNCameraTrackVideoDataDelegate,
-QNMicrophoneAudioTrackDataDelegate,
-QNScreenVideoTrackDelegate,
 UITableViewDelegate,
 UITableViewDataSource
 >
@@ -90,6 +87,7 @@ UITableViewDataSource
 - (void)setUserExtraTrackWindowView:(UIView *)faceView uid:(NSString *)uid trackTag:(NSString *)trackTag;
 
 //获取用户视频Track
+- (NSArray <QNTrack *> *)getTracksWithUser:(NSString *)userID;
 - (QNTrackInfo *)getUserVideoTrackInfo:(NSString *)uid;
 //获取用户音频Track
 - (QNTrackInfo *)getUserAudioTrackInfo:(NSString *)uid;

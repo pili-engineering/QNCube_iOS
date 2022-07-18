@@ -26,7 +26,7 @@ QNRemoteVideoTrack;
 @interface QNRTCAbsRoom : UIViewController
 
 @property (nonatomic, strong) QNRTCClient *rtcClient;
-@property (nonatomic, strong) QNGLKView *preview;
+@property (nonatomic, strong) QNVideoGLView *preview;
 
 @property (nonatomic, strong) QNMicrophoneAudioTrack *localAudioTrack;
 @property (nonatomic, strong) QNCameraVideoTrack *localVideoTrack;

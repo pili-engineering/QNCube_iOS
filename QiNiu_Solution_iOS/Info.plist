@@ -31,6 +31,8 @@
 	<string>YES</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>YES</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string></string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

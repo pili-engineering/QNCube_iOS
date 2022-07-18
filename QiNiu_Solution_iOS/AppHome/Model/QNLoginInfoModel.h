@@ -26,9 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QNLoginInfoModel : NSObject
 //登录token
 @property (nonatomic, copy) NSString *loginToken;
+@property (nonatomic, copy) NSString *avatar;
 //用户ID
 @property (nonatomic, copy) NSString *accountId;
-
+//昵称
 @property (nonatomic, copy) NSString *nickname;
 //im配置信息
 @property (nonatomic, strong) QNImconfigModel *imConfig;

@@ -22,7 +22,7 @@ typedef NS_ENUM(NSUInteger, QNMovieAction){
 
 @interface QNMovieMicController : UIViewController
 
-@property (nonatomic, strong) QNGLKView *preView;
+@property (nonatomic, strong) QNVideoGLView *preView;
 
 @property (nonatomic, strong) QNRoomUserView *userView;
 

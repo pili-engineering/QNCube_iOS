@@ -16,7 +16,7 @@
 #import <YYCategories/YYCategories.h>
 #import "QNRoomUserView.h"
 #import "QNChatRoomView.h"
-#import "QNIMTextMsgModel.h"
+#import "IMTextMsgModel.h"
 #import "MBProgressHUD+QNShow.h"
 #import <SDWebImage/SDWebImage.h>
 #import "QNInterviewListViewModel.h"
@@ -26,7 +26,7 @@
 
 #define QN_DELAY_MS 5000
 
-@interface QNInterviewViewController ()<QNIMChatServiceProtocol,UIGestureRecognizerDelegate,QNRTCClientDelegate,QNInputBarControlDelegate>
+@interface QNInterviewViewController ()<QNIMChatServiceProtocol,UIGestureRecognizerDelegate,QNRTCClientDelegate,InputBarControlDelegate>
 
 @property (nonatomic, strong) NSString *mergeJobId;
 @property (nonatomic, strong) UIView *buttonView;
@@ -179,7 +179,8 @@
 - (void)beginScreenShare {
     _screenShareButton.selected = !_screenShareButton.isSelected;
 
-    QNScreenVideoTrackConfig * screenConfig = [[QNScreenVideoTrackConfig alloc] initWithSourceTag:@"screen" bitrate:self.bitrate videoEncodeSize:self.videoEncodeSize];
+    QNVideoEncoderConfig *config = [[QNVideoEncoderConfig alloc] initWithBitrate:self.bitrate videoEncodeSize:self.videoEncodeSize videoFrameRate:15];
+    QNScreenVideoTrackConfig * screenConfig = [[QNScreenVideoTrackConfig alloc] initWithSourceTag:@"screen" config:config multiStreamEnable:NO];
     self.localScreenTrack = [QNRTC createScreenVideoTrackWithConfig:screenConfig];
                              
     if (self.localScreenTrack) {
@@ -187,9 +188,9 @@
             [self.rtcClient publish:@[self.localScreenTrack] completeCallback:^(BOOL onPublished, NSError *error) {
                 
                 self.selfScreenLayout = [[QNTranscodingLiveStreamingTrack alloc] init];
-                self.selfScreenLayout.trackId = self.localScreenTrack.trackID;
+                self.selfScreenLayout.trackID = self.localScreenTrack.trackID;
                 self.selfScreenLayout.frame = CGRectMake(480, 0, 240, 430);
-                self.selfScreenLayout.zIndex = 0;
+                self.selfScreenLayout.zOrder = 0;
                 [self.layouts addObject:self.selfScreenLayout];
                 
                 [self removeSameLayoutsAndMergeStreamLayouts];
@@ -329,10 +330,10 @@
 - (void)resetLayout {
         
     //只有自己的视频流推送的情况下，调整视频frame
-    if (self.remoteCameraLayout.trackId.length == 0 && !self.remoteScreenLayout && self.selfCameraLayout) {
+    if (self.remoteCameraLayout.trackID.length == 0 && !self.remoteScreenLayout && self.selfCameraLayout) {
         QNTranscodingLiveStreamingTrack *selfLayout = self.selfCameraLayout;
         selfLayout.frame = CGRectMake(0, 0, 720, 1280);
-        selfLayout.zIndex = 2;
+        selfLayout.zOrder = 2;
         [self.layouts removeObject:self.selfCameraLayout];
         [self.layouts addObject:selfLayout];
         self.selfCameraLayout = selfLayout;
@@ -342,7 +343,7 @@
         
         QNTranscodingLiveStreamingTrack *selfCameraLayout = self.selfCameraLayout;
         selfCameraLayout.frame = CGRectMake(480, 0, 240, 430);
-        selfCameraLayout.zIndex = 2;
+        selfCameraLayout.zOrder = 2;
         [self.layouts removeObject:self.selfCameraLayout];
         
         if (self.selfCameraLayout) {
@@ -353,7 +354,7 @@
         
         QNTranscodingLiveStreamingTrack *remoteCameraLayout = self.remoteCameraLayout;
         remoteCameraLayout.frame = CGRectMake(0, 0, 720, 1280);
-        self.remoteCameraLayout.zIndex = 1;
+        self.remoteCameraLayout.zOrder = 1;
         [self.layouts removeObject:self.remoteCameraLayout];
         [self.layouts addObject:remoteCameraLayout];
         
@@ -395,13 +396,13 @@
                 
                 //自己的音频
                 QNTranscodingLiveStreamingTrack *audioLayout = [[QNTranscodingLiveStreamingTrack alloc] init];
-                audioLayout.trackId = self.localAudioTrack.trackID;
+                audioLayout.trackID = self.localAudioTrack.trackID;
                 [self.layouts addObject:audioLayout];
 //                自己的摄像头
                 self.selfCameraLayout = [[QNTranscodingLiveStreamingTrack alloc]init];
-                self.selfCameraLayout.trackId = self.localVideoTrack.trackID;
+                self.selfCameraLayout.trackID = self.localVideoTrack.trackID;
                 self.selfCameraLayout.frame = CGRectMake(480, 0, 240, 430);
-                self.selfCameraLayout.zIndex = 2;
+                self.selfCameraLayout.zOrder = 2;
                 
                 [self removeSameLayoutsAndMergeStreamLayouts];
                 
@@ -433,7 +434,7 @@
                 if (trackInfo.kind == QNTrackKindAudio) {
                     self.remoteAudioTrack = (QNRemoteAudioTrack *)trackInfo;
                     QNTranscodingLiveStreamingTrack *audioLayout = [[QNTranscodingLiveStreamingTrack alloc] init];
-                    audioLayout.trackId = trackInfo.trackID;
+                    audioLayout.trackID = trackInfo.trackID;
                     [self.layouts addObject:audioLayout];
                 }
                 
@@ -443,9 +444,9 @@
                         self.remoteScreenTrack = (QNRemoteVideoTrack *)trackInfo;
                         [self.layouts removeObject:self.remoteScreenLayout];
                         self.remoteScreenLayout = [[QNTranscodingLiveStreamingTrack alloc] init];
-                        self.remoteScreenLayout.trackId = trackInfo.trackID;
+                        self.remoteScreenLayout.trackID = trackInfo.trackID;
                         self.remoteScreenLayout.frame = CGRectMake(0, 0, 720, 1280);
-                        self.remoteScreenLayout.zIndex = 0;
+                        self.remoteScreenLayout.zOrder = 0;
                         [self.layouts addObject:self.remoteScreenLayout];
                         
                         self.screenShareButton.selected = YES;
@@ -456,9 +457,9 @@
                         self.remoteCameraTrack = (QNRemoteVideoTrack *)trackInfo;
                         [self.layouts removeObject:self.remoteCameraLayout];
                         self.remoteCameraLayout = [[QNTranscodingLiveStreamingTrack alloc] init];
-                        self.remoteCameraLayout.trackId = trackInfo.trackID;
+                        self.remoteCameraLayout.trackID = trackInfo.trackID;
                         self.remoteCameraLayout.frame = CGRectMake(0, 0, 720, 1280);
-                        self.remoteCameraLayout.zIndex = 1;
+                        self.remoteCameraLayout.zOrder = 1;
                         [self.layouts addObject:self.remoteCameraLayout];
                         
                     }

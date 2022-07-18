@@ -17,7 +17,7 @@
 #import "QNApplyOnSeatView.h"
 #import <UIKit/UIKit.h>
 #import "QNChatRoomView.h"
-#import "QNIMTextMsgModel.h"
+#import "IMTextMsgModel.h"
 #import <YYCategories/YYCategories.h>
 #import "QNSeatNumModel.h"
 #import "QNMergeTrackOption.h"
@@ -286,7 +286,7 @@
         }
         
         [self.roomRequest requestRoomHeartBeatWithInterval:@"3"];
-        if ([self isAdminUser:QN_User_id]) {
+        if ([self isAdminUser:Get_User_id]) {
             [self.mixManager startMixStreamJob];
         }        
     }
@@ -301,7 +301,7 @@
         NSInteger tag =  message.content.integerValue;
             
             if (tag == idx + 101) {
-                seatView.userId = message.userId;
+                seatView.userId = message.userID;
             }
         }];
     }
@@ -326,7 +326,7 @@
         
     if ([self.roomEntity.provideHostUid isEqualToString:userID]) {
         
-        QNVideoView *seatView = [[QNVideoView alloc]initWithFrame:CGRectMake(0, 0, self.preview.frame.size.width, self.preview.frame.size.height)];
+        QNVideoGLView *seatView = [[QNVideoGLView alloc]initWithFrame:CGRectMake(0, 0, self.preview.frame.size.width, self.preview.frame.size.height)];
         [self.preview addSubview:seatView];
         [videoTrack play:seatView];
         
@@ -334,7 +334,7 @@
         
         for (QNApplyOnSeatView *seatView in self.seatViews) {
             if ([seatView.userId isEqualToString:userID]) {
-                QNVideoView *vv = [[QNVideoView alloc]initWithFrame:CGRectMake(0, 0, seatView.frame.size.width, seatView.frame.size.height)];
+                QNVideoGLView *vv = [[QNVideoGLView alloc]initWithFrame:CGRectMake(0, 0, seatView.frame.size.width, seatView.frame.size.height)];
                 [seatView addSubview:vv];
                 seatView.isSeat = YES;
                 [videoTrack play:vv];
@@ -373,7 +373,7 @@
                 if ([seatView.userId isEqualToString:userID]) {
                     
                     [seatView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                        if ([obj isKindOfClass:[QNVideoView class]]) {
+                        if ([obj isKindOfClass:[QNVideoGLView class]]) {
                             [obj removeFromSuperview];
                             seatView.isSeat = NO;
                         }
@@ -406,16 +406,16 @@
     if ([self.model.userInfo.role isEqualToString:@"roomHost"]) {
         [self.localVideoTrack play:self.preview];
     }
-    self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatioAndFill;
+//    self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatioAndFill;
     __weak typeof(self)weakSelf = self;
     [self.rtcClient publish:@[self.localAudioTrack,self.localVideoTrack] completeCallback:^(BOOL onPublished, NSError *error) {
         [weakSelf.roomRequest requestUpMicSeatWithUserExtRoleType:@"" clientRoleType:QNClientRoleTypeMaster success:^{} failure:^(NSError * _Nonnull error) {}];
         if ([weakSelf isAdmin]) {
-            [weakSelf.mixManager updateUserAudioMergeOptions:QN_User_id isNeed:YES];
+            [weakSelf.mixManager updateUserAudioMergeOptions:Get_User_id isNeed:YES];
             QNMergeTrackOption *option = [QNMergeTrackOption new];
             option.frame = CGRectMake(147, 97, 120, 120);
             option.zIndex = 0;
-            [self.mixManager updateUserCameraMergeOptions:QN_User_id option:option];
+            [self.mixManager updateUserCameraMergeOptions:Get_User_id option:option];
         }
     }];
 }

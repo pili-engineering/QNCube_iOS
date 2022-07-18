@@ -6,7 +6,7 @@ target 'QiNiu_Solution_iOS' do
   
   use_frameworks!
   #真机
-  pod 'QNRTCKit-iOS','4.0.0'
+  pod 'QNRTCKit-iOS','5.0.0'
   pod 'Bugly','2.5.91'
   pod 'PLPlayerKit', '3.4.7'
   pod 'MMMaterialDesignSpinner', '0.2.5'
@@ -18,7 +18,9 @@ target 'QiNiu_Solution_iOS' do
   pod 'IQKeyboardManager','6.5.9'
   pod 'MBProgressHUD','1.2.0'
   pod 'MJRefresh', '3.5.0'
-  pod 'SocketRocket','0.6.0'  
+  pod 'SocketRocket','0.6.0'
+  pod 'PLShortVideoKit-SenseTime','1.4.0'
+
 
   target 'QiNiu_Solution_iOSTests' do
     inherit! :search_paths

@@ -12,19 +12,19 @@
 #import <MJExtension/MJExtension.h>
 #import "QNChatRoomView.h"
 #import "QNRoomUserView.h"
-#import "QNIMTextMsgModel.h"
+#import "IMTextMsgModel.h"
 #import <YYCategories/YYCategories.h>
 #import <Masonry/Masonry.h>
 #import <QNWhiteBoardSDK/QNWhiteBoardSDK.h>
 #import "MBProgressHUD+QNShow.h"
-#import <QNAISDK/QNAISDK.h>
+//#import <QNAISDK/QNAISDK.h>
 #import "QNRepairWhiteBoardController.h"
 #import "QNWhiteBoardExpandableToolbar.h"
 #import "QNVideoTrackParams.h"
 #import "QNAudioTrackParams.h"
 #import "QNRoomUserView.h"
 
-@interface QNRepairViewController ()<QNIMChatServiceProtocol,UIGestureRecognizerDelegate,QNWhiteboardDelegate,QNRTCClientDelegate,QNMicrophoneAudioTrackDataDelegate>
+@interface QNRepairViewController ()<QNIMChatServiceProtocol,UIGestureRecognizerDelegate,QNWhiteboardDelegate,QNRTCClientDelegate,QNLocalAudioTrackDelegate>
 
 @property (nonatomic, strong) QNJoinRepairModel *repairModel;
 
@@ -82,6 +82,10 @@
     } failure:^(NSError *error) {
         [MBProgressHUD showText:@"加入房间失败!"];
     }];
+    
+}
+
+- (void)localAudioTrack:(QNLocalAudioTrack *)localAudioTrack didGetAudioBuffer:(AudioBuffer *)audioBuffer bitsPerSample:(NSUInteger)bitsPerSample sampleRate:(NSUInteger)sampleRate {
     
 }
 
@@ -172,22 +176,22 @@
 //语音转文字
 - (void)audioToText {
     
-    QNSpeakToTextParams *params = [[QNSpeakToTextParams alloc]init];
-    params.force_final = YES;
-    
-    __weak typeof(self)wealSelf = self;
-    [[QNSpeakToTextDetect shareManager] startDetectWithTrack:self.localAudioTrack params:params complete:^(QNSpeakToTextResult * _Nonnull result) {
-        //语音识别成功，发送识别消息
-        NSString *content = [wealSelf audioWithTranscript:result.transcript];
-        if (result.isFinal == 1 && content.length > 0) {
-            QNIMMessageObject *message = [self.messageCreater createChatMessage:content];
-            [[QNIMChatService sharedOption] sendMessage:message];
-            [self.chatRoomView sendMessage:message];
-                        
-        }
-    } failure:^(NSError *error) {
-
-    }];
+//    QNSpeakToTextParams *params = [[QNSpeakToTextParams alloc]init];
+//    params.force_final = YES;
+//
+//    __weak typeof(self)wealSelf = self;
+//    [[QNSpeakToTextDetect shareManager] startDetectWithTrack:self.localAudioTrack params:params complete:^(QNSpeakToTextResult * _Nonnull result) {
+//        //语音识别成功，发送识别消息
+//        NSString *content = [wealSelf audioWithTranscript:result.transcript];
+//        if (result.isFinal == 1 && content.length > 0) {
+//            QNIMMessageObject *message = [self.messageCreater createChatMessage:content];
+//            [[QNIMChatService sharedOption] sendMessage:message];
+//            [self.chatRoomView sendMessage:message];
+//
+//        }
+//    } failure:^(NSError *error) {
+//
+//    }];
   
 }
 
@@ -225,8 +229,8 @@
 
 //停止语音识别
 - (void)endSpeak {
-    [[QNSpeakToTextDetect shareManager] stopDetect];
-    self.localAudioTrack.audioDelegate = self;
+//    [[QNSpeakToTextDetect shareManager] stopDetect];
+    self.localAudioTrack.delegate = self;
 }
 
 - (void)setupWhiteBoard {
@@ -371,11 +375,11 @@
 - (void)RTCClient:(QNRTCClient *)client didStartLiveStreamingWith:(NSString *)streamID {
     
     QNTranscodingLiveStreamingTrack *pushVideoTrack = [QNTranscodingLiveStreamingTrack new];
-    pushVideoTrack.trackId = self.localVideoTrack.trackID;
+    pushVideoTrack.trackID = self.localVideoTrack.trackID;
     pushVideoTrack.frame = CGRectMake(0, 0, 540, 960);
     
     QNTranscodingLiveStreamingTrack *pushAudioTrack = [QNTranscodingLiveStreamingTrack new];
-    pushAudioTrack.trackId = self.localAudioTrack.trackID;
+    pushAudioTrack.trackID = self.localAudioTrack.trackID;
     
     [self.rtcClient setTranscodingLiveStreamingID:self.itemModel.roomId withTracks:@[pushVideoTrack,pushAudioTrack]];
 }
@@ -420,7 +424,7 @@
         [tracks addObject:self.localAudioTrack];
         
         if (self.itemModel.roleType == QNRepairRoleTypeStaff) {
-            self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatio;
+//            self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatio;
             [tracks addObject:self.localVideoTrack];
         }
         

@@ -73,7 +73,7 @@
     room.provideRoomToken = self.model.rtcInfo.roomToken;
     room.provideHostUid = self.model.roomInfo.creator;
     
-    room.provideMeId = QN_User_id;
+    room.provideMeId = Get_User_id;
     
     QNUserExtension *userInfo = [QNUserExtension new];
     userInfo.userExtRoleType = self.model.userInfo.role;
@@ -95,18 +95,18 @@
 - (void)setUpLocalAudioTrackParams:(QNAudioTrackParams *)audioTrackParams{
     
     [self.localAudioTrack setVolume:audioTrackParams.volume];
-    self.localAudioTrack.tag = audioTrackParams.tag.length == 0 ? @"audio" : audioTrackParams.tag;
 }
 //本地视频轨道参数
 - (void)setUpLocalVideoParams:(QNVideoTrackParams *)videoTrackParams{
     CGSize videoEncodeSize = CGSizeMake(videoTrackParams.width, videoTrackParams.height);
-    QNCameraVideoTrackConfig * cameraConfig = [[QNCameraVideoTrackConfig alloc] initWithSourceTag:@"camera" bitrate:videoTrackParams.bitrate videoEncodeSize:videoEncodeSize];
+    
+    QNVideoEncoderConfig *config = [[QNVideoEncoderConfig alloc] initWithBitrate:400*1000 videoEncodeSize:videoEncodeSize videoFrameRate:15];
+    QNCameraVideoTrackConfig * cameraConfig = [[QNCameraVideoTrackConfig alloc] initWithSourceTag:@"camera" config:config multiStreamEnable:NO];    
     self.localVideoTrack = [QNRTC createCameraVideoTrackWithConfig:cameraConfig];
     [self.localVideoTrack play:self.preview];
     self.localVideoTrack.videoFrameRate = videoTrackParams.fps;
     self.localVideoTrack.previewMirrorFrontFacing = NO;
     [self.localVideoTrack startCapture];
-    self.localVideoTrack.fillMode = QNVideoFillModePreserveAspectRatio;
     [self.localVideoTrack play:self.preview];
 }
 //设置屏幕共享参数
@@ -118,10 +118,9 @@
     }
     // 视频
     CGSize videoEncodeSize = CGSizeMake(params.width, params.height);
-    QNScreenVideoTrackConfig * screenConfig = [[QNScreenVideoTrackConfig alloc] initWithSourceTag:@"screen" bitrate:params.bitrate videoEncodeSize:videoEncodeSize];
+    QNVideoEncoderConfig *config = [[QNVideoEncoderConfig alloc] initWithBitrate:400*1000 videoEncodeSize:videoEncodeSize videoFrameRate:15];
+    QNScreenVideoTrackConfig * screenConfig = [[QNScreenVideoTrackConfig alloc] initWithSourceTag:@"screen" config:config multiStreamEnable:NO];
     self.localScreenTrack = [QNRTC createScreenVideoTrackWithConfig:screenConfig];
-    // 设置采集视频的帧率
-    self.localScreenTrack.screenRecorderFrameRate = params.fps;
 
 }
 
@@ -233,6 +232,13 @@
     return nil;
 }
 
+- (NSArray <QNTrack *> *)getTracksWithUser:(NSString *)userID {
+    QNRemoteUser *user = [self.rtcClient getRemoteUser:userID];
+    NSMutableArray *tracks = [[NSMutableArray alloc]initWithArray:user.videoTrack];
+    [tracks addObjectsFromArray:user.audioTrack];
+    return tracks;
+}
+
 //是否是房主
 - (BOOL)isAdminUser:(NSString *)userId {
     BOOL isAdmin = NO;
@@ -244,7 +250,7 @@
 
 - (BOOL)isAdmin {
     BOOL isAdmin = NO;
-    if ([self.model.roomInfo.creator isEqualToString:QN_User_id]) {
+    if ([self.model.roomInfo.creator isEqualToString:Get_User_id]) {
         isAdmin = YES;
     }
     return isAdmin;
@@ -655,7 +661,7 @@ static const int cLabelTag = 10;
 }
 
 - (void)getStatesTimerAction {
-    if (QNConnectionStateConnected != self.rtcClient.roomState && QNConnectionStateReconnected != self.rtcClient.roomState) {
+    if (QNConnectionStateConnected != self.rtcClient.connectionState && QNConnectionStateReconnected != self.rtcClient.connectionState) {
         return;
     }
         
@@ -708,7 +714,7 @@ static const int cLabelTag = 10;
 - (void)RTCClient:(QNRTCClient *)client didConnectionStateChanged:(QNConnectionState)state disconnectedInfo:(QNConnectionDisconnectedInfo *)info {
     
     NSDictionary *roomStateDictionary =  @{
-                                           @(QNConnectionStateIdle) : @"Idle",
+                                           @(QNConnectionStateDisconnected) : @"Idle",
                                            @(QNConnectionStateConnecting) : @"Connecting",
                                            @(QNConnectionStateConnected): @"Connected",
                                            @(QNConnectionStateReconnecting) : @"Reconnecting",
@@ -721,7 +727,7 @@ static const int cLabelTag = 10;
         [self stopGetStatsTimer];
     }
     [self addLogString:str];
-    if (QNConnectionStateIdle == state) {
+    if (QNConnectionStateDisconnected == state) {
         switch (info.reason) {
             case QNConnectionDisconnectedReasonKickedOut:{
                 str =[NSString stringWithFormat:@"被远端服务器踢出的回调"];
@@ -748,9 +754,9 @@ static const int cLabelTag = 10;
                     case QNRTCErrorTokenExpired:
                         NSLog(@"roomToken 过期");
                         break;
-                    case QNRTCErrorReconnectTokenError:
-                        NSLog(@"重新进入房间超时，请务必调用 leave, 重新进入房间");
-                        break;
+//                    case QNRTCErrorReconnectTokenError:
+//                        NSLog(@"重新进入房间超时，请务必调用 leave, 重新进入房间");
+//                        break;
                     default:
                         break;
                 }
@@ -790,7 +796,7 @@ static const int cLabelTag = 10;
 - (QNRoomUserView *)userViewWithTrackId:(NSString *)trackId {
     @synchronized(self.userViewArray) {
         for (QNRoomUserView *userView in self.renderBackgroundView.subviews) {
-            if ([userView.class isEqual:[QNGLKView class]]) {
+            if ([userView.class isEqual:[QNVideoGLView class]]) {
                 return nil;
             }
             if ([userView.trackId isEqualToString:trackId]) {

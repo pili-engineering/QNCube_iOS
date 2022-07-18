@@ -1,5 +1,5 @@
 //
-//  QNGiftCollectionViewCell.h
+//  GiftCollectionViewCell.h
 //  QiNiu_Solution_iOS
 //
 //  Created by 郭茜 on 2022/1/5.
@@ -8,7 +8,7 @@
 #import <UIKit/UIKit.h>
 
 @class QNSendGiftModel;
-@interface QNGiftCollectionViewCell : UICollectionViewCell
+@interface GiftCollectionViewCell : UICollectionViewCell
 
 /** model */
 @property(nonatomic,strong) QNSendGiftModel *model;

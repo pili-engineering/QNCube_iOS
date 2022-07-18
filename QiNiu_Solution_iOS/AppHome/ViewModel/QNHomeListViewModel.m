@@ -25,7 +25,6 @@
             [listModel.list enumerateObjectsUsingBlock:^(QNSolutionItemModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 if ([obj.type isEqualToString:@"interview"]) {
                     obj.itemSelectorNameStr = @"interviewClicked";
-                    
                 } else if ([obj.type isEqualToString:@"repair"]) {
                     obj.itemSelectorNameStr = @"repairClicked";
                 } else if ([obj.type isEqualToString:@"show"]){
@@ -34,7 +33,9 @@
                     obj.itemSelectorNameStr = @"movieClicked";
                 } else if ([obj.type isEqualToString:@"voiceChatRoom"]){
                     obj.itemSelectorNameStr = @"voiceChatRoomClicked";
-                }  else {
+                }  else if ([obj.type isEqualToString:@"liveKit"]) {
+                    obj.itemSelectorNameStr = @"pkClicked";
+                }else {
                     obj.itemSelectorNameStr = @"others";
                 }
             }];

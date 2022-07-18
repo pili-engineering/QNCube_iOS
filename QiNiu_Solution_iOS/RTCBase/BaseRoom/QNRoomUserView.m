@@ -14,7 +14,7 @@
 @interface QNRoomUserView()
 
 @property (nonatomic, strong) UILabel *nameLabel;
-@property (nonatomic, strong, readwrite) QNVideoView *cameraView;
+@property (nonatomic, strong, readwrite) QNVideoGLView *cameraView;
 @property (nonatomic, strong) UIImageView *avatarImageView;
 
 @end
@@ -31,7 +31,7 @@
         
 //        _nameLabel.hidden = YES;
         
-        _cameraView = [[QNVideoView alloc] init];
+        _cameraView = [[QNVideoGLView alloc] init];
 //        _cameraView.hidden = YES;
 //        [self insertSubview:_cameraView atIndex:0];
         [self addSubview:_cameraView];

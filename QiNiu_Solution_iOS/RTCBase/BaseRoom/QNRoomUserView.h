@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray *traks;
 @property (nonatomic, copy) void (^changeSizeBlock)(void);
 
-@property (nonatomic, readonly) QNVideoView *cameraView;
+@property (nonatomic, readonly) QNVideoGLView *cameraView;
 
 - (QNTrack *)trackInfoWithTrackId:(NSString *)trackId;
 - (void)showCameraView;

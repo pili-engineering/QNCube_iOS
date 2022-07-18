@@ -6,15 +6,15 @@
 //
 
 #import "QNMessageCreater.h"
-#import "QNMicSeatMessageModel.h"
-#import "QNIMTextMsgModel.h"
-#import "QNInvitationModel.h"
-#import "QNForbiddenMicModel.h"
+#import "MicSeatMessageModel.h"
+#import "IMTextMsgModel.h"
+#import "InvitationModel.h"
+#import "ForbiddenMicModel.h"
 #import "QNDanmuMsgModel.h"
-#import "QNGiftMsgModel.h"
-#import "QNHeartMsgModel.h"
+#import "GiftMsgModel.h"
+#import "HeartMsgModel.h"
 #import "QNRTCRoomEntity.h"
-#import "QNIMModel.h"
+#import "IMModel.h"
 
 @interface QNMessageCreater ()
 
@@ -35,6 +35,7 @@
 - (QNIMMessageObject *)createJoinRoomMessage {
     
     QNIMMessageObject *message = [self messageWithAction:@"welcome" content:@"加入房间"];
+    message.senderName = Get_Nickname;
     return message;
 }
 
@@ -59,56 +60,56 @@
 
     QNDanmuMsgModel *danmu = [QNDanmuMsgModel new];
     danmu.content = content;
-    danmu.senderName = QN_User_nickname;
-    danmu.senderUid = QN_User_id;
-    danmu.senderAvatar = QN_User_avatar;
+    danmu.senderName = Get_Nickname;
+    danmu.senderUid = Get_User_id;
+    danmu.senderAvatar = Get_avatar;
     danmu.senderRoomId = self.toId;
     
-    QNIMModel *model = [QNIMModel new];
+    IMModel *model = [IMModel new];
     model.action = @"living_danmu";
     model.data = danmu.mj_keyValues;
     
-    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:model.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
-    message.senderName = QN_User_nickname;
+    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:model.mj_JSONString fromId:Get_IM_ID.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
+    message.senderName = Get_Nickname;
     return message;
 }
 
 //生成礼物消息
 - (QNIMMessageObject *)createGiftMessage:(QNGiftModel *)giftModel number:(NSInteger)number extMsg:(NSString *)extMsg {
     
-    QNGiftMsgModel *giftMsgModel = [QNGiftMsgModel new];
-    giftMsgModel.senderUid = QN_User_id;
-    giftMsgModel.senderName = QN_User_nickname;
-    giftMsgModel.senderAvatar = QN_User_avatar;
+    GiftMsgModel *giftMsgModel = [GiftMsgModel new];
+    giftMsgModel.senderUid = Get_User_id;
+    giftMsgModel.senderName = Get_Nickname;
+    giftMsgModel.senderAvatar = Get_avatar;
     giftMsgModel.senderRoomId = self.toId;
     giftMsgModel.sendGift = giftModel;
     giftMsgModel.number = number;
     giftMsgModel.extMsg = extMsg;
     
-    QNIMModel *model = [QNIMModel new];
+    IMModel *model = [IMModel new];
     model.action = @"living_gift";
     model.data = giftMsgModel.mj_keyValues;
     
-    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:model.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
-    message.senderName = QN_User_nickname;
+    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:model.mj_JSONString fromId:Get_IM_ID.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
+    message.senderName = Get_Nickname;
     return message;
 }
 
 //生成点赞消息
 - (QNIMMessageObject *)createHeartMessage:(NSInteger)count {
     
-    QNHeartMsgModel *heartMsgModel = [QNHeartMsgModel new];
+    HeartMsgModel *heartMsgModel = [HeartMsgModel new];
     heartMsgModel.count = count;
-    heartMsgModel.senderName = QN_User_nickname;
-    heartMsgModel.senderUid = QN_User_id;
+    heartMsgModel.senderName = Get_Nickname;
+    heartMsgModel.senderUid = Get_User_id;
     heartMsgModel.senderRoomId = self.toId;
     
-    QNIMModel *model = [QNIMModel new];
+    IMModel *model = [IMModel new];
     model.action = @"living_heart";
     model.data = heartMsgModel.mj_keyValues;
     
-    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:model.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
-    message.senderName = QN_User_nickname;
+    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:model.mj_JSONString fromId:Get_IM_ID.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
+    message.senderName = Get_Nickname;
     return message;
 }
 
@@ -152,7 +153,7 @@
 //生成锁麦信令
 - (QNIMMessageObject *)createLockMicMessageWithUid:(NSString *)uid msg:(NSString *)msg {
     
-    QNMicSeatMessageModel *micSeat = [QNMicSeatMessageModel new];
+    MicSeatMessageModel *micSeat = [MicSeatMessageModel new];
     micSeat.ownerOpenAudio = NO;
     micSeat.ownerOpenVideo = NO;
     micSeat.uid = uid;
@@ -161,19 +162,19 @@
     operaqtionModel.seat = micSeat;
     operaqtionModel.msg = msg;
     
-    QNIMModel *messageModel = [QNIMModel new];
+    IMModel *messageModel = [IMModel new];
     messageModel.action = @"rtc_lockSeat";
     messageModel.data = operaqtionModel.mj_keyValues;
     
-    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
-    message.senderName = QN_User_nickname;
+    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:Get_IM_ID.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
+    message.senderName = Get_Nickname;
     return message;
 }
 
 //生成踢麦信令
 - (QNIMMessageObject *)createKickOutMicMessageWithUid:(NSString *)uid msg:(NSString *)msg {
     
-    QNMicSeatMessageModel *micSeat = [QNMicSeatMessageModel new];
+    MicSeatMessageModel *micSeat = [MicSeatMessageModel new];
     micSeat.ownerOpenAudio = NO;
     micSeat.ownerOpenVideo = NO;
     micSeat.uid = uid;
@@ -182,43 +183,43 @@
     operaqtionModel.seat = micSeat;
     operaqtionModel.msg = msg;
     
-    QNIMModel *messageModel = [QNIMModel new];
+    IMModel *messageModel = [IMModel new];
     messageModel.action = @"rtc_kickOutFromMicSeat";
     messageModel.data = operaqtionModel.mj_keyValues;
     
-    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
-    message.senderName = QN_User_nickname;
+    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:Get_IM_ID.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
+    message.senderName = Get_Nickname;
     return message;
 }
 
 //生成踢出房间信令
 - (QNIMMessageObject *)createKickOutRoomMessage:(NSString *)uid msg:(NSString *)msg {
     
-    QNMicSeatMessageModel *micSeat = [QNMicSeatMessageModel new];
+    MicSeatMessageModel *micSeat = [MicSeatMessageModel new];
     micSeat.uid = uid;
     micSeat.msg = msg;
     
-    QNIMModel *messageModel = [QNIMModel new];
+    IMModel *messageModel = [IMModel new];
     messageModel.action = @"rtc_kickOutFromRoom";
     messageModel.data = micSeat.mj_keyValues;
     
-    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
+    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:Get_IM_ID.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
     return message;
 }
 
 //生成禁麦信令
 - (QNIMMessageObject *)createForbiddenMessageWithAction:(NSString *)action isFobidden:(BOOL)isForbidden userId:(NSString *)userId msg:(NSString *)msg {
     
-    QNForbiddenMicModel *msgModel = [QNForbiddenMicModel new];
+    ForbiddenMicModel *msgModel = [ForbiddenMicModel new];
     msgModel.uid = userId;
     msgModel.isForbidden = isForbidden;
     msgModel.msg = msg;
     
-    QNIMModel *model = [QNIMModel new];
+    IMModel *model = [IMModel new];
     model.action = action;
     model.data = msgModel.mj_keyValues;
     
-    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:model.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
+    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:model.mj_JSONString fromId:Get_IM_ID.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
     
     return message;
 }
@@ -256,38 +257,38 @@
     
     QNInvitationInfo *info = [QNInvitationInfo new];
     info.channelId = self.toId;
-    info.initiatorUid = QN_User_id;
-    info.msg = [NSString stringWithFormat:@"用户 %@ 邀请你一起连麦，是否加入？",QN_User_nickname];
+    info.initiatorUid = Get_User_id;
+    info.msg = [NSString stringWithFormat:@"用户 %@ 邀请你一起连麦，是否加入？",Get_Nickname];
     info.receiver =  receiverId;
     info.timeStamp = [self getNowTimeTimestamp3];
     
-    QNInvitationModel *invitationData = [QNInvitationModel new];
+    InvitationModel *invitationData = [InvitationModel new];
     invitationData.invitationName = invitationName;
     invitationData.invitation = info;
     
-    QNIMModel *model = [QNIMModel new];
+    IMModel *model = [IMModel new];
     model.action = action;
     model.data = invitationData.mj_keyValues;
     
-    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:model.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
-    message.senderName = QN_User_nickname;
+    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:model.mj_JSONString fromId:Get_IM_ID.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
+    message.senderName = Get_Nickname;
     return message;
 }
 
 //生成进房/离房/聊天消息
 - (QNIMMessageObject *)messageWithAction:(NSString *)action content:(NSString *)content {
     
-    QNIMTextMsgModel *model = [QNIMTextMsgModel new];
-    model.senderName = QN_User_nickname;
-    model.senderId = QN_IM_userId;
+    IMTextMsgModel *model = [IMTextMsgModel new];
+    model.senderName = Get_Nickname;
+    model.senderId = Get_IM_ID;
     model.msgContent = content;
     
-    QNIMModel *messageModel = [QNIMModel new];
+    IMModel *messageModel = [IMModel new];
     messageModel.action = action;
     messageModel.data = model.mj_keyValues;
     
-    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
-    message.senderName = QN_User_nickname;
+    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:Get_IM_ID.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
+    message.senderName = Get_Nickname;
     return message;
     
 }
@@ -295,20 +296,20 @@
 //上下麦信令
 - (QNIMMessageObject *)sendMicMessage:(NSString *)action openAudio:(BOOL)openAudio openVideo:(BOOL)openVideo {
 
-    QNIMModel *messageModel = [QNIMModel new];
+    IMModel *messageModel = [IMModel new];
     messageModel.action = action;
     
-    QNMicSeatMessageModel *micSeat = [QNMicSeatMessageModel new];
+    MicSeatMessageModel *micSeat = [MicSeatMessageModel new];
     micSeat.ownerOpenAudio = openAudio;
     micSeat.ownerOpenVideo = openVideo;
-    micSeat.uid = QN_User_id;
+    micSeat.uid = Get_User_id;
     
     QNUserExtension *user = [QNUserExtension new];
-    user.uid = QN_User_id;
+    user.uid = Get_User_id;
     
     QNUserExtProfile *profile = [QNUserExtProfile new];
-    profile.name = QN_User_nickname;
-    profile.avatar = QN_User_avatar;
+    profile.name = Get_Nickname;
+    profile.avatar = Get_avatar;
     
     user.userExtProfile = profile;
     
@@ -316,8 +317,8 @@
     
     messageModel.data = micSeat.mj_keyValues;
     
-    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:QN_IM_userId.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
-    message.senderName = QN_User_nickname;
+    QNIMMessageObject *message = [[QNIMMessageObject alloc]initWithQNIMMessageText:messageModel.mj_JSONString fromId:Get_IM_ID.longLongValue toId:self.toId.longLongValue type:QNIMMessageTypeGroup conversationId:self.toId.longLongValue];
+    message.senderName = Get_Nickname;
     return message;
     
 }

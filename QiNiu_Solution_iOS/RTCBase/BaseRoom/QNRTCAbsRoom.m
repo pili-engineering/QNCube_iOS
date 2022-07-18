@@ -14,7 +14,7 @@
 #import "QNRoomUserView.h"
 #import <MJExtension/MJExtension.h>
 
-@interface QNRTCAbsRoom ()<QNRTCClientDelegate,QNCameraTrackVideoDataDelegate,QNMicrophoneAudioTrackDataDelegate,QNScreenVideoTrackDelegate>
+@interface QNRTCAbsRoom ()<QNRTCClientDelegate,QNLocalAudioTrackDelegate,QNLocalVideoTrackDelegate>
 
 @property (nonatomic, strong) UIView *renderBackgroundView;//上面只添加 renderView
 
@@ -44,16 +44,20 @@
     // QNRTCKit 的码率
     self.kBitrate = [_settingsDic[@"kBitrate"] integerValue];
     
-    [QNRTC configRTC:[QNRTCConfiguration defaultConfiguration]];
-    // QNRTCClient 初始化
-    self.rtcClient = [QNRTC createRTCClient];
+    [QNRTC initRTC:[QNRTCConfiguration defaultConfiguration]];
+    QNClientConfig *config = [[QNClientConfig alloc]initWithMode:QNClientModeRTC];
+
+    self.rtcClient = [QNRTC createRTCClient:config];
+    [self.rtcClient setClientRole:QNClientRoleBroadcaster completeCallback:nil];
     self.rtcClient.delegate = self;
+    // QNRTCClient 初始化
     
     self.renderBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
     [self.view insertSubview:self.renderBackgroundView atIndex:0];
     
-    self.preview = [[QNGLKView alloc] init];
+    self.preview = [[QNVideoGLView alloc] init];
     self.preview.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight);
+    self.preview.fillMode = QNVideoFillModePreserveAspectRatio;
     [self.renderBackgroundView addSubview:self.preview];
     
 }
@@ -86,8 +90,7 @@
     if (!_localAudioTrack) {
         _localAudioTrack = [QNRTC createMicrophoneAudioTrack];
         [_localAudioTrack setVolume:0.5];
-        _localAudioTrack.audioDelegate = self;
-        _localAudioTrack.tag =  @"audio";
+        _localAudioTrack.delegate = self;
     }
     return _localAudioTrack;
 }
@@ -96,11 +99,13 @@
 - (QNCameraVideoTrack *)localVideoTrack {
     if (!_localVideoTrack) {
         CGSize videoEncodeSize = CGSizeMake(540, 960);
-        QNCameraVideoTrackConfig * cameraConfig = [[QNCameraVideoTrackConfig alloc] initWithSourceTag:@"camera" bitrate:400*1000 videoEncodeSize:videoEncodeSize];
+        
+        QNVideoEncoderConfig *config = [[QNVideoEncoderConfig alloc] initWithBitrate:400*1000 videoEncodeSize:videoEncodeSize videoFrameRate:15];
+        QNCameraVideoTrackConfig * cameraConfig = [[QNCameraVideoTrackConfig alloc] initWithSourceTag:@"camera" config:config multiStreamEnable:NO];
+        
         _localVideoTrack = [QNRTC createCameraVideoTrackWithConfig:cameraConfig];
-        _localVideoTrack.videoFrameRate = 15;
         _localVideoTrack.previewMirrorFrontFacing = NO;
-        _localVideoTrack.videoDelegate = self;
+        _localVideoTrack.delegate = self;
         [_localVideoTrack startCapture];
         [_localVideoTrack play:self.preview];
     }
@@ -115,10 +120,12 @@
             return nil;
         }
         CGSize videoEncodeSize = CGSizeMake(540, 960);
-        QNScreenVideoTrackConfig * screenConfig = [[QNScreenVideoTrackConfig alloc] initWithSourceTag:@"screen" bitrate:400*1000 videoEncodeSize:videoEncodeSize];
+        
+        QNVideoEncoderConfig *config = [[QNVideoEncoderConfig alloc] initWithBitrate:400*1000 videoEncodeSize:videoEncodeSize videoFrameRate:15];
+        QNScreenVideoTrackConfig * screenConfig = [[QNScreenVideoTrackConfig alloc] initWithSourceTag:@"screen" config:config multiStreamEnable:NO];
+        
         _localScreenTrack = [QNRTC createScreenVideoTrackWithConfig:screenConfig];
-        _localScreenTrack.screenRecorderFrameRate = 15;
-        _localScreenTrack.screenDelegate = self;
+        _localScreenTrack.delegate = self;
 
     }
     return _localScreenTrack;
@@ -135,7 +142,7 @@
  */
 - (void)RTCClient:(QNRTCClient *)client didConnectionStateChanged:(QNConnectionState)state disconnectedInfo:(QNConnectionDisconnectedInfo *)info {
     NSDictionary *roomStateDictionary =  @{
-                                           @(QNConnectionStateIdle) : @"Idle",
+                                           @(QNConnectionStateDisconnected) : @"Idle",
                                            @(QNConnectionStateConnecting) : @"Connecting",
                                            @(QNConnectionStateConnected): @"Connected",
                                            @(QNConnectionStateReconnecting) : @"Reconnecting",

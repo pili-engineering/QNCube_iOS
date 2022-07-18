@@ -1,14 +1,14 @@
 //
-//  QNGiftShowManager.m
+//  GiftShowManager.m
 //  QiNiu_Solution_iOS
 //
 //  Created by 郭茜 on 2022/1/5.
 //
 
-#import "QNGiftShowManager.h"
+#import "GiftShowManager.h"
 #import "QNGiftShowView.h"
-#import "QNGiftOperation.h"
-#import "QNSendGiftModel.h"
+#import "GiftOperation.h"
+#import "SendGiftModel.h"
 
 //获取屏幕 宽度、高度
 #define SCREEN_WIDTH ([UIScreen mainScreen].bounds.size.width)
@@ -32,7 +32,7 @@
 
 static const NSInteger giftMaxNum = 99;
 
-@interface QNGiftShowManager()
+@interface GiftShowManager()
 
 /** 队列 */
 @property(nonatomic,strong) NSOperationQueue *giftQueue1;
@@ -52,7 +52,7 @@ static const NSInteger giftMaxNum = 99;
 
 @end
 
-@implementation QNGiftShowManager
+@implementation GiftShowManager
 
 - (NSOperationQueue *)giftQueue1{
     
@@ -93,7 +93,7 @@ static const NSInteger giftMaxNum = 99;
         CGFloat showViewW = 10+showGiftView_UserIcon_LT+showGiftView_UserIcon_WH+showGiftView_UserName_L+showGiftView_UserName_W+showGiftView_GiftIcon_W+showGiftView_XNum_L+showGiftView_XNum_W;
         CGFloat showViewY = SCREEN_HEIGHT-Bottom_Margin(44)-2*itemH-showGiftView_GiftIcon_H-10-15;
         _giftShowView1 = [[QNGiftShowView alloc] initWithFrame:CGRectMake(-showViewW, showViewY, showViewW, showGiftView_GiftIcon_H)];
-        [_giftShowView1 setShowViewKeyBlock:^(QNSendGiftModel *giftModel) {
+        [_giftShowView1 setShowViewKeyBlock:^(SendGiftModel *giftModel) {
             [weakSelf.curentGiftKeys addObject:giftModel.giftKey];
         }];
     }
@@ -110,7 +110,7 @@ static const NSInteger giftMaxNum = 99;
         CGFloat showViewW = 10+showGiftView_UserIcon_LT+showGiftView_UserIcon_WH+showGiftView_UserName_L+showGiftView_UserName_W+showGiftView_GiftIcon_W+showGiftView_XNum_L+showGiftView_XNum_W;
         CGFloat showViewY = SCREEN_HEIGHT-Bottom_Margin(44)-2*itemH-showGiftView_GiftIcon_H*2-2*10-15;
         _giftShowView2 = [[QNGiftShowView alloc] initWithFrame:CGRectMake(-showViewW, showViewY, showViewW, showGiftView_GiftIcon_H)];
-        [_giftShowView2 setShowViewKeyBlock:^(QNSendGiftModel *giftModel) {
+        [_giftShowView2 setShowViewKeyBlock:^(SendGiftModel *giftModel) {
             [weakSelf.curentGiftKeys addObject:giftModel.giftKey];
             
         }];
@@ -129,15 +129,15 @@ static const NSInteger giftMaxNum = 99;
 
 + (instancetype)sharedManager {
     
-    static QNGiftShowManager *manager = nil;
+    static GiftShowManager *manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        manager = [[QNGiftShowManager alloc] init];
+        manager = [[GiftShowManager alloc] init];
     });
     return manager;
 }
 
-- (void)showGiftViewWithBackView:(UIView *)backView info:(QNSendGiftModel *)giftModel completeBlock:(completeBlock)completeBlock {
+- (void)showGiftViewWithBackView:(UIView *)backView info:(SendGiftModel *)giftModel completeBlock:(completeBlock)completeBlock {
     
     //展示gifimage
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -164,7 +164,7 @@ static const NSInteger giftMaxNum = 99;
         if ([self.operationCache objectForKey:giftModel.giftKey]) {
             
             //当前存在操作
-            QNGiftOperation *op = [self.operationCache objectForKey:giftModel.giftKey];
+            GiftOperation *op = [self.operationCache objectForKey:giftModel.giftKey];
             //限制一次礼物的连击最大值
             if (op.giftShowView.currentGiftCount >= giftMaxNum) {
                 //移除操作
@@ -189,7 +189,7 @@ static const NSInteger giftMaxNum = 99;
             }
 
             //当前操作已结束 重新创建
-            QNGiftOperation *operation = [QNGiftOperation addOperationWithView:showView OnView:backView Info:giftModel completeBlock:^(BOOL finished,NSString *giftKey) {
+            GiftOperation *operation = [GiftOperation addOperationWithView:showView OnView:backView Info:giftModel completeBlock:^(BOOL finished,NSString *giftKey) {
                 if (self.finishedBlock) {
                     self.finishedBlock(finished);
                 }
@@ -210,7 +210,7 @@ static const NSInteger giftMaxNum = 99;
         if ([self.operationCache objectForKey:giftModel.giftKey]) {
             
             //当前存在操作
-            QNGiftOperation *op = [self.operationCache objectForKey:giftModel.giftKey];
+            GiftOperation *op = [self.operationCache objectForKey:giftModel.giftKey];
             //限制一次礼物的连击最大值
             if (op.model.defaultCount >= giftMaxNum) {
                 //移除操作
@@ -234,7 +234,7 @@ static const NSInteger giftMaxNum = 99;
                 showView = self.giftShowView2;
             }
 
-            QNGiftOperation *operation = [QNGiftOperation addOperationWithView:showView OnView:backView Info:giftModel completeBlock:^(BOOL finished,NSString *giftKey) {
+            GiftOperation *operation = [GiftOperation addOperationWithView:showView OnView:backView Info:giftModel completeBlock:^(BOOL finished,NSString *giftKey) {
                 if (self.finishedBlock) {
                     self.finishedBlock(finished);
                 }
