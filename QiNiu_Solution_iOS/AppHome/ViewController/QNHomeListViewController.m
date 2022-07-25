@@ -55,6 +55,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    //互动直播的IM账号与牛魔方不一样 ，所以每次回到菜单需要重新登录牛魔方IM账号
     [[QNIMClient sharedClient] signInByName:Get_IM_ID password:QN_IM_psw completion:^(QNIMError * _Nonnull error) {
         NSLog(@"---七牛IM服务器-----%li",[QNIMClient sharedClient].connectStatus);
         ;

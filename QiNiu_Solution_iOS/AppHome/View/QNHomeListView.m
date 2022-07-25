@@ -46,10 +46,34 @@
 }
 
 - (void)pkClicked {
+    __weak typeof(self)weakSelf = self;
+    [QLive initWithToken:QN_Live_Token serverURL:@"https://live-api.qiniu.com/%@" errorBack:^(NSError * _Nonnull error) {
+        //如果token过期
+        [weakSelf getLiveToken:^(NSString * _Nonnull token) {
+            [QLive initWithToken:token serverURL:@"https://live-api.qiniu.com/%@" errorBack:nil];
+        }];
+    }];
     [QLive setUser:Get_avatar nick:Get_Nickname extension:nil];
     QLiveListController *vc = [QLiveListController new];
     [self topViewController].tabBarController.tabBar.hidden = YES;
     [[self topViewController].navigationController pushViewController:vc animated:YES];
+}
+
+//获取liveToken
+- (void)getLiveToken:(nullable void (^)(NSString * _Nonnull token))callBack {
+    
+    NSString *action = [NSString stringWithFormat:@"live/auth_token?userID=%@&deviceID=%@",Get_User_id,@"111"];
+    [QNNetworkUtil getRequestWithAction:action params:nil success:^(NSDictionary *responseData) {
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:responseData[@"accessToken"] forKey:Live_Token];
+        [defaults synchronize];
+        
+        callBack(responseData[@"accessToken"]);
+
+        } failure:^(NSError *error) {
+        
+        }];
 }
 
 //面试点击
